@@ -21,13 +21,10 @@ if (!defined('ABSPATH')){
 class cryptofrcomments{ 
 
 	function __construct(){
-		// add_filter( 'comments_template', function ( $template ) {
-		//     return 'https://cryptofrtest.roisdigital.agency/wp-content/plugins/wordpress-cryptofrcomments/public/cryptofrcomments.php';
-		// },100);
-		// add_filter( "comments_template", "wpse_plugin_comment_template" );
-		add_filter( "comments_template", "cryptofr",10000 );
-
-		// apply_filters( 'comments_template', 'https://cryptofrtest.roisdigital.agency/wp-content/plugins/wordpress-cryptofrcomments/public/cryptofrcomments.php' );
+		add_filter( 'comments_template', function ( $template ) {
+		    return plugin_dir_path( dirname( __FILE__ ) ) . 'public/cryptofrcomments.php';
+		});
+		// apply_filters( 'comments_template', plugin_dir_path( dirname( __FILE__ ) ) . 'public/cryptofrcomments.php' );
 		// add_filter( 'comments_template', function ( $template ) {
 		//     return 'null';
 		// });
@@ -43,14 +40,6 @@ class cryptofrcomments{
 
 	function uninstall(){
 	}
-
-	function cryptofr( $comment_template ) {
-	     // global $post; 
-        return 'https://cryptofrtest.roisdigital.agency/wp-content/plugins/wordpress-cryptofrcomments/public/cryptofrcomments.php';
-        // return dirname(__FILE__) . '/review.php';
-	     
-	}
-
 }
 
 
