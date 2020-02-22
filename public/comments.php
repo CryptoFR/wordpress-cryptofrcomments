@@ -13,12 +13,13 @@
 
 <?php
 if ( post_password_required() )
-    return;
+    return; 
 ?>
 
 <a id="nodebb-comments"></a>
+
      <script type="text/javascript">
-                 var nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>',
+                 var nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>', 
                      wordpressURL = '<?php echo get_site_url(); ?>',
                      articleID = '<?php echo the_ID(); ?>',
                      blogger = 'name', //OPTIONAL. Assign an blogger name to disdinguish different blogger. Omit it to fallback to 'default'
