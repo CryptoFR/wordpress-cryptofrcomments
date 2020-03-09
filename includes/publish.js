@@ -20,18 +20,16 @@ function encodeStringData(data){
 getXHR.onload = function(){
 	if (getXHR.status >= 200 && getXHR.status < 400) {
 		var responseData = JSON.parse(getXHR.responseText);
+
+		if (responseData.postCount>=0) {
+			return null;
+		}
 		
 		postData._csrf=responseData.token;
 		postData.uid=responseData.user.uid;
 
-		// console.log(responseData);
-		// console.log(postData);
-
 		encodedString=encodeStringData(postData);
-		// console.log(encodedString);
-		// console.log(postURL);
 
-		
 		postXHR.open("POST", postURL, true);
 		postXHR.withCredentials = true;
 		postXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -44,7 +42,7 @@ getXHR.onload = function(){
 function publish(data,url){
 	postData=data;
 	postURL=url;
-	getXHR.open("GET","https://testforum.cryptofr.com/comments/get/null/1/0/newest",true);
+	getXHR.open("GET","https://testforum.cryptofr.com/comments/get/"+postData.blogger+"/"+postData.id+"/0/newest",true);
 	getXHR.withCredentials = true;
 	getXHR.send(); 
 }

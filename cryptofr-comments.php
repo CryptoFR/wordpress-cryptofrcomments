@@ -1,4 +1,3 @@
-<script type="text/javascript" src="<?php echo get_site_url().'/wp-content/plugins/cryptofr-comments/includes/api.js'; ?>" ></script>
 <?php
 /**
  * @package cryptofrcomments
@@ -10,7 +9,7 @@
  Description: Plugin for installing CryptoFR Forum Comments Box
  Version: 1.0.0
  Author: CryptoFR
- Author URI: http://cryptofr.com
+ Author URI: https://cryptofr.com
  License: --
  Text Domain: CryptoFR Comments-plugin
  */
@@ -27,54 +26,94 @@ class cryptofrcomments{
 
 		add_filter('comments_template', array($this, 'cryptofrCommentsTemplate'),10,1);
 
-		add_action('init', array($this, 'printTest')); 
-		add_action('publish_post', array($this, 'publishTopicToCryptofr'),10,2);
+		add_action('publish_post', array($this, 'markPostOnPublish'),10,2);
+		add_action('init', array($this, 'markPostForTopicPublishing')); 
+		 
 	}
   
 
-	function activate(){
+	function activate(){	
+		ob_start();
+
+	   	global $wpdb; 
+
+		$table_name = $wpdb->prefix . 'posts'; 
+
+		$check_column = (array) $wpdb->get_results(  "SELECT count(cryptofrcomments) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME = '{$table_name}' AND COLUMN_NAME = 'cryptofrcomments'"  )[0];
+
+		$check_column = (int) array_shift($check_column);
+		if($check_column == 0) {
+			$wpdb->query(
+			"ALTER TABLE $table_name
+			ADD COLUMN `cryptofrcomments` VARCHAR(55) NOT NULL DEFAULT 'Disabled'
+			");
+		}
+ 
 		flush_rewrite_rules();
 	}
+
+
 
 	function deactivate(){
 		flush_rewrite_rules();
 	}
-
-	function uninstall(){
-	}
-
+ 
 	function cryptofrCommentsTemplate ( $comment_template ) {
 		$templatefile= PLUGIN_PATH.'/public/comments.php'; 
 	    return $templatefile;
 	}
 
-	function printTest(){ 
-		$url = NODEBB_URL.'/comments/publish';
-		?>
-		<script type="text/javascript"> 
-			var data={
-				markdown: 'this will work of course',
-				title: 'cryptofr test',
-				cid: -1,
-				blogger: 'admin',
-				tags: "",
-				id: '98',
-				url: 'https://testblog.cryptofr.com/2020/03/07/cryptofr-test/',
-				timestamp: Date.now(),
-				uid: "",
-				_csrf: ""
-			}
-			console.log(JSON.stringify(data, null, 4));
+	function markPostForTopicPublishing(){ 
+	   	global $wpdb; 
+		$table_name = $wpdb->prefix . 'posts'; 
+		$url = NODEBB_URL.'/comments/publish';  
 
-			// publish(data,'<?php echo $url; ?>');
-		</script>
-		<?php
+		$sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments='Marked' ORDER BY ID DESC Limit 1 ";
+		$wpdb->query($sqlCommand);
+ 
 
+		foreach ($wpdb->last_result as $post){
+			// $sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID=%s";
+			// $wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
+			?>
+			<script type="text/javascript" src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/includes/publish.js" ></script>
+			<script type="text/javascript">
+				var data={
+					markdown: '<?php echo escaped_content($post->post_content); ?>',
+					title: '<?php echo $post->post_title; ?>',
+					cid: -1,
+					blogger: '<?php echo the_author_meta( 'display_name' , $post->post_author ); ?>',
+					tags: "",
+					id: '<?php echo $post->ID; ?>',
+					url: '<?php echo $post->guid; ?>',
+					timestamp: Date.now(),
+					uid: "",
+					_csrf: ""
+				}
+
+				publish(data,'<?php echo $url; ?>');
+			</script>
+			<?php
+
+		}		
 	}
 
 
-	function publishTopicToCryptofr($ID, $post)  {
-		$url = NODEBB_URL.'/comments/publish';  
+	function markPostOnPublish($ID, $post)  {
+
+	    if ( $post->post_type != 'post' ) return;
+  
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'posts';
+ 
+		$sqlCommand = "SELECT * FROM ".$table_name." WHERE ID=%s AND cryptofrcomments='Disabled'";
+		$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
+
+		if ($wpdb->last_result){
+			$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Marked' WHERE ID=%s";
+			$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
+		}
+
 	}
 
 }
@@ -91,6 +130,4 @@ register_activation_hook(__FILE__,array($cryptofrcomments,'activate'));
 
 // Deactivation
 register_deactivation_hook(__FILE__,array($cryptofrcomments,'deactivate'));
-
-
-// Uninstall
+ 
