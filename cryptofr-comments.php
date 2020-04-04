@@ -18,19 +18,40 @@ defined( 'ABSPATH' ) or die( 'Nope, not accessing this' );
 
 class cryptofrcomments{ 
 
-	function __construct(){   
+	public $plugin_name;
+
+	function __construct(){
+
+		$this->plugin_name= plugin_basename(__FILE__);
+
 		define('PLUGIN_PATH', dirname(__FILE__)); 
 		define('NODEBB_URL', 'https://testforum.cryptofr.com'); 
 
 		include (PLUGIN_PATH."/includes/util.php");
 
-		add_filter('comments_template', array($this, 'cryptofrCommentsTemplate'),10,1);
 
 		add_action('publish_post', array($this, 'markPostOnPublish'),10,2);
-		add_action('init', array($this, 'markPostForTopicPublishing')); 
-		 
+		add_action('init', array($this, 'topicPublishing'));   
+		add_action('admin_menu',array($this,'add_admin_pages'));
+
+		add_filter('comments_template', array($this, 'cryptofrCommentsTemplate'),10,1);
+		add_filter("plugin_action_links_$this->plugin_name", array($this, 'settings_link'));
 	}
-  
+
+	function add_admin_pages(){
+		add_menu_page('Cryptofr','Cryptofrcomments','manage_options','cryptofr_comments_plugin',array($this,'admin_index'),'dashicons-store',110);
+	}
+
+	function admin_index(){
+		include (PLUGIN_PATH."/templates/admin.php"); 
+	}
+
+	function settings_link($links){
+		$settings_link= '<a href="admin.php?page=cryptofr_comments_plugin">Settings</a>';
+		array_push($links, $settings_link);
+		return $links;
+	}
+
 
 	function activate(){	
 		ob_start();
@@ -47,11 +68,10 @@ class cryptofrcomments{
 			"ALTER TABLE $table_name
 			ADD COLUMN `cryptofrcomments` VARCHAR(55) NOT NULL DEFAULT 'Disabled'
 			");
-		}
- 
+		} 
+		
 		flush_rewrite_rules();
-	}
-
+	} 
 
 
 	function deactivate(){
@@ -63,7 +83,7 @@ class cryptofrcomments{
 	    return $templatefile;
 	}
 
-	function markPostForTopicPublishing(){ 
+	function topicPublishing(){ 
 	   	global $wpdb; 
 		$table_name = $wpdb->prefix . 'posts'; 
 		$url = NODEBB_URL.'/comments/publish';  
@@ -73,8 +93,8 @@ class cryptofrcomments{
  
 
 		foreach ($wpdb->last_result as $post){
-			// $sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID=%s";
-			// $wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
+			$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID=%s";
+			$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
 			?>
 			<script type="text/javascript" src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/includes/publish.js" ></script>
 			<script type="text/javascript">
@@ -101,8 +121,6 @@ class cryptofrcomments{
 
 	function markPostOnPublish($ID, $post)  {
 
-	    if ( $post->post_type != 'post' ) return;
-  
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'posts';
  

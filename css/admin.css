@@ -1,0 +1,27 @@
+body{
+	background: #f1f1f1!important;
+}
+
+.comments-area,.load-more-div{
+	display: none;
+}
+
+#login-modal{
+	display: block;
+	position:relative;
+	display: block;
+	background: none;
+}
+
+#login-modal .modal-content{
+	margin-left: 0px;
+}
+
+.cryptofrcomments-tabs #cryptofr-login
+.cryptofrcomments-tabs #cryptofr-comments,
+.cryptofrcomments-tabs #cryptofr-user,
+.cryptofrcomments-tabs .cryptofr-login-tab,
+.cryptofrcomments-tabs .cryptofr-comments-tab,
+.cryptofrcomments-tabs .cryptofr-user-tab{
+	display: none;
+}

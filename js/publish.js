@@ -30,6 +30,8 @@ getXHR.onload = function(){
 
 		encodedString=encodeStringData(postData);
 
+		console.log(postData)
+
 		postXHR.open("POST", postURL, true);
 		postXHR.withCredentials = true;
 		postXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -40,9 +42,12 @@ getXHR.onload = function(){
 
 
 function publish(data,url){
+	// alert("hola")
 	postData=data;
 	postURL=url;
 	getXHR.open("GET","https://testforum.cryptofr.com/comments/get/"+postData.blogger+"/"+postData.id+"/0/newest",true);
 	getXHR.withCredentials = true;
 	getXHR.send(); 
 }
+
+
