@@ -1,4 +1,7 @@
+<a id="nodebb-comments"></a> 
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <?php 
    	global $wpdb; 
 	$table_name = $wpdb->prefix . 'posts'; 
@@ -25,7 +28,7 @@
 
 				(function() { 
 					var nbb = document.createElement('script'); nbb.type = 'module'; nbb.async = true;
-					nbb.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/main2.js';
+					nbb.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/main.js';
 					var nbb2 = document.createElement('script'); nbb2.type = 'module'; nbb2.async = true;
 					nbb2.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/build.js';
 					(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(nbb);
@@ -34,7 +37,7 @@
 			// }, <?php echo $timer*10000; ?>);  
 		</script>
 <?php
-		// break;
+		break;
 	}
 ?>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -43,7 +46,6 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/cryptofr.js"></script>
 
-<a id="nodebb-comments"></a> 
 
 <h1>CryptoFR Comments</h1>
 

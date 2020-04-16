@@ -1,27 +1,36 @@
-body{
+body.wp-admin{
 	background: #f1f1f1!important;
 }
 
-.comments-area,.load-more-div{
+.wp-admin .comments-area,.load-more-div{
 	display: none;
 }
 
-#login-modal{
+.wp-admin #login-modal{
 	display: block;
 	position:relative;
 	display: block;
 	background: none;
 }
 
-#login-modal .modal-content{
+.wp-admin #login-modal .modal-content{
 	margin-left: 0px;
 }
 
-.cryptofrcomments-tabs #cryptofr-login
-.cryptofrcomments-tabs #cryptofr-comments,
-.cryptofrcomments-tabs #cryptofr-user,
-.cryptofrcomments-tabs .cryptofr-login-tab,
-.cryptofrcomments-tabs .cryptofr-comments-tab,
-.cryptofrcomments-tabs .cryptofr-user-tab{
+.wp-admin .cryptofrcomments-tabs #cryptofr-login
+.wp-admin .cryptofrcomments-tabs #cryptofr-comments,
+.wp-admin .cryptofrcomments-tabs #cryptofr-user,
+.wp-admin .cryptofrcomments-tabs .cryptofr-login-tab,
+.wp-admin .cryptofrcomments-tabs .cryptofr-comments-tab,
+.wp-admin .cryptofrcomments-tabs .cryptofr-user-tab{
 	display: none;
+}
+
+.wp-admin .modal-input{
+	padding-left: 30px;
+}
+
+.wp-admin .email-input svg, .wp-admin .password-input svg{
+	margin-top: 5px;
+    margin-left: 8px;
 }

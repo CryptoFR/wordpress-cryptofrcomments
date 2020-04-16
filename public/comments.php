@@ -16,6 +16,8 @@ if ( post_password_required() )
     return;  
 ?>
 
+<a id="nodebb-comments"></a> 
+
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
@@ -33,7 +35,7 @@ if ( post_password_required() )
 
     (function() { 
         var nbb = document.createElement('script'); nbb.type = 'module'; nbb.async = true;
-        nbb.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/main2.js';
+        nbb.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/main.js';
         var nbb2 = document.createElement('script'); nbb2.type = 'module'; nbb2.async = true;
         nbb2.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/build.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(nbb);
