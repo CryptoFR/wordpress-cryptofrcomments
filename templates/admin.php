@@ -1,6 +1,16 @@
 <a id="nodebb-comments"></a> 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+	var nodeBBURL = '', 
+	wordpressURL = '',
+	articleID = '',
+	blogger = '', 
+	articleType = '',
+	articleTitle = '',
+	content = "",
+	categoryID = ''; 
+</script>
 
 <?php 
    	global $wpdb; 
@@ -10,20 +20,20 @@
 
 	$posts = (array) $wpdb->get_results($sqlCommand);
 	$timer=-1;
+
 	foreach ($posts as $post){
 		$timer++;
 ?>
 		<script type="text/javascript">
-			// setTimeout(async function tick() { 
-				var nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>', 
-				wordpressURL = '<?php echo get_site_url(); ?>',
-				// articleID = '1',
-				articleID = '<?php echo $post->ID; ?>',
-				blogger = '<?php echo the_author_meta( 'display_name' , $post->post_author );  ?>', //OPTIONAL. Assign an blogger name to disdinguish different blogger. Omit it to fallback to 'default'
-				articleType = 'Post',
-				articleTitle = '<?php echo $post->post_title;; ?>',
-				content = "<?php echo escaped_content($post->post_content); ?>",
-				categoryID = -1; // If -1, will use category in NodeBB ACP.  Put in a category number to force that category.
+			setTimeout(async function tick() { 
+				nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>'; 
+				wordpressURL = '<?php echo get_site_url(); ?>';
+				articleID = '<?php echo $post->ID; ?>';
+				blogger = '<?php echo the_author_meta( 'display_name' , $post->post_author );  ?>'; 
+				articleType = 'Post';
+				articleTitle = '<?php echo $post->post_title;; ?>';
+				content = "<?php echo escaped_content($post->post_content); ?>";
+				categoryID = -1; 
 
 
 				(function() { 
@@ -34,10 +44,10 @@
 					(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(nbb);
 					(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(nbb2);
 				})();
-			// }, <?php echo $timer*10000; ?>);  
+			}, <?php echo $timer*2000; ?>);  
 		</script>
 <?php
-		break;
+		// break;
 	}
 ?>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
