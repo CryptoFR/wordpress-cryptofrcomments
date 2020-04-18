@@ -1,6 +1,7 @@
 <a id="nodebb-comments"></a> 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/cryptofr.js"></script>
 <script type="text/javascript">
 	var nodeBBURL = '', 
 	wordpressURL = '',
@@ -10,6 +11,11 @@
 	articleTitle = '',
 	content = "",
 	categoryID = ''; 
+	
+	function reload_js(src,type,async) {
+        $('script[src="' + src + '"]').remove();
+        $('<script>').attr('src', src).attr('type',type).attr('async',async).appendTo('head');
+    }
 </script>
 
 <?php 
@@ -25,7 +31,9 @@
 		$timer++;
 ?>
 		<script type="text/javascript">
+
 			setTimeout(async function tick() { 
+				console.log(<?php echo $timer ?>)
 				nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>'; 
 				wordpressURL = '<?php echo get_site_url(); ?>';
 				articleID = '<?php echo $post->ID; ?>';
@@ -35,16 +43,10 @@
 				content = "<?php echo escaped_content($post->post_content); ?>";
 				categoryID = -1; 
 
+				reload_js(nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/main.js','module',true)
+				reload_js(nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/build.js',true)
 
-				(function() { 
-					var nbb = document.createElement('script'); nbb.type = 'module'; nbb.async = true;
-					nbb.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/main.js';
-					var nbb2 = document.createElement('script'); nbb2.type = 'module'; nbb2.async = true;
-					nbb2.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/build.js';
-					(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(nbb);
-					(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(nbb2);
-				})();
-			}, <?php echo $timer*2000; ?>);  
+			}, <?php echo $timer*10000; ?>);  
 		</script>
 <?php
 		// break;
@@ -54,7 +56,6 @@
 <link rel="stylesheet" href="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/css/admin.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/cryptofr.js"></script>
 
 
 <h1>CryptoFR Comments</h1>

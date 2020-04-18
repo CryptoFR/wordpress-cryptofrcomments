@@ -33,5 +33,8 @@
 			timerId = setTimeout(tick, 500);	
 			 
 		}, 500); 
+
+
+	    
 	})();
 
