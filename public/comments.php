@@ -41,12 +41,12 @@ if ( post_password_required() )
 
 
     (function() { 
-        var nbb = document.createElement('script'); nbb.type = 'module'; nbb.async = true;
+        var nbb = document.createElement('script'); nbb.async = true;
         nbb.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/main.js';
-        var nbb2 = document.createElement('script'); nbb2.type = 'module'; nbb2.async = true;
-        nbb2.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/build.js';
+        // var nbb2 = document.createElement('script'); nbb2.type = 'module'; nbb2.async = true;
+        // nbb2.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/build.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(nbb);
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(nbb2);
+        // (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(nbb2);
     })();  
 
 </script>
