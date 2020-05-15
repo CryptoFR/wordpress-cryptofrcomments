@@ -43,11 +43,11 @@ getXHR.onload = function(){
 }
 
 
-function publish(data,url){
+function publish(data,forumURL,publishURL){
 	// alert("hola")
 	postData=data;
-	postURL=url;
-	getXHR.open("GET","https://testforum.cryptofr.com/comments/get/"+postData.blogger+"/"+postData.id+"/0/newest",true);
+	postURL=publishURL;
+	getXHR.open("GET",forumURL+"/comments/get/"+postData.blogger+"/"+postData.id+"/0/newest",true);
 	getXHR.withCredentials = true;
 	getXHR.send(); 
 }

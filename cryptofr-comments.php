@@ -86,7 +86,7 @@ class cryptofrcomments{
 	function topicPublishing(){ 
 	   	global $wpdb; 
 		$table_name = $wpdb->prefix . 'posts'; 
-		$url = NODEBB_URL.'/comments/publish';  
+		$publishURL = NODEBB_URL.'/comments/publish';  
 
 		$sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments='Marked' ORDER BY ID DESC Limit 1 ";
 		$wpdb->query($sqlCommand);
@@ -111,7 +111,7 @@ class cryptofrcomments{
 					_csrf: ""
 				}
 
-				publish(data,'<?php echo $url; ?>');
+				publish(data,'<?php echo NODEBB_URL; ?>','<?php echo $publishURL; ?>');
 			</script>
 			<?php
 
