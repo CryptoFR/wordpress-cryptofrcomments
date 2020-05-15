@@ -96,7 +96,7 @@ class cryptofrcomments{
 			$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID=%s";
 			$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
 			?>
-			<script type="text/javascript" src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/includes/publish.js" ></script>
+			<script type="text/javascript" src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/publish.js" ></script>
 			<script type="text/javascript">
 				var data={
 					markdown: '<?php echo escaped_content($post->post_content); ?>',

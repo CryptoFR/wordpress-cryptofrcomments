@@ -30,7 +30,9 @@ getXHR.onload = function(){
 
 		encodedString=encodeStringData(postData);
 
+		console.log("postData")
 		console.log(postData)
+		console.log(postURL)
 
 		postXHR.open("POST", postURL, true);
 		postXHR.withCredentials = true;
