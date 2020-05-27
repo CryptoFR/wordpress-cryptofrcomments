@@ -30,7 +30,7 @@ getXHR.onload = function(){
 
 		encodedString=encodeStringData(postData);
 
-		console.log("postData")
+		console.log("postData to send")
 		console.log(postData)
 		console.log(postURL)
 
@@ -44,12 +44,13 @@ getXHR.onload = function(){
 
 
 function publish(data,forumURL,publishURL){
-	// alert("hola")
+	// console.log('data',data)
+	// console.log('forumURL',forumURL)
+	// console.log('publishURL',publishURL)
 	postData=data;
 	postURL=publishURL;
 	getXHR.open("GET",forumURL+"/comments/get/"+postData.blogger+"/"+postData.id+"/0/newest",true);
 	getXHR.withCredentials = true;
 	getXHR.send(); 
 }
-
 

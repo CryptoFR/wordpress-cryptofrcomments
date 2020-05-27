@@ -20,8 +20,7 @@ class cryptofrcomments{
 
 	public $plugin_name;
 
-	function __construct(){
-
+	function __construct(){ 
 		$this->plugin_name= plugin_basename(__FILE__);
 
 		define('PLUGIN_PATH', dirname(__FILE__)); 
@@ -29,14 +28,16 @@ class cryptofrcomments{
 
 		include (PLUGIN_PATH."/includes/util.php");
 
-
+		// Hooks
 		add_action('publish_post', array($this, 'markPostOnPublish'),10,2);
-		add_action('init', array($this, 'topicPublishing'));   
+		add_action('admin_enqueue_scripts', array($this,'publish'));
 		add_action('admin_menu',array($this,'add_admin_pages'));
 
+		// Overwrite wordpress functions or templates
 		add_filter('comments_template', array($this, 'cryptofrCommentsTemplate'),10,1);
 		add_filter("plugin_action_links_$this->plugin_name", array($this, 'settings_link'));
 	}
+ 
 
 	function add_admin_pages(){
 		add_menu_page('Cryptofr','Cryptofrcomments','manage_options','cryptofr_comments_plugin',array($this,'admin_index'),'dashicons-store',110);
@@ -83,37 +84,48 @@ class cryptofrcomments{
 	    return $templatefile;
 	}
 
-	function topicPublishing(){ 
+	function publish(){ 
 	   	global $wpdb; 
 		$table_name = $wpdb->prefix . 'posts'; 
 		$publishURL = NODEBB_URL.'/comments/publish';  
 
-		$sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments='Marked' ORDER BY ID DESC Limit 1 ";
+		$sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments='Marked' ORDER BY ID DESC ";
 		$wpdb->query($sqlCommand);
  
-
 		foreach ($wpdb->last_result as $post){
 			$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID=%s";
-			$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
-			?>
-			<script type="text/javascript" src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/publish.js" ></script>
-			<script type="text/javascript">
-				var data={
-					markdown: '<?php echo escaped_content($post->post_content); ?>',
-					title: '<?php echo $post->post_title; ?>',
-					cid: -1,
-					blogger: '<?php echo the_author_meta( 'display_name' , $post->post_author ); ?>',
-					tags: "",
-					id: '<?php echo $post->ID; ?>',
-					url: '<?php echo $post->guid; ?>',
-					timestamp: Date.now(),
-					uid: "",
-					_csrf: ""
-				}
+			$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));  
 
-				publish(data,'<?php echo NODEBB_URL; ?>','<?php echo $publishURL; ?>');
-			</script>
-			<?php
+			$escapedContent = escaped_content($post->post_content);
+			$title = $post->post_title;
+			$meta = get_the_author_meta('display_name', $post->post_author);
+			$id = $post->ID;
+			$url = $post->guid;
+
+
+			$data="{".
+  				"markdown:  '$escapedContent',".
+  				"title: '$title',".
+  				"cid: -1,".
+  				"blogger: '$meta',".
+  				"tags: '',".
+  				"id: '$id',".
+  				"url: '$url',".
+  				"timestamp: Date.now(),".
+  				"uid: '',".
+  				"_csrf: ''".
+			"}";
+
+			var_dump($data);
+
+			$publishCommand='publish('.$data.',"'.NODEBB_URL.'","'.$publishURL.'")';
+			// $publishCommand="alert($data,".NODEBB_URL.",$publishURL)";
+/*
+				publish(data,'<?php echo NODEBB_URL; ?>','<?php echo $publishURL; ?>'); */
+ 
+			wp_enqueue_script('publish',"/wp-content/plugins/cryptofr-comments/js/publish.js",'','',true);
+			wp_add_inline_script( 'publish', 'console.log("'.$meta.'")' ); 
+			wp_add_inline_script( 'publish', $publishCommand ); 
 
 		}		
 	}
@@ -130,7 +142,7 @@ class cryptofrcomments{
 		if ($wpdb->last_result){
 			$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Marked' WHERE ID=%s";
 			$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
-		}
+		} 
 
 	}
 
