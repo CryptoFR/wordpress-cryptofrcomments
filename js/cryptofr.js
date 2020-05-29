@@ -54,10 +54,28 @@
 
 	console.log(nodeBBURL+"/comments/bycid/"+cid)
 
-	
+	var data=null;
+
 	newFetchGet(nodeBBURL+"/comments/bycid/"+cid)
 	.then(res => res.json())
 	.then(function(res){
-		console.log(res)
+		data=res;
+		console.log(data);
+        $('#grid').DataTable(data.posts);
 	});
+
+
+
+
+	$(document).ready(function () {
+ 		// for (post of data.posts){
+ 		// 	$('#grid tbody').append('<tr><td>')
+ 		// }
+
+
+    });
+
+
+
+
 
