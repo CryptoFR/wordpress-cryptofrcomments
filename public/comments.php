@@ -20,7 +20,7 @@ if ( post_password_required() )
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="<?php echo constant("NODEBB_URL"); ?>/plugins/nodebb-plugin-blog-comments-cryptofr/css/fontawesome/js/all.js"></script>
+<script src="<?php echo constant("NODEBB_URL"); ?>/plugins/nodebb-plugin-blog-comments-cryptofr/css/fontawesome/js/all.min.js"></script>
 <script src="<?php echo constant("NODEBB_URL"); ?>/plugins/nodebb-plugin-blog-comments-cryptofr/js/config.js"></script>
 <script src="<?php echo constant("NODEBB_URL"); ?>/plugins/nodebb-plugin-blog-comments-cryptofr/js/util.js"></script>
 <script src="<?php echo constant("NODEBB_URL"); ?>/plugins/nodebb-plugin-blog-comments-cryptofr/js/jquery.emojiarea.js"></script>

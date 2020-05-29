@@ -59,6 +59,8 @@ class cryptofrcomments{
 
 	   	global $wpdb; 
 
+	   	// Altering post table for cryptofrcomments attribute  
+
 		$table_name = $wpdb->prefix . 'posts'; 
 
 		$check_column = (array) $wpdb->get_results(  "SELECT count(cryptofrcomments) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME = '{$table_name}' AND COLUMN_NAME = 'cryptofrcomments'"  )[0];
@@ -71,6 +73,33 @@ class cryptofrcomments{
 			");
 		} 
 		
+
+
+		// Create "cryptofrcomments" table for saving config if not exists 
+
+
+		$sqlCommand= "DROP TABLE IF EXISTS `cryptofrcomments`";
+
+		$wpdb->query($sqlCommand);
+
+
+		$sqlCommand ="
+			CREATE TABLE IF NOT EXISTS `cryptofrcomments` (
+			  `ID` int(11) NOT NULL AUTO_INCREMENT,
+			  `cid` int (11) NOT NULL,
+			  PRIMARY KEY (`ID`)
+			);";
+
+		$wpdb->query($sqlCommand); 
+
+
+		$sqlCommand ="
+			INSERT INTO `cryptofrcomments` (cid)
+			VALUES (0);
+			";
+
+		$wpdb->query($sqlCommand);  
+
 		flush_rewrite_rules();
 	} 
 
@@ -86,6 +115,9 @@ class cryptofrcomments{
 
 	function publish(){ 
 	   	global $wpdb; 
+	   	$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID=%s";
+	   	$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));    
+
 		$table_name = $wpdb->prefix . 'posts'; 
 		$publishURL = NODEBB_URL.'/comments/publish';  
 
@@ -118,11 +150,9 @@ class cryptofrcomments{
 
 			var_dump($data);
 
-			$publishCommand='publish('.$data.',"'.NODEBB_URL.'","'.$publishURL.'")';
-			// $publishCommand="alert($data,".NODEBB_URL.",$publishURL)";
-/*
-				publish(data,'<?php echo NODEBB_URL; ?>','<?php echo $publishURL; ?>'); */
- 
+			$publishCommand='publish('.$data.',"'.NODEBB_URL.'","'.$publishURL.'")'; 
+
+
 			wp_enqueue_script('publish',"/wp-content/plugins/cryptofr-comments/js/publish.js",'','',true);
 			wp_add_inline_script( 'publish', 'console.log("'.$meta.'")' ); 
 			wp_add_inline_script( 'publish', $publishCommand ); 
@@ -142,10 +172,8 @@ class cryptofrcomments{
 		if ($wpdb->last_result){
 			$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Marked' WHERE ID=%s";
 			$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
-		} 
-
-	}
-
+		}  
+	} 
 }
 
 

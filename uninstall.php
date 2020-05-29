@@ -13,11 +13,10 @@ defined( 'WP_UNINSTALL_PLUGIN' ) or die( 'Nope, not accessing this' );
 
 global $wpdb; 
 
+/*
 $table_name = $wpdb->prefix . 'posts';
-
-
-$sqlCommand = "IF EXISTS( 
-
+ 
+$sqlCommand = "IF EXISTS(  
 SELECT NULL
 FROM INFORMATION_SCHEMA.COLUMNS
 WHERE table_name = '".$table_name."'
@@ -29,3 +28,4 @@ ALTER TABLE ".$table_name." DROP COLUMN cryptofrcomments;
 END IF; ";
 
 $wpdb->query($sqlCommand);
+*/

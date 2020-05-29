@@ -10,7 +10,7 @@
 		    tab.dispatchEvent(click);
 		}
 
-		let timerId = setTimeout(async function tick() {
+		/*let timerId = setTimeout(async function tick() {
 				if ($("#nodebb #login-modal").length){
 					if ($("#nodebb > .topic-profile-pic").length ){
 						$(".cryptofr-login-tab, #cryptofr-login").hide()
@@ -32,9 +32,32 @@
 			
 			timerId = setTimeout(tick, 500);	
 			 
-		}, 500); 
+		}, 500);*/  
 
-
+		$('#config-form').submit(function(event){
+			// // event.preventDefault();
+			// console.log(this);
+		}) 
 	    
 	})();
+
+
+	function newFetchGet(path) { 
+	    return fetch(path, {
+	      	method: 'GET',
+	      	headers: {
+	        	'Content-Type': 'application/x-www-form-urlencoded'
+	      	},
+	      	credentials: 'include'
+	    })
+	}
+
+	console.log(nodeBBURL+"/comments/bycid/"+cid)
+
+	
+	newFetchGet(nodeBBURL+"/comments/bycid/"+cid)
+	.then(res => res.json())
+	.then(function(res){
+		console.log(res)
+	});
 
