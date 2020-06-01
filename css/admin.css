@@ -34,7 +34,34 @@ body.wp-admin{
 	margin-top: 5px;
     margin-left: 8px;
 }
+ 
 
-#grid_wrapper{
-	width: max-content;
+td.child-table {
+    background-color: #bfdbff;
 }
+td.details-control {
+    background: url('details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('details_close.png') no-repeat center center;
+}
+
+#grid {
+	margin: 0 auto;
+	clear: both;
+	width: 100%!important;
+	table-layout: fixed;
+}
+
+#grid td {
+	word-wrap: break-word;
+	white-space: initial;
+}
+
+#grid thead th:nth-child(3),
+#grid tbody td:nth-child(3) {
+	width: 350px;
+	max-width: 350px;
+	min-width: 350px;
+}  

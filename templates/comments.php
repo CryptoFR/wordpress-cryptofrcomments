@@ -8,7 +8,9 @@
                 <th>Comment</th>
                 <th>Votes Count</th>
                 <th>Actions</th>
-                <th>Replies</th>
+                <th>Replies</th> 
+                <th></th>
+             
             </tr>
         </thead> 
 	    <tbody> 
