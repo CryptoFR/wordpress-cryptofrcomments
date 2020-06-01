@@ -133,7 +133,6 @@
 
          
             // Display it the child row
-            // row.child( table ).show();
             $( tr ).insertAfter( $(cell.closest('tr')) );
          
             // Initialise as a DataTable
@@ -182,25 +181,27 @@
         }
 
 
-        function destroyChild(row) {
-            var table = $("table", row.child());
-            table.detach();
-            table.DataTable().destroy();
+        function destroyChild(row,cell) {
+            // var table = $("table", row.child()); 
+            var table = cell.parentNode.nextSibling.querySelector('table'); 
+            console.log(table)
+            $(table).detach();
+            $(table).DataTable().destroy();
          
             // And then hide the row
-            row.child.hide();
+            $(cell.parentNode.nextSibling).remove() 
         }
 
 
 
         $(document).on('click', '#grid td.details-control', function () {
-            var tr = $(this).closest('tr');
+            var tr = $(this).closest('tr'); 
             var row = siteTable.row( tr );
          
-            if ( row.child.isShown() ) {
+            if ( $(tr).hasClass('shown') ) {
                 // This row is already open - close it
                 tr.removeClass('shown');
-                destroyChild(row);
+                destroyChild(row,this);
             }
             else {
                 // Open this row
