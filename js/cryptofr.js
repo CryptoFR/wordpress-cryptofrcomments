@@ -12,35 +12,8 @@
 		        view: window
 		    });
 		    tab.dispatchEvent(click);
-		}
-
-		/*let timerId = setTimeout(async function tick() {
-				if ($("#nodebb #login-modal").length){
-					if ($("#nodebb > .topic-profile-pic").length ){
-						$(".cryptofr-login-tab, #cryptofr-login").hide()
-						$(".cryptofrcomments-tabs .cryptofr-comments-tab,.cryptofrcomments-tabs .cryptofr-user-tab, #cryptofr-comments, #cryptofr-user").show()
-
-						if ($("#cryptofr-login").hasClass("active"))
-							clickTab(document.getElementById("a-comments"))
-					}else{
-						$(".cryptofrcomments-tabs .cryptofr-comments-tab,.cryptofrcomments-tasbc .cryptofr-user-tab, #cryptofr-comments, #cryptofr-user").hide()
-						$(".cryptofrcomments-tabs .cryptofr-login-tab,#cryptofr-login").show()
-						
-						if ($("#cryptofr-comments").hasClass("active") || $("#cryptofr-user").hasClass("active"))
-							clickTab(document.getElementById("a-login"))
-						
-						if (!$("#cryptofr-login .container #login-modal").length)  					
-							$("#cryptofr-login .container").append($("#nodebb #login-modal")[0])
-					} 
-				}
-			
-			timerId = setTimeout(tick, 500);	
-			 
-		}, 500);*/  
-
-		$('#config-form').submit(function(event){
-			// // event.preventDefault();
-		}) 
+		} 
+ 
 	    
 	})();
 
@@ -65,11 +38,26 @@
 	    return (year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
 	} 
 
+	function singleGifComment(comment) {
+	  while (comment.indexOf("![")>=0){
+	    let src=comment.substring(comment.indexOf("](")+2,comment.indexOf(".gif)")+4)
+	    let imgTag="<img class='gif-post' src='"+src+"'></br>";
 
-	function setDataTable(element,data){
-		return $(element).DataTable( {  
+	    if (comment.substring(comment.indexOf("![]")-6,comment.indexOf("![]"))!="&gt;  " && comment.indexOf("![]") > 1){
+	      imgTag="</br>"+imgTag;
+	    }
+	    comment=comment.substring(0,comment.indexOf("!["))+" "+imgTag+" "+comment.substring(comment.indexOf(".gif)")+5,comment.length);
+	  }
+	  return comment;
+	}
+
+
+	function setDataTable(table,data){
+		table.innerHTML='<thead><th class="article-title">Article Title</th><th class="article-user">User</th><th class="article-comment">Comment</th><th class="article-date">Date</th><th class="article-votes">Votes</th><th class="article-actions">Actions</th><th class="article-children">Children</th><th class="article-expand"></th></tr></thead><tbody></tbody>';
+		return $(table).DataTable( {  
             "bAutoWidth": false,
             // ajax: '../php/sites.php', 
+            "order": [ 3, 'desc' ],
             "aaData": data,
             columns: [ 
 		        {
@@ -80,7 +68,9 @@
 	                "className": "article-user"
 	            },{
 	                "data": "content",
-	                "className": "article-comment"
+	                "className": "article-comment", render: function(data){
+	                	return singleGifComment(data);
+	                }
 	            },{
 	                "data": "timestamp", render: function(data){
 	                	return timeStamptoDate(data);
@@ -91,9 +81,9 @@
 	                "className": "article-votes"
 	            }, {
 	                "data": null,
-		            "defaultContent": '',
+		            "defaultContent": '<button class="moderate">Delete</prueba>',
 	                "className": "article-actions"
-	                
+
 	            }, { "data": 'children', render: function ( data ) {
 	                	if (data){
 	                    	return data.length;
@@ -110,7 +100,7 @@
                 select: {
                     "style":    'os',
                     "selector": 'td:not(:first-child)'
-                }  ,
+                },
                 createdRow: function ( row, data, index ) {
                 	let pidCell=row.querySelector('.details-control')
 		        	let pid=pidCell.innerText;
@@ -120,6 +110,26 @@
         } ); 
 	}
 
+	function newFetch(path, data ={}) {
+	    var encodedString = "";
+	    for (var prop in data) {
+	      if (data.hasOwnProperty(prop)) {
+	        if (encodedString.length > 0) {
+	          encodedString += "&";
+	        }
+	        encodedString +=
+	          encodeURIComponent(prop) + "=" + encodeURIComponent(data[prop]);
+	      }
+	    }
+	    return fetch(path, {
+	      method: 'POST',
+	      headers: {
+	        'Content-Type': 'application/x-www-form-urlencoded'
+	      },
+	      credentials: 'include',
+	      body: encodedString
+	    })
+	  }
 
 	function newFetchGet(path) { 
 	    return fetch(path, {
@@ -133,11 +143,14 @@
 
 	function createChild ( row,cell ) {
 	    // This is the table we'll convert into a DataTable
-	    let table = $('<table class="display" width="100%"/>');
-	    let tr= $('<tr></tr>')
-	    let td= $('<td colspan="8"></td>')
-	    tr.append(td)
-	    td.append(table)
+	    let table = document.createElement('table');
+	    $(table).addClass('article-table').addClass('display').css('width','100%');
+	    let tr= document.createElement('tr');
+	    let td= document.createElement('td');
+	    td.setAttribute('colspan','8');
+	    tr.append(td);
+	    td.append(table);
+
 
 
 	 
@@ -148,6 +161,8 @@
 	    let childrenData= data.posts.find(post => post.pid == cell.getAttribute('data-pid')).children
 	    
 	    var usersTable =  setDataTable(table,childrenData)
+
+	    console.log(usersTable)
 
 	}
 
@@ -189,13 +204,14 @@
 
         siteTable=  setDataTable(document.querySelector('#grid'),data.posts);
  
+
+
 		for (const article of articles){
 
 			console.log(article)
 
 			let table = document.createElement('table')
-			$(table).addClass('article-table').addClass('display').attr('id',article[1].topic.tid).css('width','100%')
-			table.innerHTML='<thead><th class="article-title">Article Title</th><th class="article-user">User</th><th class="article-comment">Comment</th><th class="article-date">Date</th><th class="article-votes">Votes</th><th class="article-actions">Actions</th><th class="article-children">Children</th><th class="article-expand"></th></tr></thead><tbody></tbody>';
+			$(table).addClass('article-table').addClass('display').attr('id',article[1].topic.tid).css('width','100%') 
 			let div = document.createElement('div')
 			$(div).addClass('article-table-container')
 			let h2= document.createElement('h2')
@@ -235,6 +251,17 @@
 		let dataTable=tableContainer.querySelector('.dataTables_wrapper')
 		$(dataTable).toggle(500);
 
+	} );
+
+	$(document).on('click', '.comments-tables .moderate', function () {
+		if (window.confirm("Do you really want to Delete this comment?")) { 
+			let tr=this.closest('tr');
+			let pidCell=tr.querySelector('.article-expand')
+			let pid=pidCell.getAttribute('data-pid') 
+	    	newFetch(nodeBBURL + "/comments/delete/" + pid, {}).then(function (){
+	    		location.reload();
+	    	});
+		}
 	} );
 
 

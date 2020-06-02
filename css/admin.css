@@ -88,3 +88,6 @@ tr.shown td.details-control {
 .comments-tables .dataTables_wrapper{
 	display: none;
 }
+.comments-tables td .dataTables_wrapper{
+	display: block!important;
+}
