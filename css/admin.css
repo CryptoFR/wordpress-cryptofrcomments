@@ -47,21 +47,44 @@ tr.shown td.details-control {
     background: url('details_close.png') no-repeat center center;
 }
 
-#grid {
+.comments-tables table {
 	margin: 0 auto;
 	clear: both;
 	width: 100%!important;
 	table-layout: fixed;
 }
 
-#grid td {
-	word-wrap: break-word;
-	white-space: initial;
+.comments-tables table td {
+	word-wrap: break-word!important;
+	white-space: initial!important;
 }
 
-#grid thead th:nth-child(3),
-#grid tbody td:nth-child(3) {
+.comments-tables table .article-comment {
 	width: 350px;
 	max-width: 350px;
 	min-width: 350px;
 }  
+
+
+.comments-tables table .article-date {
+	width: 125px;
+	max-width: 125px;
+	min-width: 125px;
+}  
+
+.comments-tables table .article-expand {
+	width: 10px;
+	max-width: 10px;
+	min-width: 10px;
+}  
+
+.comments-tables table .article-votes {
+	width: 40px;
+	max-width: 40px;
+	min-width: 40px;
+}  
+
+ 
+.comments-tables .dataTables_wrapper{
+	display: none;
+}

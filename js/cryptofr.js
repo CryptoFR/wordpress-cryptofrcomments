@@ -1,5 +1,9 @@
 
 	(function() {  
+
+
+
+
 		function clickTab(tab) {
 		    let click = new MouseEvent('click', {
 		        bubbles: true,
@@ -40,74 +44,68 @@
 	    
 	})();
 
+	function timeStamptoDate(timeStamp){  
+	    // Create a new JavaScript Date object based on the timestamp
+	    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+	    var date_ob = new Date(timeStamp );
+	    // adjust 0 before single digit date
+	    let date = ("0" + date_ob.getDate()).slice(-2);
+	    // current month
+	    let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+	    // current year
+	    let year = date_ob.getFullYear();
+	    // current hours
+	    let hours = date_ob.getHours();
+	    // current minutes
+	    let minutes = date_ob.getMinutes(); 
+	    // current seconds
+	    let seconds = date_ob.getSeconds(); 
 
-	function newFetchGet(path) { 
-	    return fetch(path, {
-	      	method: 'GET',
-	      	headers: {
-	        	'Content-Type': 'application/x-www-form-urlencoded'
-	      	},
-	      	credentials: 'include'
-	    })
-	}
+	    // prints date & time in YYYY-MM-DD HH:MM:SS format
+	    return (year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
+	} 
 
 
-	var data=null;
-
-	newFetchGet(nodeBBURL+"/comments/bycid/"+cid)
-	.then(res => res.json())
-	.then(function(res){
-		data=res;
-		console.log(data);
-        // $('#grid').DataTable(data.posts);
-
-
-        // $('#grid').dataTable({
-        //     "bAutoWidth": false,
-        //     "aaData": data.posts,
-        //     "columns": [{
-        //         "data": ""
-        //     },{
-        //         "data": "user.username"
-        //     }, {
-        //         "data": "content"
-        //     }, {
-        //         "data": "votes"
-        //     }, {
-        //         "data": ""
-        //     }, {
-        //         "data": "children"	
-        //     }]
-        // })
-
-        var siteTable = $('#grid').DataTable( {  
+	function setDataTable(element,data){
+		return $(element).DataTable( {  
             "bAutoWidth": false,
             // ajax: '../php/sites.php', 
-            "aaData": data.posts,
+            "aaData": data,
             columns: [ 
 		        {
-	                "data": "topic.title"
+	                "data": "topic.title",
+	                "className": "article-title"
 	            },{
-	                "data": "user.username"
+	                "data": "user.username",
+	                "className": "article-user"
 	            },{
-	                "data": "content" 
-	            }, {
-	                "data": "votes"
+	                "data": "content",
+	                "className": "article-comment"
+	            },{
+	                "data": "timestamp", render: function(data){
+	                	return timeStamptoDate(data);
+	                },
+	                "className": "article-date"
+	            },{
+	                "data": "votes",
+	                "className": "article-votes"
 	            }, {
 	                "data": null,
-		            "defaultContent": ''
+		            "defaultContent": '',
+	                "className": "article-actions"
+	                
 	            }, { "data": 'children', render: function ( data ) {
 	                	if (data){
 	                    	return data.length;
 	                	}
 	                	else return 0;
-                	} 
+                	} ,
+	                "className": "article-children"
             	},{
-		            "className": 'details-control', 
+		            "className": 'details-control article-expand', 
 		            "orderable": false,
 		            "data": "pid",
-		            "defaultContent": '',
-		            "width": '10%'
+		            "defaultContent": '' 
 		        }],
                 select: {
                     "style":    'os',
@@ -120,99 +118,124 @@
 		        	pidCell.innerText=""; 
                 }
         } ); 
+	}
 
 
-        function createChild ( row,cell ) {
-            // This is the table we'll convert into a DataTable
-            let table = $('<table class="display" width="100%"/>');
-            let tr= $('<tr></tr>')
-            let td= $('<td colspan="7"></td>')
-            tr.append(td)
-            td.append(table)
+	function newFetchGet(path) { 
+	    return fetch(path, {
+	      	method: 'GET',
+	      	headers: {
+	        	'Content-Type': 'application/x-www-form-urlencoded'
+	      	},
+	      	credentials: 'include'
+	    })
+	}
+
+	function createChild ( row,cell ) {
+	    // This is the table we'll convert into a DataTable
+	    let table = $('<table class="display" width="100%"/>');
+	    let tr= $('<tr></tr>')
+	    let td= $('<td colspan="8"></td>')
+	    tr.append(td)
+	    td.append(table)
 
 
-         
-            // Display it the child row
-            $( tr ).insertAfter( $(cell.closest('tr')) );
-         
-            // Initialise as a DataTable
-            let childrenData= data.posts.find(post => post.pid == cell.getAttribute('data-pid')).children
-            
-            var usersTable = table.DataTable({  
-            "bAutoWidth": false,
-            // ajax: '../php/sites.php', 
-            "aaData": childrenData,
-            columns: [ 
-		        {
-	                "data": "topic.title"
-	            },{
-	                "data": "user.username"
-	            },{
-	                "data": "content" 
-	            }, {
-	                "data": "votes"
-	            }, {
-	                "data": null,
-		            "defaultContent": ''
-	            }, { "data": 'children', render: function ( data ) {
-	                	if (data){
-	                    	return data.length;
-	                	}
-	                	else return 0;
-                	} 
-            	},{
-		            "className": 'details-control',
-		            "orderable": false,
-		            "data": "pid",
-		            "defaultContent": '',
-		            "width": '10%'
-		        }],
-                select: {
-                    "style":    'os',
-                    "selector": 'td:not(:first-child)'
-                },
-                createdRow: function ( row, data, index ) {
-                	let pidCell=row.querySelector('.details-control')
-		        	let pid=pidCell.innerText;
-		        	pidCell.setAttribute('data-pid',pid);
-		        	pidCell.innerText=""; 
-                }
-       		} );
-        }
+	 
+	    // Display it the child row
+	    $( tr ).insertAfter( $(cell.closest('tr')) );
+	 
+	    // Initialise as a DataTable
+	    let childrenData= data.posts.find(post => post.pid == cell.getAttribute('data-pid')).children
+	    
+	    var usersTable =  setDataTable(table,childrenData)
+
+	}
 
 
-        function destroyChild(row,cell) {
-            // var table = $("table", row.child()); 
-            var table = cell.parentNode.nextSibling.querySelector('table'); 
-            console.log(table)
-            $(table).detach();
-            $(table).DataTable().destroy();
-         
-            // And then hide the row
-            $(cell.parentNode.nextSibling).remove() 
-        }
+	function destroyChild(row,cell) {
+	    // var table = $("table", row.child()); 
+	    var table = cell.parentNode.nextSibling.querySelector('table'); 
+	    $(table).detach();
+	    $(table).DataTable().destroy();
+	 
+	    // And then hide the row
+	    $(cell.parentNode.nextSibling).remove() 
+	}
 
 
+	var data=null;
+	var siteTable=null;
+	var articles={};
 
-        $(document).on('click', '#grid td.details-control', function () {
-            var tr = $(this).closest('tr'); 
-            var row = siteTable.row( tr );
-         
-            if ( $(tr).hasClass('shown') ) {
-                // This row is already open - close it
-                tr.removeClass('shown');
-                destroyChild(row,this);
-            }
-            else {
-                // Open this row
-                tr.addClass('shown');
-                createChild(row, this); // class is for background colour
-            }
-        } );
+	newFetchGet(nodeBBURL+"/comments/bycid/"+cid)
+	.then(res => res.json())
+	.then(function(res){
+		data=res; 
+		console.log(data); 
+
+		for (const l of data.posts) {
+	      if (!articles.hasOwnProperty(l.tid)) {
+	        articles[l.tid] = {
+	          topic: l.topic,
+	          posts: []
+	        }
+	      }
+	      articles[l.tid].posts.push(l);
+	    }
+
+	    articles=Object.entries(articles);
+
+		console.log(articles) 
+
+        siteTable=  setDataTable(document.querySelector('#grid'),data.posts);
+ 
+		for (const article of articles){
+
+			console.log(article)
+
+			let table = document.createElement('table')
+			$(table).addClass('article-table').addClass('display').attr('id',article[1].topic.tid).css('width','100%')
+			table.innerHTML='<thead><th class="article-title">Article Title</th><th class="article-user">User</th><th class="article-comment">Comment</th><th class="article-date">Date</th><th class="article-votes">Votes</th><th class="article-actions">Actions</th><th class="article-children">Children</th><th class="article-expand"></th></tr></thead><tbody></tbody>';
+			let div = document.createElement('div')
+			$(div).addClass('article-table-container')
+			let h2= document.createElement('h2')
+			h2.innerText=article[1].topic.title;
+			div.append(h2)
+			div.append(table)
+			document.querySelector('.comments-tables').append(div)
+
+			let articleTable =  setDataTable(table,article[1].posts) 
+
+		}
 
 
-
+ 
 	});
+
+
+	$(document).on('click', '#grid td.details-control', function () {
+	    var tr = $(this).closest('tr'); 
+	    var row = siteTable.row( tr );
+	 
+	    if ( $(tr).hasClass('shown') ) {
+	        // This row is already open - close it
+	        tr.removeClass('shown');
+	        destroyChild(row,this);
+	    }
+	    else {
+	        // Open this row
+	        tr.addClass('shown');
+	        createChild(row, this); // class is for background colour
+	    }
+	} );
+
+
+	$(document).on('click', '.comments-tables h2', function () {
+		let tableContainer=this.closest('.article-table-container');
+		let dataTable=tableContainer.querySelector('.dataTables_wrapper')
+		$(dataTable).toggle(500);
+
+	} );
 
 
  
