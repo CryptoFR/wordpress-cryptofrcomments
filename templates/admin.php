@@ -13,13 +13,13 @@
 <h1>CryptoFR Comments</h1>
 
 <ul class="nav nav-tabs cryptofrcomments-tabs">
-  <li class="active cryptofr-login-tab"><a data-toggle="tab" href="#cryptofr-login" id="a-login">Login</a></li>
+  <li class="cryptofr-login-tab"><a data-toggle="tab" href="#cryptofr-login" id="a-login">Login</a></li>
   <li class="cryptofr-comments-tab"><a data-toggle="tab" href="#cryptofr-comments" id="a-comments">Comments</a></li>
   <li class="cryptofr-user-tab"><a data-toggle="tab" href="#cryptofr-user" id="a-user">User</a></li>
 </ul>
 
 <div class="tab-content">
-  <div id="cryptofr-login" class="tab-pane fade  in active">
+  <div id="cryptofr-login" class="tab-pane fade ">
   	<?php 
 		include (PLUGIN_PATH."/templates/login.php"); 
   	 ?>
