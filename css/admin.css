@@ -21,12 +21,17 @@ body.wp-admin{
 	margin-left: 0px;
 }
 
+.cryptofrcomments-tabs{
+  position: relative;
+}
+
 .wp-admin .cryptofrcomments-tabs #cryptofr-login
 .wp-admin .cryptofrcomments-tabs #cryptofr-comments,
 .wp-admin .cryptofrcomments-tabs #cryptofr-user,
 .wp-admin .cryptofrcomments-tabs .cryptofr-login-tab,
 .wp-admin .cryptofrcomments-tabs .cryptofr-comments-tab,
-.wp-admin .cryptofrcomments-tabs .cryptofr-user-tab{
+.wp-admin .cryptofrcomments-tabs .cryptofr-user-tab,
+.wp-admin .cryptofrcomments-tabs .logout-box{
 	display: none;
 }
 
@@ -112,6 +117,20 @@ tr.shown td.details-control {
 
  .container {
     max-width: 100%;
+}
+ 
+
+.logout-box svg{
+  padding-top: 0px;
+  padding-left: 10px;
+  max-height: initial;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.logout-box span{
+  vertical-align: middle;
+  display: inline-block;
 }
 
 

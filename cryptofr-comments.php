@@ -44,11 +44,11 @@ class cryptofrcomments{
 	}
 
 	function admin_index(){
-		include (PLUGIN_PATH."/templates/admin.php"); 
+		include (PLUGIN_PATH."/templates/dashboard.php"); 
 	}
 
 	function settings_link($links){
-		$settings_link= '<a href="admin.php?page=cryptofr_comments_plugin">Settings</a>';
+		$settings_link= '<a href="dashboard.php?page=cryptofr_comments_plugin">Settings</a>';
 		array_push($links, $settings_link);
 		return $links;
 	}

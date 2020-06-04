@@ -316,6 +316,14 @@
 		}
 	} );
 
+	$(document).on('click', '.logout-box', function () {
+		console.log('logout')
+		newFetch(nodeBBURL + "/logout", {
+		  _csrf: data.token,
+		  noscript: false
+		}).then(() => location.reload() );
+	} );
+
 
 	// WHEN LOGIN FORM SUBMIT, SEND POST REQUEST THROUGH FETCH
 	$(document).on('submit','#login-form',function(event){
@@ -325,9 +333,7 @@
 		login(username,password,data.token)
 	});
 
-
-
-
+ 
 
 
 
@@ -362,6 +368,7 @@
 		document.querySelector('.cryptofr-comments-tab').classList.add('active');
 		
 		document.querySelector('.cryptofr-user-tab').style.display="block";
+		document.querySelector('.logout-box').style.display="block";
 
 
 		for (const l of data.posts) {
@@ -378,8 +385,6 @@
         siteTable=  setDataTable(document.querySelector('#grid'),data.posts);
   
 		for (const article of articles){
-
-			console.log(article)
 
 			let table = document.createElement('table')
 			$(table).addClass('article-table').addClass('display').attr('id',article[1].topic.tid).css('width','100%') 
