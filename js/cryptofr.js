@@ -1,3 +1,7 @@
+	// ----- FUNCTIONS
+
+
+	// Data Table init for Comments from nodebb
 	function setDataTable(table,data){
 		table.innerHTML='<thead><th class="article-title">Article Title</th><th class="article-user">User</th><th class="article-comment">Comment</th><th class="article-date">Date</th><th class="article-votes">Votes</th><th class="article-actions">Actions</th><th class="article-children">Children</th><th class="article-expand"></th></tr></thead><tbody></tbody>';
 		return $(table).DataTable( {  
@@ -55,22 +59,10 @@
                 }
         } ); 
 	}
- 
+  
 	
-	function clickTab(tab) {
-	    let click = new MouseEvent('click', {
-	        bubbles: true,
-	        cancelable: true,
-	        synthetic: true,
-	        view: window
-	    });
-	    tab.dispatchEvent(click);
-	}  
-
-	
+	// Create a new JavaScript Date object based on the timestamp 
 	function timeStamptoDate(timeStamp){  
-	    // Create a new JavaScript Date object based on the timestamp
-	    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
 	    var date_ob = new Date(timeStamp );
 	    // adjust 0 before single digit date
 	    let date = ("0" + date_ob.getDate()).slice(-2);
@@ -89,6 +81,7 @@
 	    return (year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
 	} 
 
+	// Parse gif image from comment
 	function singleGifComment(comment) {
 	  while (comment.indexOf("![")>=0){
 	    let src=comment.substring(comment.indexOf("](")+2,comment.indexOf(".gif)")+4)
@@ -103,9 +96,8 @@
 	}
 
 
-
+	// POST REQUEST
 	function newFetch(path, data ={}) {
-	    console.log(data)
 	    var encodedString = "";
 	    for (var prop in data) {
 	      if (data.hasOwnProperty(prop)) {
@@ -115,8 +107,7 @@
 	        encodedString +=
 	          encodeURIComponent(prop) + "=" + encodeURIComponent(data[prop]);
 	      }
-	    }
-
+	    } 
 
 	    return fetch(path, {
 	      method: 'POST',
@@ -128,6 +119,7 @@
 	    })
 	  }
 
+	// GET REQUEST
 	function newFetchGet(path) { 
 	    return fetch(path, {
 	      	method: 'GET',
@@ -138,6 +130,7 @@
 	    })
 	}
 
+	// CREATE THE INNER TABLE AS CHILD FROM THE PARENT COMMENT WHEN EXPAND
 	function createChild ( row,cell ) {
 	    // This is the table we'll convert into a DataTable
 	    let table = document.createElement('table');
@@ -159,6 +152,7 @@
 	}
 
 
+	// DESTROY THE CHILD TABLE WHEN CLOSE
 	function destroyChild(row,cell) {
 	    // var table = $("table", row.child()); 
 	    var table = cell.parentNode.nextSibling.querySelector('table'); 
@@ -169,6 +163,7 @@
 	    $(cell.parentNode.nextSibling).remove() 
 	}
 
+	// REMOVE ELEMENT NODE FROM DOM
 	function removeNodes(nodes) {
 	   var nodeList = nodes && nodes.length !== undefined ? nodes : [nodes];
 	   var len = nodeList.length;
@@ -178,9 +173,9 @@
 	   }
 	 }
 
+	// SET VALUES TO USER TAB
 	function setUSerData(){
-		document.querySelector('.user-name').innerText=data.user.username;
-
+		document.querySelector('.user-name').innerText=data.user.username; 
 	    if (data.user.picture) {
 	    	document.querySelector('.user-image').setAttribute('src',data.user.picture)
 	    	document.querySelector('.user-image').setAttribute('alt',data.user.username)
@@ -195,52 +190,7 @@
 	    }
 	}
 
-
-
-
-	$(document).on('click', '#grid td.details-control', function () {
-	    var tr = $(this).closest('tr'); 
-	    var row = siteTable.row( tr );
-	 
-	    if ( $(tr).hasClass('shown') ) {
-	        // This row is already open - close it
-	        tr.removeClass('shown');
-	        destroyChild(row,this);
-	    }
-	    else {
-	        // Open this row
-	        tr.addClass('shown');
-	        createChild(row, this); // class is for background colour
-	    }
-	} );
-
-
-	$(document).on('click', '.comments-tables h2', function () {
-		let tableContainer=this.closest('.article-table-container');
-		let dataTable=tableContainer.querySelector('.dataTables_wrapper')
-		$(dataTable).toggle(500);
-
-	} );
-
-	$(document).on('click', '.comments-tables .moderate', function () {
-		if (window.confirm("Do you really want to Delete this comment?")) { 
-			let tr=this.closest('tr');
-			let pidCell=tr.querySelector('.article-expand')
-			let pid=pidCell.getAttribute('data-pid') 
-	    	newFetch(nodeBBURL + "/comments/delete/" + pid, {}).then(function (){
-	    		location.reload();
-	    	});
-		}
-	} );
-
-
-	$(document).on('submit','#login-form',function(event){
-		event.preventDefault();
-		let username= this.querySelector("[name='email']").value
-		let password= this.querySelector("[name='password']").value
-		login(username,password,data.token)
-	});
-
+	// LOGIN CALL WHEN FORM SUBMIT
 	function login(username, password, token) {
 	   return newFetch(nodeBBURL + "/login", {
 	     username: username,
@@ -260,7 +210,8 @@
 	     
 	 }
 
-	 function loginError(message){
+	// DISPLAY LOGIN ERROR
+	function loginError(message){
 	   var modal = document.querySelector("#login-modal");
 	     modal.querySelector(".nodebb-error").innerText=message;
 	     modal.querySelector(".nodebb-error").classList.add("display");
@@ -268,8 +219,10 @@
 	       modal.querySelector(".nodebb-error").innerText="";
 	       modal.querySelector(".nodebb-error").classList.remove("display");
 	     },6000)
-	   }
+	}
 
+
+	// SOCIAL AUTH 
 	function addSocialAuthListeners(modal) {
 	    for (let socialLink of modal.querySelectorAll("a[data-link]")) {
 	      socialLink.addEventListener('click', function(event){
@@ -293,6 +246,18 @@
 	  }
 	}
 
+
+
+
+
+
+
+
+
+	// ----- EVENTS
+ 
+
+	// WHEN TAB IS CHANGED IT CHECKS IF LOGIN STATE HAS CHANGE AND RELOADS THE PAGE
 	document.addEventListener('visibilitychange', function() {
 	  
 	  	newFetchGet(nodeBBURL+"/comments/bycid/"+cid)
@@ -308,10 +273,67 @@
 	  		data=res;   
 	  	});
 
-	  });
+	});
 
 
 
+	// WHEN EXPAND ICON IS CLICKED, CREATES OR DESTROY THE CHILD COMMENTS TABLE
+	$(document).on('click', '#grid td.details-control', function () {
+	    var tr = $(this).closest('tr'); 
+	    var row = siteTable.row( tr );
+	 
+	    if ( $(tr).hasClass('shown') ) {
+	        // This row is already open - close it
+	        tr.removeClass('shown');
+	        destroyChild(row,this);
+	    }
+	    else {
+	        // Open this row
+	        tr.addClass('shown');
+	        createChild(row, this); // class is for background colour
+	    }
+	});
+
+
+	// WHEN CLICK ON ARTICLE TITLE, IT TOGGLE DISPLAY FOR ITS COMMENTS TABLE
+	$(document).on('click', '.comments-tables h2', function () {
+		let tableContainer=this.closest('.article-table-container');
+		let dataTable=tableContainer.querySelector('.dataTables_wrapper')
+		$(dataTable).toggle(500);
+
+	});
+
+
+	// WHEN CLICK ON DELETE BUTTON, DELETE COMMENT FROM FORUM AFTER A CONFIRM
+	$(document).on('click', '.comments-tables .moderate', function () {
+		if (window.confirm("Do you really want to Delete this comment?")) { 
+			let tr=this.closest('tr');
+			let pidCell=tr.querySelector('.article-expand')
+			let pid=pidCell.getAttribute('data-pid') 
+	    	newFetch(nodeBBURL + "/comments/delete/" + pid, {}).then(function (){
+	    		location.reload();
+	    	});
+		}
+	} );
+
+
+	// WHEN LOGIN FORM SUBMIT, SEND POST REQUEST THROUGH FETCH
+	$(document).on('submit','#login-form',function(event){
+		event.preventDefault();
+		let username= this.querySelector("[name='email']").value
+		let password= this.querySelector("[name='password']").value
+		login(username,password,data.token)
+	});
+
+
+
+
+
+
+
+
+
+	// ----- MAIN
 
 
 	var data=null;
@@ -319,7 +341,7 @@
 	var articles={};
 
 
-
+	// GET COMMENTS FROM CATEGORY AND CATEGORIZE THEM BY ARTICLE/TOPIC
 	newFetchGet(nodeBBURL+"/comments/bycid/"+cid)
 	.then(res => res.json())
 	.then(function(res){
@@ -341,6 +363,7 @@
 		
 		document.querySelector('.cryptofr-user-tab').style.display="block";
 
+
 		for (const l of data.posts) {
 	      if (!articles.hasOwnProperty(l.tid)) {
 	        articles[l.tid] = {
@@ -349,14 +372,11 @@
 	        }
 	      }
 	      articles[l.tid].posts.push(l);
-	    }
-
+	    } 
 	    articles=Object.entries(articles);
-
-
-        siteTable=  setDataTable(document.querySelector('#grid'),data.posts);
  
-
+        siteTable=  setDataTable(document.querySelector('#grid'),data.posts);
+  
 		for (const article of articles){
 
 			console.log(article)
