@@ -156,7 +156,7 @@ tr.shown td.details-control {
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 10000; /* Sit on top */
+  z-index: 0; /* Sit on top */
   padding-top: 30px; /* Location of the box */
   left: 0;
   top: 0;

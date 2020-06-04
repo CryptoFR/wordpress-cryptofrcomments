@@ -60,8 +60,7 @@
 
   $table_name = $wpdb->prefix . 'posts';    
 
-  $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments <> 'Disabled'";
-  // $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments='Marked' ORDER BY ID DESC ";
+  $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Marked'";
   $wpdb->query($sqlCommand); 
 
   $markedArticles=json_encode($wpdb->last_result);

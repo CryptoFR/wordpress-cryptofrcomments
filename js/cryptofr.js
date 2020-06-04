@@ -251,7 +251,7 @@
 		return $(table).DataTable( {  
             "bAutoWidth": false,
             // ajax: '../php/sites.php', 
-            "order": [ 2, 'desc' ],
+            "order": [ 1, 'desc' ],
             "aaData": data,
             columns: [ 
 		        {

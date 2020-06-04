@@ -17,6 +17,12 @@ function encodeStringData(data){
 	return encodedString;
 }
 
+postXHR.onload = function(){ 
+	var responseData = JSON.parse(postXHR.responseText);
+	console.log("postXHR.onload responseData");
+	console.log(responseData);  
+}
+
 getXHR.onload = function(){
 	if (getXHR.status >= 200 && getXHR.status < 400) {
 		var responseData = JSON.parse(getXHR.responseText);
@@ -37,8 +43,7 @@ getXHR.onload = function(){
 		postXHR.open("POST", postURL, true);
 		postXHR.withCredentials = true;
 		postXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		postXHR.send(encodedString);
-
+		postXHR.send(encodedString); 
 	}
 }
 
