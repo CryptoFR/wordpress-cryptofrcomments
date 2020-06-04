@@ -31,6 +31,7 @@ body.wp-admin{
 .wp-admin .cryptofrcomments-tabs .cryptofr-login-tab,
 .wp-admin .cryptofrcomments-tabs .cryptofr-comments-tab,
 .wp-admin .cryptofrcomments-tabs .cryptofr-user-tab,
+.wp-admin .cryptofrcomments-tabs .cryptofr-publish-tab,
 .wp-admin .cryptofrcomments-tabs .logout-box{
 	display: none;
 }
@@ -57,16 +58,26 @@ tr.shown td.details-control {
     background: url('details_close.png') no-repeat center center;
 }
 
-.comments-tables table {
+.comments-tables table ,#marked-articles-table{
 	margin: 0 auto;
 	clear: both;
 	width: 100%!important;
 	table-layout: fixed;
 }
 
-.comments-tables table td {
+.comments-tables table td,
+#marked-articles-table td {
 	word-wrap: break-word!important;
 	white-space: initial!important;
+}
+
+
+#marked-articles-table .article-status,
+#marked-articles-table .article-date,
+#marked-articles-table .article-actions {
+  width: 125px;
+  max-width: 125px;
+  min-width: 125px;
 }
 
 .comments-tables table .article-comment {
@@ -135,7 +146,11 @@ tr.shown td.details-control {
 
 
 
- /* LOGIN DIV RULES */
+
+
+ /**************
+  LOGIN DIV RULES 
+  **************/
 
 
 .modal {

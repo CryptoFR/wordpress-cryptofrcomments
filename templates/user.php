@@ -3,16 +3,7 @@ global $wpdb;
 if (isset($_POST['cid'])) {
 	if (ctype_digit($_POST['cid'])){
 		$sqlCommand = "UPDATE cryptofrcomments SET cid=%s";
-		$wpdb->query($wpdb->prepare($sqlCommand, $_POST['cid'] ));    
-
-		/*
-		echo('$wpdb->last_query <br><br>');
-		var_dump($wpdb->last_query);
-		echo('$wpdb->last_result <br><br>');
-		var_dump($wpdb->last_result);
-		echo('$wpdb->last_error <br><br>');
-		var_dump($wpdb->last_error); 
-		*/
+		$wpdb->query($wpdb->prepare($sqlCommand, $_POST['cid'] ));     
 	}
 } 
 

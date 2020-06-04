@@ -16,6 +16,7 @@
 <ul class="nav nav-tabs cryptofrcomments-tabs">
   <li class="cryptofr-login-tab"><a data-toggle="tab" href="#cryptofr-login" id="a-login">Login</a></li>
   <li class="cryptofr-comments-tab"><a data-toggle="tab" href="#cryptofr-comments" id="a-comments">Comments</a></li>
+  <li class="cryptofr-publish-tab"><a data-toggle="tab" href="#cryptofr-publish" id="a-publish">Publish</a></li>
   <li class="cryptofr-user-tab"><a data-toggle="tab" href="#cryptofr-user" id="a-user">User</a></li>
   <li class="logout-box">
     <a data-toggle="tab" href="">
@@ -36,10 +37,15 @@
 		include (PLUGIN_PATH."/templates/comments.php"); 
   	 ?>
   </div>
+  <div id="cryptofr-publish" class="tab-pane fade">
+    <?php 
+    include (PLUGIN_PATH."/templates/publish.php"); 
+     ?>
+  </div>
   <div id="cryptofr-user" class="tab-pane fade">
-  	<?php 
-		include (PLUGIN_PATH."/templates/user.php"); 
-  	 ?>
+    <?php 
+    include (PLUGIN_PATH."/templates/user.php"); 
+     ?>
   </div>
 </div>
 
@@ -50,12 +56,23 @@
 	$sqlCommand = "SELECT * from cryptofrcomments";
 	$wpdb->query($sqlCommand);
 	$config=$wpdb->last_result[0];
+
+
+  $table_name = $wpdb->prefix . 'posts';    
+
+  $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments <> 'Disabled'";
+  // $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments='Marked' ORDER BY ID DESC ";
+  $wpdb->query($sqlCommand); 
+
+  $markedArticles=json_encode($wpdb->last_result);
+
 ?>
 
 
 <script type="text/javascript">
 	var cid= <?php echo $config->cid; ?>;
-    var nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>';
+  var markedArticles= <?php echo $markedArticles; ?>;
+  var nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>';
 </script>
 <script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/cryptofr.js"></script>
 

@@ -114,10 +114,8 @@ class cryptofrcomments{
 	}
 
 	function publish(){ 
-	   	global $wpdb; 
-	   	$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID=%s";
-	   	$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));    
-
+	   	global $wpdb;  
+	   	
 		$table_name = $wpdb->prefix . 'posts'; 
 		$publishURL = NODEBB_URL.'/comments/publish';  
 

@@ -3,7 +3,7 @@
 
 	// Data Table init for Comments from nodebb
 	function setDataTable(table,data){
-		table.innerHTML='<thead><th class="article-title">Article Title</th><th class="article-user">User</th><th class="article-comment">Comment</th><th class="article-date">Date</th><th class="article-votes">Votes</th><th class="article-actions">Actions</th><th class="article-children">Children</th><th class="article-expand"></th></tr></thead><tbody></tbody>';
+		table.innerHTML='<thead><tr><th class="article-title">Article Title</th><th class="article-user">User</th><th class="article-comment">Comment</th><th class="article-date">Date</th><th class="article-votes">Votes</th><th class="article-actions">Actions</th><th class="article-children">Children</th><th class="article-expand"></th></tr></thead><tbody></tbody>';
 		return $(table).DataTable( {  
             "bAutoWidth": false,
             // ajax: '../php/sites.php', 
@@ -31,7 +31,7 @@
 	                "className": "article-votes"
 	            }, {
 	                "data": null,
-		            "defaultContent": '<button class="moderate">Delete</prueba>',
+		            "defaultContent": '<button class="moderate">Delete</button>',
 	                "className": "article-actions"
 
 	            }, { "data": 'children', render: function ( data ) {
@@ -246,6 +246,43 @@
 	  }
 	}
 
+	function setDataTableMarkedArticles(table,data){
+
+		return $(table).DataTable( {  
+            "bAutoWidth": false,
+            // ajax: '../php/sites.php', 
+            "order": [ 2, 'desc' ],
+            "aaData": data,
+            columns: [ 
+		        {
+	                "data": "post_title",
+	                "className": "article-title"
+	            },{
+	                "data": "post_date",
+	                "className": "article-date"
+	            },{
+	                "data": "cryptofrcomments",
+	                "className": "article-status" 
+	            },{
+	                "data": "cryptofrcomments", 
+	                "className": "article-actions", render: function(data){
+	                	if (data=="Marked") return '<button class="publish-button">Publish</button>'; 
+	                	else return "";
+	                }
+	            }],
+                select: {
+                    "style":    'os',
+                    "selector": 'td:not(:first-child)'
+                }/*,
+                createdRow: function ( row, data, index ) {
+                	let pidCell=row.querySelector('.details-control')
+		        	let pid=pidCell.innerText;
+		        	pidCell.setAttribute('data-pid',pid);
+		        	pidCell.innerText=""; 
+                }*/
+        } ); 
+	} 
+
 
 
 
@@ -368,6 +405,7 @@
 		document.querySelector('.cryptofr-comments-tab').classList.add('active');
 		
 		document.querySelector('.cryptofr-user-tab').style.display="block";
+		document.querySelector('.cryptofr-publish-tab').style.display="block";
 		document.querySelector('.logout-box').style.display="block";
 
 
@@ -406,3 +444,4 @@
 
 
 
+	setDataTableMarkedArticles(document.querySelector('#marked-articles-table'),markedArticles);
