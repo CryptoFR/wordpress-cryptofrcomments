@@ -135,10 +135,17 @@ class cryptofrcomments{
 			$url = $post->guid;
 
 
+			$sqlCommand = "SELECT * from cryptofrcomments";
+			$wpdb->query($sqlCommand);
+
+			$cid= $wpdb->last_result[0]->cid;
+
+
+
 			$data="{".
   				"markdown:  '$escapedContent',".
   				"title: '$title',".
-  				"cid: -1,".
+  				"cid: $cid,".
   				"blogger: '$meta',".
   				"tags: '',".
   				"id: '$id',".
@@ -148,7 +155,7 @@ class cryptofrcomments{
   				"_csrf: ''".
 			"}";
 
-			var_dump($data);
+			// var_dump($data);
 
 			$publishCommand='publish('.$data.',"'.NODEBB_URL.'","'.$publishURL.'")'; 
 

@@ -105,6 +105,7 @@
 
 
 	function newFetch(path, data ={}) {
+	    console.log(data)
 	    var encodedString = "";
 	    for (var prop in data) {
 	      if (data.hasOwnProperty(prop)) {
@@ -115,6 +116,8 @@
 	          encodeURIComponent(prop) + "=" + encodeURIComponent(data[prop]);
 	      }
 	    }
+
+
 	    return fetch(path, {
 	      method: 'POST',
 	      headers: {
@@ -231,6 +234,83 @@
 	} );
 
 
+	$(document).on('submit','#login-form',function(event){
+		event.preventDefault();
+		let username= this.querySelector("[name='email']").value
+		let password= this.querySelector("[name='password']").value
+		login(username,password,data.token)
+	});
+
+	function login(username, password, token) {
+	   return newFetch(nodeBBURL + "/login", {
+	     username: username,
+	     password: password,
+	     _csrf: token,
+	     remember: "on",
+	     noscript: false
+	   })
+	     .then((res) => {
+	       const loginSuccess = res.status === 200;
+	       if (!loginSuccess) {
+	         loginError("L'identifiant et/ou le mot de passe sont erronés");
+	         var loginButton = document.querySelector('#login-modal button.login-button');
+	         loginButton.classList.remove("loading-button");
+	       }else location.reload();
+	     }) 
+	     
+	 }
+
+	 function loginError(message){
+	   var modal = document.querySelector("#login-modal");
+	     modal.querySelector(".nodebb-error").innerText=message;
+	     modal.querySelector(".nodebb-error").classList.add("display");
+	     setTimeout(function(){
+	       modal.querySelector(".nodebb-error").innerText="";
+	       modal.querySelector(".nodebb-error").classList.remove("display");
+	     },6000)
+	   }
+
+	function addSocialAuthListeners(modal) {
+	    for (let socialLink of modal.querySelectorAll("a[data-link]")) {
+	      socialLink.addEventListener('click', function(event){
+
+	        event.preventDefault();
+	        
+	        var w = window.open(
+	          this.getAttribute("data-link"),
+	          this.getAttribute("data-network"),
+	          "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes"
+	        );
+	        var interval = setInterval(function checkSocialAuth() {
+	          if (w === null || w.closed === true) {
+	            setTimeout(closeModal, 1000);
+	            clearInterval(interval);
+	          }
+	        }, 1000);
+
+	      });
+	    
+	  }
+	}
+
+	document.addEventListener('visibilitychange', function() {
+	  
+	  	newFetchGet(nodeBBURL+"/comments/bycid/"+cid)
+	  	.then(res => res.json())
+	  	.then(function(res){
+	  		// Now im logged in
+	  		if (data.error && !res.error){
+	  			location.reload();
+	  		} // Now Im disconected
+	  		else if (!data.error && res.error){
+	  			location.reload();
+	  		}
+	  		data=res;   
+	  	});
+
+	  });
+
+
 
 
 
@@ -245,15 +325,16 @@
 	.then(function(res){
 		data=res; 
 		console.log(data); 
-
-
+ 
 		if (data.error){
 			document.querySelector('#cryptofr-login').classList.add('in','active');
 			document.querySelector('.cryptofr-login-tab').style.display="block";
 			document.querySelector('.cryptofr-login-tab').classList.add('active');
+			addSocialAuthListeners(document.querySelector('#login-modal'))
 
 			return;
 		}
+
 		document.querySelector('#cryptofr-comments').classList.add('in','active');
 		document.querySelector('.cryptofr-comments-tab').style.display="block";
 		document.querySelector('.cryptofr-comments-tab').classList.add('active');
