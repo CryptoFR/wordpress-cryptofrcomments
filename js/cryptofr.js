@@ -139,42 +139,17 @@
 	  }
 	  return comment;
 	}
-
-
-	// POST REQUEST
-	function newFetch(path, data ={}) {
-	    var encodedString = "";
-	    for (var prop in data) {
-	      if (data.hasOwnProperty(prop)) {
-	        if (encodedString.length > 0) {
-	          encodedString += "&";
-	        }
-	        encodedString +=
-	          encodeURIComponent(prop) + "=" + encodeURIComponent(data[prop]);
-	      }
-	    } 
-
-	    return fetch(path, {
-	      method: 'POST',
-	      headers: {
-	        'Content-Type': 'application/x-www-form-urlencoded'
-	      },
-	      credentials: 'include',
-	      body: encodedString
-	    })
-	  }
-
-	// GET REQUEST
-	function newFetchGet(path) { 
-	    return fetch(path, {
-	      	method: 'GET',
-	      	headers: {
-	        	'Content-Type': 'application/x-www-form-urlencoded'
-	      	},
-	      	credentials: 'include'
-	    })
-	}
-
+ 
+	// REMOVE ELEMENT NODE FROM DOM
+	function removeNodes(nodes) {
+	   var nodeList = nodes && nodes.length !== undefined ? nodes : [nodes];
+	   var len = nodeList.length;
+	   if (nodes) for (var i = 0; i < len; i++) {
+	     var node = nodeList[i];
+	     node.parentNode.removeChild(node);
+	   }
+	 }
+	 
 	// CREATE THE INNER TABLE AS CHILD FROM THE PARENT COMMENT WHEN EXPAND
 	function createChild ( row,cell ) {
 	    // This is the table we'll convert into a DataTable
@@ -208,15 +183,7 @@
 	    $(cell.parentNode.nextSibling).remove() 
 	}
 
-	// REMOVE ELEMENT NODE FROM DOM
-	function removeNodes(nodes) {
-	   var nodeList = nodes && nodes.length !== undefined ? nodes : [nodes];
-	   var len = nodeList.length;
-	   if (nodes) for (var i = 0; i < len; i++) {
-	     var node = nodeList[i];
-	     node.parentNode.removeChild(node);
-	   }
-	 }
+	 
 
 	// SET VALUES TO USER TAB
 	function setUSerData(){
@@ -391,8 +358,6 @@
 		.then(res => res.json())
 		.then(function(res){
 
-			console.log('res',res);
-
 			data={
 				"markdown": button.getAttribute('data-post_content'),
 				"title": button.getAttribute('data-post_title'),
@@ -406,7 +371,7 @@
 				"_csrf": ''
 			};
 
-			publish(data,nodeBBURL,publishURL,publishPHP)
+			publish(data,nodeBBURL,publishURL,publishPHP,button)
 
 		});
 

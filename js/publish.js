@@ -33,10 +33,11 @@ function newFetchGet(path) {
       	credentials: 'include'
     })
 }
+
  
 
 
-function publish(data,nodeBBURL,publishURL,publishPHP){ 
+function publish(data,nodeBBURL,publishURL,publishPHP,manualButton=null){ 
 
 	// GET Request to get csrf Token
 	newFetchGet(nodeBBURL+"/comments/token/")
@@ -76,6 +77,12 @@ function publish(data,nodeBBURL,publishURL,publishPHP){
 			console.log(publishPHP);
 
 			newFetch(publishPHP,data)
+			.then(function(){
+				if (manualButton) {
+					alert('Article has been manually Published to forum');
+					location.reload();
+				}
+			})
 
 		})
 
