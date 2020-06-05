@@ -59,7 +59,52 @@
                 }
         } ); 
 	}
-  
+ 
+
+
+	function setDataTableMarkedArticles(table,data){
+
+		return $(table).DataTable( {  
+            "bAutoWidth": false,
+            // ajax: '../php/sites.php', 
+            "order": [ 1, 'desc' ],
+            "aaData": data,
+            columns: [ 
+		        {
+	                "data": "post_title",
+	                "className": "article-title"
+	            },{
+	                "data": "post_date",
+	                "className": "article-date"
+	            },{
+	                "data": "cryptofrcomments",
+	                "className": "article-status" 
+	            },{
+	                "data": "cryptofrcomments", 
+	                "className": "article-actions", render: function(data,display,object){ 
+	                	return '<button data-post_content="'+escapeContent(object.post_content) +'" data-post_title="'+object.post_title+'" data-post_author="'+object.post_author+'" data-id="'+object.ID+'" data-guid="'+object.guid+'" data-cid="'+cid+'" class="publish-button">Publish</button>'; 
+	                }
+	            }],
+                select: {
+                    "style":    'os',
+                    "selector": 'td:not(:first-child)'
+                } 
+        } ); 
+	} 
+
+
+	function escapeContent(content){ 
+	    content=content.replace("\n", "");
+	    content=content.replace("<!-- wp:paragraph -->", "");
+	    content=content.replace("<!-- /wp:paragraph -->", "");
+	    return content;
+	}
+
+
+
+
+
+
 	
 	// Create a new JavaScript Date object based on the timestamp 
 	function timeStamptoDate(timeStamp){  
@@ -246,44 +291,7 @@
 	  }
 	}
 
-	function setDataTableMarkedArticles(table,data){
-
-		return $(table).DataTable( {  
-            "bAutoWidth": false,
-            // ajax: '../php/sites.php', 
-            "order": [ 1, 'desc' ],
-            "aaData": data,
-            columns: [ 
-		        {
-	                "data": "post_title",
-	                "className": "article-title"
-	            },{
-	                "data": "post_date",
-	                "className": "article-date"
-	            },{
-	                "data": "cryptofrcomments",
-	                "className": "article-status" 
-	            },{
-	                "data": "cryptofrcomments", 
-	                "className": "article-actions", render: function(data){
-	                	if (data=="Marked") return '<button class="publish-button">Publish</button>'; 
-	                	else return "";
-	                }
-	            }],
-                select: {
-                    "style":    'os',
-                    "selector": 'td:not(:first-child)'
-                }/*,
-                createdRow: function ( row, data, index ) {
-                	let pidCell=row.querySelector('.details-control')
-		        	let pid=pidCell.innerText;
-		        	pidCell.setAttribute('data-pid',pid);
-		        	pidCell.innerText=""; 
-                }*/
-        } ); 
-	} 
-
-
+	
 
 
 
@@ -369,6 +377,40 @@
 		let password= this.querySelector("[name='password']").value
 		login(username,password,data.token)
 	});
+
+
+	$(document).on('click','.publish-button',function(event){
+		event.preventDefault();
+
+		var button=this;
+
+
+		bloggerPHP = siteURL+'/wp-json/cryptofr-comments/getbloggerendpoint';  
+
+		newFetchGet(bloggerPHP+"/"+button.getAttribute('data-post_author')) 
+		.then(res => res.json())
+		.then(function(res){
+
+			console.log('res',res);
+
+			data={
+				"markdown": button.getAttribute('data-post_content'),
+				"title": button.getAttribute('data-post_title'),
+				"cid": button.getAttribute('data-cid'),
+				"blogger": res.name,
+				"tags": '',
+				"id": button.getAttribute('data-id'),
+				"url": button.getAttribute('data-guid'),
+				"timestamp": Date.now(),
+				"uid": '',
+				"_csrf": ''
+			};
+
+			publish(data,nodeBBURL,publishURL,publishPHP)
+
+		});
+
+	})
 
  
 

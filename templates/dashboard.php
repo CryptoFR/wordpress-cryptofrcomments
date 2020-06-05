@@ -17,7 +17,7 @@
 <ul class="nav nav-tabs cryptofrcomments-tabs">
   <li class="cryptofr-login-tab"><a data-toggle="tab" href="#cryptofr-login" id="a-login">Login</a></li>
   <li class="cryptofr-comments-tab"><a data-toggle="tab" href="#cryptofr-comments" id="a-comments">Comments</a></li>
-  <li class="cryptofr-publish-tab"><a data-toggle="tab" href="#cryptofr-publish" id="a-publish">Publish</a></li>
+  <li class="cryptofr-publish-tab"><a data-toggle="tab" href="#cryptofr-publish" id="a-publish">Pending</a></li>
   <li class="cryptofr-user-tab"><a data-toggle="tab" href="#cryptofr-user" id="a-user">User</a></li>
   <li class="logout-box">
     <a data-toggle="tab" href="">
@@ -73,6 +73,10 @@
 	var cid= <?php echo $config->cid; ?>;
   var markedArticles= <?php echo $markedArticles; ?>;
   var nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>';
+  var siteURL = '<?php echo get_site_url(); ?>';
+  var publishURL = nodeBBURL+'/comments/publish';  
+  var publishPHP = '<?php echo get_site_url(); ?>/wp-json/cryptofr-comments/publishendpoint';  
 </script>
+<script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/publish.js"></script>
 <script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/cryptofr.js"></script>
 

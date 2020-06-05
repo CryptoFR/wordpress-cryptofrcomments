@@ -31,12 +31,18 @@ class cryptofrcomments{
 		// Hooks
 		add_action('publish_post', array($this, 'markPostOnPublish'),10,2);
 		add_action('admin_enqueue_scripts', array($this,'publish'));
-		add_action('admin_menu',array($this,'add_admin_pages'));
-		add_action( 'rest_api_init', function () {
+		add_action('admin_menu',array($this,'add_admin_pages')); 
+		add_action( 'rest_api_init', function () { 
+		  register_rest_route( 'cryptofr-comments', '/getbloggerendpoint/(?P<post_author>\d+)', array(
+		    'methods' => 'GET',
+		    'callback' => array($this,'getbloggerendpoint')
+		  ) ); 
+		} ); 
+		add_action( 'rest_api_init', function () { 
 		  register_rest_route( 'cryptofr-comments', '/publishendpoint', array(
 		    'methods' => 'POST',
 		    'callback' => array($this,'publishendpoint')
-		  ) );
+		  ) );  
 		} );
 
 		// Overwrite wordpress functions or templates
@@ -54,6 +60,12 @@ class cryptofrcomments{
 		$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments=%s WHERE ID=%s";
 		$wpdb->query($wpdb->prepare($sqlCommand, $status, $id ));  
 
+		return "OK";
+
+	}
+
+	function getbloggerendpoint($data){
+		return  array('name' => get_the_author_meta('display_name', $data['post_author']));
 	}
  
 
