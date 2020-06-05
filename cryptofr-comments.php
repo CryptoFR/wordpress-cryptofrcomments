@@ -123,8 +123,8 @@ class cryptofrcomments{
 		$wpdb->query($sqlCommand);
  
 		foreach ($wpdb->last_result as $post){
-			// $sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID=%s";
-			// $wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));  
+			$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID=%s";
+			$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));  
 
 			$escapedContent = escaped_content($post->post_content);
 			$title = $post->post_title;

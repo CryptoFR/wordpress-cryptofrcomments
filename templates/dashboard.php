@@ -60,7 +60,7 @@
 
   $table_name = $wpdb->prefix . 'posts';    
 
-  $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Marked'";
+  $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Pending'";
   $wpdb->query($sqlCommand); 
 
   $markedArticles=json_encode($wpdb->last_result);
