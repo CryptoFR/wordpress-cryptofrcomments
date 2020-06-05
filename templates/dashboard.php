@@ -12,6 +12,7 @@
 
 
 <h1>CryptoFR Comments</h1>
+<p class="error-cryptofr-auth">You are not Authorized</p>
 
 <ul class="nav nav-tabs cryptofrcomments-tabs">
   <li class="cryptofr-login-tab"><a data-toggle="tab" href="#cryptofr-login" id="a-login">Login</a></li>

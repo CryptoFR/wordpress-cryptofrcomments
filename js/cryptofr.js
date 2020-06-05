@@ -381,23 +381,31 @@
 
 	var data=null;
 	var siteTable=null;
+	var status=null;
 	var articles={};
 
 
 	// GET COMMENTS FROM CATEGORY AND CATEGORIZE THEM BY ARTICLE/TOPIC
 	newFetchGet(nodeBBURL+"/comments/bycid/"+cid)
+	.then(res => {
+		  status = res.status
+		  return res
+		})
 	.then(res => res.json())
 	.then(function(res){
 		data=res; 
 		console.log(data); 
- 
-		if (data.error){
+
+		if (status==401){
 			document.querySelector('#cryptofr-login').classList.add('in','active');
 			document.querySelector('.cryptofr-login-tab').style.display="block";
 			document.querySelector('.cryptofr-login-tab').classList.add('active');
-			addSocialAuthListeners(document.querySelector('#login-modal'))
-
+			addSocialAuthListeners(document.querySelector('#login-modal')) 
 			return;
+		}else if (status==403){
+			document.querySelector('.logout-box').style.display="block";
+			document.querySelector('.error-cryptofr-auth').style.display="block";
+			return; 
 		}
 
 		document.querySelector('#cryptofr-comments').classList.add('in','active');
