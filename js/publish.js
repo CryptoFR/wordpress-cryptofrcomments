@@ -1,61 +1,84 @@
-var getXHR = new XMLHttpRequest();
-var postXHR = new XMLHttpRequest();
-var postData = {};
-var postURL = "";
 
-function encodeStringData(data){
-	var encodedString = "";
-	for (var prop in postData) {
-	  if (data.hasOwnProperty(prop)) {
-	    if (encodedString.length > 0) {
-	      encodedString += "&";
-	    }
-	    encodedString +=
-	      encodeURIComponent(prop) + "=" + encodeURIComponent(data[prop]);
-	  }
-	}
-	return encodedString;
+// POST REQUEST
+function newFetch(path, data ={}) {
+    var encodedString = "";
+    for (var prop in data) {
+      if (data.hasOwnProperty(prop)) {
+        if (encodedString.length > 0) {
+          encodedString += "&";
+        }
+        encodedString +=
+          encodeURIComponent(prop) + "=" + encodeURIComponent(data[prop]);
+      }
+    } 
+
+    return fetch(path, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      credentials: 'include',
+      body: encodedString
+    })
+  }
+
+
+// GET REQUEST
+function newFetchGet(path) { 
+    return fetch(path, {
+      	method: 'GET',
+      	headers: {
+        	'Content-Type': 'application/x-www-form-urlencoded'
+      	},
+      	credentials: 'include'
+    })
 }
-
-postXHR.onload = function(){ 
-	var responseData = JSON.parse(postXHR.responseText);
-	console.log("postXHR.onload responseData");
-	console.log(responseData);  
-}
-
-getXHR.onload = function(){
-	if (getXHR.status >= 200 && getXHR.status < 400) {
-		var responseData = JSON.parse(getXHR.responseText);
-
-		if (responseData.postCount>=0) {
-			return null;
-		}
-		
-		postData._csrf=responseData.token;
-		postData.uid=responseData.user.uid;
-
-		encodedString=encodeStringData(postData);
-
-		console.log("postData to send")
-		console.log(postData)
-		console.log(postURL)
-
-		postXHR.open("POST", postURL, true);
-		postXHR.withCredentials = true;
-		postXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		postXHR.send(encodedString); 
-	}
-}
+ 
 
 
-function publish(data,forumURL,publishURL){
-	// console.log('data',data)
-	// console.log('forumURL',forumURL)
-	// console.log('publishURL',publishURL)
-	postData=data;
-	postURL=publishURL;
-	getXHR.open("GET",forumURL+"/comments/get/"+postData.blogger+"/"+postData.id+"/0/newest",true);
-	getXHR.withCredentials = true;
-	getXHR.send(); 
+function publish(data,nodeBBURL,publishURL,publishPHP){ 
+
+	// GET Request to get csrf Token
+	newFetchGet(nodeBBURL+"/comments/token/")
+	.then(res => {
+		  status = res.status
+		  return res
+		})
+	.then(res => res.json())
+	.then(function(res){
+
+		data._csrf=res.token;
+		data.uid=res.uid; 
+
+		newFetch(publishURL,data)
+		.then(res => {
+			  status = res.status
+			  return res
+			})
+		.then(res => res.json())
+		.then(function(res){
+
+			console.log('status',status)
+			console.log('res',res)
+
+			if (status=='403'){
+				status="Pending"
+			}else{
+				status="Published"
+			}
+
+			id=data.id;
+
+			data={};
+			data.status=status;
+			data.id=id;
+
+			console.log(publishPHP);
+
+			newFetch(publishPHP,data)
+
+		})
+
+	}); 
 }
 

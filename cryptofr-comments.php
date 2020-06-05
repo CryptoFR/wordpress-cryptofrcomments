@@ -32,10 +32,28 @@ class cryptofrcomments{
 		add_action('publish_post', array($this, 'markPostOnPublish'),10,2);
 		add_action('admin_enqueue_scripts', array($this,'publish'));
 		add_action('admin_menu',array($this,'add_admin_pages'));
+		add_action( 'rest_api_init', function () {
+		  register_rest_route( 'cryptofr-comments', '/publishendpoint', array(
+		    'methods' => 'POST',
+		    'callback' => array($this,'publishendpoint')
+		  ) );
+		} );
 
 		// Overwrite wordpress functions or templates
 		add_filter('comments_template', array($this, 'cryptofrCommentsTemplate'),10,1);
 		add_filter("plugin_action_links_$this->plugin_name", array($this, 'settings_link'));
+
+	}
+
+	function publishendpoint($data){
+		global $wpdb; 
+		$status=$data['status'];
+		$id=$data['id'];
+		$table_name = $wpdb->prefix . 'posts';  
+
+		$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments=%s WHERE ID=%s";
+		$wpdb->query($wpdb->prepare($sqlCommand, $status, $id ));  
+
 	}
  
 
@@ -118,13 +136,14 @@ class cryptofrcomments{
 	   	
 		$table_name = $wpdb->prefix . 'posts'; 
 		$publishURL = NODEBB_URL.'/comments/publish';  
+		$publishPHP = get_site_url().'/wp-json/cryptofr-comments/publishendpoint';  
 
 		$sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments='Marked' ORDER BY ID DESC ";
 		$wpdb->query($sqlCommand);
  
 		foreach ($wpdb->last_result as $post){
-			$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID=%s";
-			$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));  
+			// $sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID=%s";
+			// $wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));  
 
 			$escapedContent = escaped_content($post->post_content);
 			$title = $post->post_title;
@@ -155,7 +174,7 @@ class cryptofrcomments{
 
 			// var_dump($data);
 
-			$publishCommand='publish('.$data.',"'.NODEBB_URL.'","'.$publishURL.'")'; 
+			$publishCommand='publish('.$data.',"'.NODEBB_URL.'","'.$publishURL.'","'.$publishPHP.'")'; 
 
 
 			wp_enqueue_script('publish',"/wp-content/plugins/cryptofr-comments/js/publish.js",'','',true);

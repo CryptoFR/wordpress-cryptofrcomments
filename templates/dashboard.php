@@ -40,7 +40,7 @@
   </div>
   <div id="cryptofr-publish" class="tab-pane fade">
     <?php 
-    include (PLUGIN_PATH."/templates/publish.php"); 
+    include (PLUGIN_PATH."/templates/pending.php"); 
      ?>
   </div>
   <div id="cryptofr-user" class="tab-pane fade">
