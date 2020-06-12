@@ -145,6 +145,10 @@ tr.shown td.details-control {
   display: inline-block;
 }
 
+.article-table-container > h2{
+  cursor: pointer;
+}
+
 
 
 

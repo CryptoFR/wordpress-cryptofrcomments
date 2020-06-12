@@ -3,17 +3,13 @@
 
 	// Data Table init for Comments from nodebb
 	function setDataTable(table,data){
-		table.innerHTML='<thead><tr><th class="article-title">Article Title</th><th class="article-user">User</th><th class="article-comment">Comment</th><th class="article-date">Date</th><th class="article-votes">Votes</th><th class="article-actions">Actions</th><th class="article-children">Children</th><th class="article-expand"></th></tr></thead><tbody></tbody>';
+		table.innerHTML='<thead><tr><th class="article-user">User</th><th class="article-comment">Comment</th><th class="article-date">Date</th><th class="article-votes">Votes</th><th class="article-actions">Actions</th><th class="article-children">Children</th><th class="article-expand"></th></tr></thead><tbody></tbody>';
 		return $(table).DataTable( {  
             "bAutoWidth": false,
             // ajax: '../php/sites.php', 
-            "order": [ 3, 'desc' ],
+            "order": [ 2, 'desc' ],
             "aaData": data,
-            columns: [ 
-		        {
-	                "data": "topic.title",
-	                "className": "article-title"
-	            },{
+            columns: [  {
 	                "data": "user.username",
 	                "className": "article-user"
 	            },{
@@ -55,7 +51,18 @@
                 	let pidCell=row.querySelector('.details-control')
 		        	let pid=pidCell.innerText;
 		        	pidCell.setAttribute('data-pid',pid);
-		        	pidCell.innerText=""; 
+		        	pidCell.innerText="";
+
+		        	let childrenCell=row.querySelector('.article-children')
+		        	let length=childrenCell.innerText; 
+		        	if (length=='0'){
+		        		pidCell.classList.remove('details-control')
+		        	}
+
+		        	if (data.topic.externalLink){
+			        	let commentCell=row.querySelector('.article-comment')
+			        	$(commentCell).wrapInner('<a href="'+data.topic.externalLink+'" target="_blank" ></a>')
+		        	}
                 }
         } ); 
 	}
@@ -390,6 +397,8 @@
 	var siteTable=null;
 	var status=null;
 	var articles={};
+
+	console.log(publishedArticles)
 
 
 	// GET COMMENTS FROM CATEGORY AND CATEGORIZE THEM BY ARTICLE/TOPIC

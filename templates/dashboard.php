@@ -66,12 +66,19 @@
 
   $markedArticles=json_encode($wpdb->last_result);
 
+
+  $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Published'";
+  $wpdb->query($sqlCommand); 
+
+  $publishedArticles=json_encode($wpdb->last_result);
+
 ?>
 
 
 <script type="text/javascript">
 	var cid= <?php echo $config->cid; ?>;
   var markedArticles= <?php echo $markedArticles; ?>;
+  var publishedArticles= <?php echo $publishedArticles; ?>;
   var nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>';
   var siteURL = '<?php echo get_site_url(); ?>';
   var publishURL = nodeBBURL+'/comments/publish';  

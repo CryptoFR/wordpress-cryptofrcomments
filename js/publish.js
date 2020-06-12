@@ -39,6 +39,8 @@ function newFetchGet(path) {
 
 function publish(data,nodeBBURL,publishURL,publishPHP,manualButton=null){ 
 
+	console.log(data)
+
 	// GET Request to get csrf Token
 	newFetchGet(nodeBBURL+"/comments/token/")
 	.then(res => {
