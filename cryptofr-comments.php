@@ -32,6 +32,9 @@ class cryptofrcomments{
 		add_action('publish_post', array($this, 'markPostOnPublish'),10,2);
 		add_action('admin_enqueue_scripts', array($this,'publish'));
 		add_action('admin_menu',array($this,'add_admin_pages')); 
+		add_action( 'get_footer', array($this,'front'));
+		
+		// Endpoints
 		add_action( 'rest_api_init', function () { 
 		  register_rest_route( 'cryptofr-comments', '/getbloggerendpoint/(?P<post_author>\d+)', array(
 		    'methods' => 'GET',
@@ -44,10 +47,39 @@ class cryptofrcomments{
 		    'callback' => array($this,'publishendpoint')
 		  ) );  
 		} );
+		add_action( 'rest_api_init', function () { 
+		  register_rest_route( 'cryptofr-comments', '/getbloggerbypostid/(?P<post_id>\d+)', array(
+		    'methods' => 'GET',
+		    'callback' => array($this,'getbloggerbypostid')
+		  ) ); 
+		} ); 
+
 
 		// Overwrite wordpress functions or templates
 		add_filter('comments_template', array($this, 'cryptofrCommentsTemplate'),10,1);
-		add_filter("plugin_action_links_$this->plugin_name", array($this, 'settings_link'));
+		add_filter("plugin_action_links_$this->plugin_name", array($this, 'settings_link')); 
+
+
+	}
+
+	function getbloggerbypostid($data){
+		global $wpdb;  
+	   	
+		$table_name = $wpdb->prefix . 'posts';     
+
+		$sqlCommand = "SELECT * from ".$table_name." WHERE ID=%s";
+		$wpdb->query($wpdb->prepare($sqlCommand,$data['post_id']));
+
+		$post=$wpdb->last_result[0];
+
+		return  array('blogger' => get_the_author_meta('display_name', $post->post_author));
+	}
+
+	function front(){
+		$frontCommand="commentsCounter('".NODEBB_URL."','".get_site_url()."');";
+
+		wp_enqueue_script('front',"/wp-content/plugins/cryptofr-comments/js/front.js",'','',true);
+		wp_add_inline_script( 'front', $frontCommand ); 
 
 	}
 

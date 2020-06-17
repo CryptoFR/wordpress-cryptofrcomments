@@ -36,7 +36,6 @@ if ( post_password_required() )
     blogger = '<?php echo get_the_author(); ?>', //OPTIONAL. Assign an blogger name to disdinguish different blogger. Omit it to fallback to 'default'
     articleType = '<?php echo get_post_type(); ?>',
     articleTitle = '<?php echo the_title_attribute(); ?>',
-    content = "<?php echo escaped_content(get_the_content()); ?>",
     categoryID = -1; // If -1, will use category in NodeBB ACP.  Put in a category number to force that category.
 
 

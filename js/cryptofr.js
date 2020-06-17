@@ -282,13 +282,18 @@
 	  	newFetchGet(nodeBBURL+"/comments/bycid/"+cid)
 	  	.then(res => res.json())
 	  	.then(function(res){
+	  		console.log(res)
 	  		// Now im logged in
 	  		if (data.error && !res.error){
 	  			location.reload();
 	  		} // Now Im disconected
 	  		else if (!data.error && res.error){
 	  			location.reload();
+	  		  // Logged in but not authorized 
+	  		}else if (data.error && res.error && data.message!=res.message){
+	  			location.reload();
 	  		}
+
 	  		data=res;   
 	  	});
 
@@ -412,6 +417,8 @@
 		data=res; 
 		console.log(data); 
 
+		setUSerData(); 
+		
 		if (status==401){
 			document.querySelector('#cryptofr-login').classList.add('in','active');
 			document.querySelector('.cryptofr-login-tab').style.display="block";
@@ -421,6 +428,9 @@
 		}else if (status==403){
 			document.querySelector('.logout-box').style.display="block";
 			document.querySelector('.error-cryptofr-auth').style.display="block";
+			document.querySelector('#cryptofr-user').classList.add('in','active');
+			document.querySelector('.cryptofr-user-tab').style.display="block";
+			document.querySelector('.cryptofr-user-tab').classList.add('active');
 			return; 
 		}
 
@@ -462,10 +472,10 @@
 
 		}
 
-		setUSerData();
  
 	});
 
 
 
 	setDataTableMarkedArticles(document.querySelector('#marked-articles-table'),markedArticles);
+

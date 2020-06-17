@@ -85,5 +85,6 @@
   var publishPHP = '<?php echo get_site_url(); ?>/wp-json/cryptofr-comments/publishendpoint';  
 </script>
 <script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/publish.js"></script>
+
 <script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/cryptofr.js"></script>
 
