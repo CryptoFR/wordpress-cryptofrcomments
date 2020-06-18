@@ -87,7 +87,7 @@ http://localhost:4567/comments/post-count?query[0][blogger]=admin&query[0][id]=1
               let counterSpan=document.createElement('span');
               counterSpan.classList.add('nodebb-comment-counter')
               let commentCount=counter.count===-1 ? 0: counter.count;
-              counterSpan.innerHTML="<a href='?p="+counter.articleID+"'>Comments "+(commentCount-1)+"</a>"
+              counterSpan.innerHTML="<a href='/?p="+counter.articleID+"'>Comments "+(commentCount-1)+"</a>"
               article.append(counterSpan)
             } 
      
