@@ -60,7 +60,6 @@ http://localhost:4567/comments/post-count?query[0][blogger]=admin&query[0][id]=1
         const promises = [];
 
 
-        console.log(document.querySelectorAll('article.post'));
 
         for (let article of document.querySelectorAll('article.post')){
           let id=article.getAttribute('id').split('-')[1];
@@ -78,13 +77,19 @@ http://localhost:4567/comments/post-count?query[0][blogger]=admin&query[0][id]=1
 
        let encodedstring=encodedstring2(paramsArray);
 
-       console.log('URL ENDPOINT->',NODEBB_URL+ "/comments/post-count"+encodedstring)
-       // Aqui el resto de lo que vayas a hacer
         newFetchGet(NODEBB_URL+ "/comments/post-count"+encodedstring)
           .then(res => res.json())
           .then(function(res){
-            console.log('res',res)
-             
+            console.log('res commentsCounter',res)
+
+            for (let counter of res){
+              let article=document.querySelector('#post-'+counter.articleID)
+              let counterSpan=document.createElement('span');
+              counterSpan.classList.add('nodebb-comment-counter')
+              let commentCount=counter.count===-1 ? 0: counter.count;
+              counterSpan.innerHTML="<a href='?p="+counter.articleID+"'>Comments "+commentCount+"</a>"
+              article.append(counterSpan)
+            } 
      
           });
 

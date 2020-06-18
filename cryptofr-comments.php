@@ -80,6 +80,7 @@ class cryptofrcomments{
 
 		wp_enqueue_script('front',"/wp-content/plugins/cryptofr-comments/js/front.js",'','',true);
 		wp_add_inline_script( 'front', $frontCommand ); 
+		wp_enqueue_style('main-styles', '/wp-content/plugins/cryptofr-comments/css/front.css', '', '', false);
 
 	}
 

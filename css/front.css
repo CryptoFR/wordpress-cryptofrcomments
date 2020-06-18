@@ -1,0 +1,5 @@
+.nodebb-comment-counter{
+	display: inline-block;
+	margin-left: 50%;
+	transform: translate(-50%,0%);
+}
