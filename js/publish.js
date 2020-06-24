@@ -22,17 +22,31 @@ function newFetch(path, data ={}) {
     })
   }
 
+  // function encodedstring2(data) {    
+  //   let str = '';
+  //   str="cid="+data.cid+"&";    
+
+  //   for(let i = 0; i < data.length; i++) {       
+  //     str += `query[${i}][blogger]=${encodeURIComponent(data[i].blogger)}&query[${i}][id]=${encodeURIComponent(data[i].id)}`       
+  //     if (i + 1 < data.length) {          
+  //       str +="&"       
+  //     }    
+
+  //   } 
+  //   return str;
+  // }
+
 
 
   // POST REQUEST without encoding
-  function newFetch2(path,data) { 
+  function newFetch2(path,data) {  
 		return fetch(path, {
 			method: 'POST',
 			headers: {
 			 'Content-Type': 'application/x-www-form-urlencoded'
 			},
 			credentials: 'include',
-			body: data
+			body: JSON.stringify(data) 
 		})
   }
 
@@ -111,12 +125,9 @@ function publish(data,nodeBBURL,publishURL,publishPHP,manualButton=null){
 
 
 function publishOldArticles(data,nodeBBURL,publishURL,publishPHP){ 
+	
 	console.log('data', data)
-
-	data=$.param( data );
-
-	console.log('data$',data);
-
+  
 	newFetchGet(nodeBBURL+"/comments/token/")
 	.then(res => {
 		  status = res.status
