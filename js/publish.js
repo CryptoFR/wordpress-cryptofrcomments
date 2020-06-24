@@ -39,6 +39,9 @@ function newFetchGet(path) {
 
 function publish(data,nodeBBURL,publishURL,publishPHP,manualButton=null){ 
 
+
+	data.markdown=data.markdown + "\n <b>Click <a href='"+data.url+"'>here</a> to see the full blog post</b>";
+	
 	console.log(data)
 
 	// GET Request to get csrf Token

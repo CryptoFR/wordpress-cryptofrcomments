@@ -487,3 +487,8 @@ svg.svg-inline--fa{
 .login-button.modal-button span{
 	color: white;
 }
+
+.gif-post{
+  max-width: 300px;
+  display: block;
+}

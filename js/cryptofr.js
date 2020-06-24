@@ -133,18 +133,28 @@
 	    return (year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
 	} 
 
-	// Parse gif image from comment
+	function reIndexOf(reIn, str, startIndex) {
+	     var re = new RegExp(reIn.source, 'g' + (reIn.ignoreCase ? 'i' : '') + (reIn.multiLine ? 'm' : ''));
+	     re.lastIndex = startIndex || 0;
+	     var res = re.exec(str);
+	     if(!res) return -1;
+	     return re.lastIndex - res[0].length;
+	 }
+
+	// Parse image from comment
 	function singleGifComment(comment) {
+	  var converter = new window.showdown.Converter();
 	  while (comment.indexOf("![")>=0){
-	    let src=comment.substring(comment.indexOf("](")+2,comment.indexOf(".gif)")+4)
-	    let imgTag="<img class='gif-post' src='"+src+"'></br>";
+	    let src=comment.substring(comment.indexOf("](")+2,reIndexOf(/\.(gif|png|jpe?g)\)/gi, comment)+4)
+	    let imgTag="<img class='gif-post' src='"+src+"'>";
 
 	    if (comment.substring(comment.indexOf("![]")-6,comment.indexOf("![]"))!="&gt;  " && comment.indexOf("![]") > 1){
-	      imgTag="</br>"+imgTag;
+	      imgTag=imgTag;
 	    }
-	    comment=comment.substring(0,comment.indexOf("!["))+" "+imgTag+" "+comment.substring(comment.indexOf(".gif)")+5,comment.length);
+	    comment=comment.substring(0,comment.indexOf("!["))+" "+imgTag+" "+comment.substring(reIndexOf(/\.(gif|png|jpe?g)\)/gi, comment)+5,comment.length);
 	  }
-	  return comment;
+	  comment=converter.makeHtml(comment);
+	  return comment
 	}
  
 	// REMOVE ELEMENT NODE FROM DOM
