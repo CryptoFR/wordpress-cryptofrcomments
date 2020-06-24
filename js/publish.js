@@ -23,6 +23,20 @@ function newFetch(path, data ={}) {
   }
 
 
+
+  // POST REQUEST without encoding
+  function newFetch2(path,data) { 
+		return fetch(path, {
+			method: 'POST',
+			headers: {
+			 'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			credentials: 'include',
+			body: data
+		})
+  }
+
+
 // GET REQUEST
 function newFetchGet(path) { 
     return fetch(path, {
@@ -97,7 +111,11 @@ function publish(data,nodeBBURL,publishURL,publishPHP,manualButton=null){
 
 
 function publishOldArticles(data,nodeBBURL,publishURL,publishPHP){ 
-	console.log('data',data)
+	console.log('data', data)
+
+	data=$.param( data );
+
+	console.log('data$',data);
 
 	newFetchGet(nodeBBURL+"/comments/token/")
 	.then(res => {
@@ -120,7 +138,6 @@ function publishOldArticles(data,nodeBBURL,publishURL,publishPHP){
 
 			console.log('status',status)
 			console.log('res',res)
-
 
 		});
 

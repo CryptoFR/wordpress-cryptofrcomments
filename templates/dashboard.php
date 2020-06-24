@@ -90,13 +90,14 @@
 
   var nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>';
   var siteURL = '<?php echo get_site_url(); ?>';
-  var bloggerPHP = siteURL+'/wp-json/cryptofr-comments/getbloggerendpoint';  
 
   var publishURL = nodeBBURL+'/comments/publish';  
   var publishURLArray = nodeBBURL+'/comments/publish-batch';  
   
   var publishPHP = '<?php echo get_site_url(); ?>/wp-json/cryptofr-comments/publishendpoint';  
   var publishPHPArray = '<?php echo get_site_url(); ?>/wp-json/cryptofr-comments/publishendpointArray';  
+    
+  var bloggerPHP = siteURL+'/wp-json/cryptofr-comments/getbloggerendpoint';
 </script>
 
 <script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/publish.js"></script>
