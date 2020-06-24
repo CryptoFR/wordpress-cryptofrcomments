@@ -374,7 +374,7 @@
 		var button=this;
 
 
-		bloggerPHP = siteURL+'/wp-json/cryptofr-comments/getbloggerendpoint';  
+		
 
 		newFetchGet(bloggerPHP+"/"+button.getAttribute('data-post_author')) 
 		.then(res => res.json())
@@ -406,14 +406,11 @@
 
 
 	// ----- MAIN
-
-
+ 
 	var data=null;
 	var siteTable=null;
 	var status=null;
-	var articles={};
-
-	console.log(publishedArticles)
+	var articles={}; 
 
 
 	// GET COMMENTS FROM CATEGORY AND CATEGORIZE THEM BY ARTICLE/TOPIC
@@ -489,3 +486,38 @@
 
 	setDataTableMarkedArticles(document.querySelector('#marked-articles-table'),markedArticles);
 
+
+
+	document.querySelector('#publish-old-articles').addEventListener('click',async function(){
+
+		let dataArray={};
+
+		dataArray['posts']=[];
+		dataArray['cid']=cid;
+		
+		for (let article of oldArticles){
+			await newFetchGet(bloggerPHP+"/"+article.post_author) 
+			.then(res => res.json())
+			.then(function(res){
+
+				let data={
+					"markdown": escapeContent(article.post_content),
+					"title": article.post_title,
+					"cid": cid,
+					"blogger": res.name,
+					"tags": '',
+					"id": article.ID,
+					"url": article.guid,
+					"timestamp": Date.now(),
+					"uid": '',
+					"_csrf": ''
+				};
+
+				dataArray['posts'].push(data);
+			});
+		}
+
+		publishOldArticles(dataArray,nodeBBURL,publishURLArray,publishPHPArray)
+
+
+	});

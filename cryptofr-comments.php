@@ -161,8 +161,9 @@ class cryptofrcomments{
 			VALUES (0);
 			";
 
-		$wpdb->query($sqlCommand);  
+		$wpdb->query($sqlCommand);   
 
+		
 		flush_rewrite_rules();
 	} 
 

@@ -73,18 +73,32 @@
 
   $publishedArticles=json_encode($wpdb->last_result);
 
+  
+  $sqlCommand="SELECT * FROM ".$table_name." WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish'";
+  $wpdb->query($sqlCommand); 
+
+  $oldArticles=json_encode($wpdb->last_result);
 ?>
 
 
 <script type="text/javascript">
 	var cid= <?php echo $config->cid; ?>;
+
   var markedArticles= <?php echo $markedArticles; ?>;
   var publishedArticles= <?php echo $publishedArticles; ?>;
+  var oldArticles= <?php echo $oldArticles; ?>;
+
   var nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>';
   var siteURL = '<?php echo get_site_url(); ?>';
+  var bloggerPHP = siteURL+'/wp-json/cryptofr-comments/getbloggerendpoint';  
+
   var publishURL = nodeBBURL+'/comments/publish';  
+  var publishURLArray = nodeBBURL+'/comments/publish-batch';  
+  
   var publishPHP = '<?php echo get_site_url(); ?>/wp-json/cryptofr-comments/publishendpoint';  
+  var publishPHPArray = '<?php echo get_site_url(); ?>/wp-json/cryptofr-comments/publishendpointArray';  
 </script>
+
 <script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/publish.js"></script>
 
 <script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/cryptofr.js"></script>

@@ -94,3 +94,35 @@ function publish(data,nodeBBURL,publishURL,publishPHP,manualButton=null){
 	}); 
 }
 
+
+
+function publishOldArticles(data,nodeBBURL,publishURL,publishPHP){ 
+	console.log('data',data)
+
+	newFetchGet(nodeBBURL+"/comments/token/")
+	.then(res => {
+		  status = res.status
+		  return res
+		})
+	.then(res => res.json())
+	.then(function(res){
+
+		data._csrf=res.token;
+		data.uid=res.uid; 
+
+		newFetch(publishURL,data)
+		.then(res => {
+			  status = res.status
+			  return res
+			})
+		.then(res => res.json())
+		.then(function(res){
+
+			console.log('status',status)
+			console.log('res',res)
+
+
+		});
+
+	});
+}
