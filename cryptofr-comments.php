@@ -48,6 +48,12 @@ class cryptofrcomments{
 		  ) );  
 		} );
 		add_action( 'rest_api_init', function () { 
+		  register_rest_route( 'cryptofr-comments', '/publishendpointarray', array(
+		    'methods' => 'POST',
+		    'callback' => array($this,'publishendpointarray')
+		  ) );  
+		} );
+		add_action( 'rest_api_init', function () { 
 		  register_rest_route( 'cryptofr-comments', '/getbloggerbypostid/(?P<post_id>\d+)', array(
 		    'methods' => 'GET',
 		    'callback' => array($this,'getbloggerbypostid')
@@ -82,6 +88,30 @@ class cryptofrcomments{
 		wp_add_inline_script( 'front', $frontCommand ); 
 		wp_enqueue_style('main-styles', '/wp-content/plugins/cryptofr-comments/css/front.css', '', '', false);
 
+	}
+
+	function publishendpointarray($ids){
+		global $wpdb;
+
+		$ids=$ids->get_json_params(); 
+
+		$idKeys="";
+
+		foreach ($ids as $id) {
+			$idKeys.= "%s, ";
+		}  
+
+		$idKeys=substr($idKeys, 0, -2);
+
+		$table_name = $wpdb->prefix . 'posts';  
+		
+		$sqlCommand ="UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID in (".$idKeys.")";
+
+		$sqlCommand= $wpdb->prepare($sqlCommand,$ids); 
+
+		$wpdb->query($sqlCommand);  
+
+		return "OK";
 	}
 
 	function publishendpoint($data){

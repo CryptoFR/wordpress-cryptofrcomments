@@ -42,9 +42,9 @@ function newFetch(path, data ={}) {
   function newFetch2(path,data) {  
 		return fetch(path, {
 			method: 'POST',
-			headers: {
-			 'Content-Type': 'application/x-www-form-urlencoded'
-			},
+			headers:{
+				'Content-Type': 'application/json'
+			  },
 			credentials: 'include',
 			body: JSON.stringify(data) 
 		})
@@ -139,16 +139,28 @@ function publishOldArticles(data,nodeBBURL,publishURL,publishPHP){
 		data._csrf=res.token;
 		data.uid=res.uid; 
 
-		newFetch(publishURL,data)
+		newFetch2(publishURL,data)
 		.then(res => {
 			  status = res.status
 			  return res
 			})
 		.then(res => res.json())
 		.then(function(res){
+ 
+			if (status!='200'){
+				alert('Error publishing Old Articles to the Forum. Try Again Later');
+				console.log(res);
+				return;
+			}
 
-			console.log('status',status)
-			console.log('res',res)
+ 
+			newFetch2(publishPHP,res.ids)
+			.then(res => res.json())
+			.then(function(res){
+				alert('Old Articles has been manually Published to the forum');
+				location.reload();
+			})
+
 
 		});
 

@@ -94,8 +94,8 @@
   var publishURL = nodeBBURL+'/comments/publish';  
   var publishURLArray = nodeBBURL+'/comments/publish-batch';  
   
-  var publishPHP = '<?php echo get_site_url(); ?>/wp-json/cryptofr-comments/publishendpoint';  
-  var publishPHPArray = '<?php echo get_site_url(); ?>/wp-json/cryptofr-comments/publishendpointArray';  
+  var publishPHP = siteURL+'/wp-json/cryptofr-comments/publishendpoint';  
+  var publishPHPArray = siteURL+'/wp-json/cryptofr-comments/publishendpointarray';  
     
   var bloggerPHP = siteURL+'/wp-json/cryptofr-comments/getbloggerendpoint';
 </script>

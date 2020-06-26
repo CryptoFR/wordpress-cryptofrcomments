@@ -488,6 +488,9 @@
 
 
 
+
+	console.log('oldArticles',oldArticles);
+
 	document.querySelector('#publish-old-articles').addEventListener('click',async function(){
 
 		let dataArray={};
