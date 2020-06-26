@@ -1,4 +1,32 @@
-<a id="nodebb-comments"></a> 
+
+<?php  
+  global $wpdb;
+  $sqlCommand = "SELECT * from cryptofrcomments";
+  $wpdb->query($sqlCommand);
+  $config=$wpdb->last_result[0];
+
+
+  $table_name = $wpdb->prefix . 'posts';    
+
+  $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Pending'";
+  $wpdb->query($sqlCommand); 
+
+  $markedArticles=json_encode($wpdb->last_result);
+
+
+  $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Published'";
+  $wpdb->query($sqlCommand); 
+
+  $publishedArticles=json_encode($wpdb->last_result);
+
+  
+  $sqlCommand="SELECT * FROM ".$table_name." WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' ORDER BY post_date ASC";
+  $wpdb->query($sqlCommand); 
+
+  $oldArticlesArray=$wpdb->last_result;
+
+  $oldArticles=json_encode($wpdb->last_result);
+?>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -19,6 +47,7 @@
   <li class="cryptofr-login-tab"><a data-toggle="tab" href="#cryptofr-login" id="a-login">Login</a></li>
   <li class="cryptofr-comments-tab"><a data-toggle="tab" href="#cryptofr-comments" id="a-comments">Comments</a></li>
   <li class="cryptofr-publish-tab"><a data-toggle="tab" href="#cryptofr-publish" id="a-publish">Pending</a></li>
+  <li class="cryptofr-old-articles-tab"><a data-toggle="tab" href="#cryptofr-old-articles" id="a-old-articles">Old Articles</a></li>
   <li class="cryptofr-user-tab"><a data-toggle="tab" href="#cryptofr-user" id="a-user">User</a></li>
   <li class="logout-box">
     <a data-toggle="tab" href="">
@@ -44,6 +73,11 @@
     include (PLUGIN_PATH."/templates/pending.php"); 
      ?>
   </div>
+  <div id="cryptofr-old-articles" class="tab-pane fade">
+    <?php 
+    include (PLUGIN_PATH."/templates/old-articles.php"); 
+     ?>
+  </div>
   <div id="cryptofr-user" class="tab-pane fade">
     <?php 
     include (PLUGIN_PATH."/templates/user.php"); 
@@ -53,32 +87,6 @@
 
 
 
-<?php  
-	global $wpdb;
-	$sqlCommand = "SELECT * from cryptofrcomments";
-	$wpdb->query($sqlCommand);
-	$config=$wpdb->last_result[0];
-
-
-  $table_name = $wpdb->prefix . 'posts';    
-
-  $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Pending'";
-  $wpdb->query($sqlCommand); 
-
-  $markedArticles=json_encode($wpdb->last_result);
-
-
-  $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Published'";
-  $wpdb->query($sqlCommand); 
-
-  $publishedArticles=json_encode($wpdb->last_result);
-
-  
-  $sqlCommand="SELECT * FROM ".$table_name." WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish'";
-  $wpdb->query($sqlCommand); 
-
-  $oldArticles=json_encode($wpdb->last_result);
-?>
 
 
 <script type="text/javascript">

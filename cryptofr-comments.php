@@ -97,7 +97,11 @@ class cryptofrcomments{
 
 		$idKeys="";
 
+		if (count($ids)==0) return "False";
+
 		foreach ($ids as $id) {
+			if (!is_numeric($id)) return "False";
+
 			$idKeys.= "%s, ";
 		}  
 
@@ -108,9 +112,9 @@ class cryptofrcomments{
 		$sqlCommand ="UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID in (".$idKeys.")";
 
 		$sqlCommand= $wpdb->prepare($sqlCommand,$ids); 
-
+		
 		$wpdb->query($sqlCommand);  
-
+ 
 		return "OK";
 	}
 

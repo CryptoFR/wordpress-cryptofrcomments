@@ -32,6 +32,7 @@ body.wp-admin{
 .wp-admin .cryptofrcomments-tabs .cryptofr-comments-tab,
 .wp-admin .cryptofrcomments-tabs .cryptofr-user-tab,
 .wp-admin .cryptofrcomments-tabs .cryptofr-publish-tab,
+.wp-admin .cryptofrcomments-tabs .cryptofr-old-articles-tab,
 .wp-admin .cryptofrcomments-tabs .logout-box,
 .error-cryptofr-auth{
 	display: none;

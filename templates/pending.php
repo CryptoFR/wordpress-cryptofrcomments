@@ -12,6 +12,5 @@
 		<tbody>
 		</tbody> 
 	</table>
-
-	<button id="publish-old-articles">Publish Old Articles</button> 
+ 
 </div>

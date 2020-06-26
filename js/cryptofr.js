@@ -447,6 +447,9 @@
 		
 		document.querySelector('.cryptofr-user-tab').style.display="block";
 		document.querySelector('.cryptofr-publish-tab').style.display="block";
+		document.querySelector('.cryptofr-old-articles-tab').style.display="block";
+		
+
 		document.querySelector('.logout-box').style.display="block";
 
 
@@ -491,6 +494,7 @@
 
 	console.log('oldArticles',oldArticles);
 
+	if (document.querySelector('#publish-old-articles'))
 	document.querySelector('#publish-old-articles').addEventListener('click',async function(){
 
 		let dataArray={};

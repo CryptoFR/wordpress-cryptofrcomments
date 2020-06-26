@@ -155,10 +155,15 @@ function publishOldArticles(data,nodeBBURL,publishURL,publishPHP){
 
  
 			newFetch2(publishPHP,res.ids)
-			.then(res => res.json())
+			.then(res => res.json()) 
 			.then(function(res){
-				alert('Old Articles has been manually Published to the forum');
-				location.reload();
+				console.log(res) 
+				if (res!=false){
+					alert('Old Articles has been manually Published to the forum');
+					location.reload();
+				}else {
+					alert('Error updating Wordpress Database');
+				}
 			})
 
 
