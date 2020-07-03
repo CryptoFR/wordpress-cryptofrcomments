@@ -1,25 +1,55 @@
 
-<?php  
-  global $wpdb;
+<?php 
+
+  global $wpdb; 
+
+  // -- POST REQUEST TO UPDATE CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
+  if (isset($_POST['cid'])) {
+    if (ctype_digit($_POST['cid'])){
+      $sqlCommand = "UPDATE cryptofrcomments SET cid=%s";
+      $wpdb->query($wpdb->prepare($sqlCommand, $_POST['cid'] ));     
+    }
+  } 
+
+  $cid="";
+
   $sqlCommand = "SELECT * from cryptofrcomments";
+  $wpdb->query($sqlCommand);
+
+  if (isset($wpdb->last_result[0]->cid)) 
+    $cid= $wpdb->last_result[0]->cid;
+
+
+
+
+  // WP_POST DEFAULT NAME
+  $table_name = $wpdb->prefix . 'posts';    
+
+
+
+  // -- GET CONFIG OF CRYPTOFRCOMMENTS WP PLUGIN 
+  $sqlCommand = "SELECT * from cryptofrcomments ORDER BY ID DESC LIMIT 1";
   $wpdb->query($sqlCommand);
   $config=$wpdb->last_result[0];
 
 
-  $table_name = $wpdb->prefix . 'posts';    
 
+  // -- GET PENDING TO POST ARTICLES 
   $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Pending'";
-  $wpdb->query($sqlCommand); 
-
+  $wpdb->query($sqlCommand);  
   $markedArticles=json_encode($wpdb->last_result);
 
 
+
+  // -- GET PUBLISHED ARTICLES
   $sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Published'";
   $wpdb->query($sqlCommand); 
 
   $publishedArticles=json_encode($wpdb->last_result);
 
+
   
+  // -- GET OLD ARTICLES
   $sqlCommand="SELECT * FROM ".$table_name." WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' ORDER BY post_date ASC";
   $wpdb->query($sqlCommand); 
 

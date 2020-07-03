@@ -9,16 +9,11 @@
 		wp_enqueue_style('main-styles', '/wp-content/plugins/cryptofr-comments/css/front.css', '', '', false);
 	}
 
-
 	
 	// -- SHOW THE DASHBOARD BUTTON OF THE CRYPTOFR PLUGIN ON THE WORDPRESS ADMIN MENU SIDEBAR
 	function add_admin_pages(){
 		add_menu_page('Cryptofr','Cryptofrcomments','manage_options','cryptofr_comments_plugin',function (){ include (PLUGIN_PATH."/templates/dashboard.php"); 	} ,'dashicons-store',110);
 	}
-
-	
-
-
 
 
 	// -- SEND THE PUBLISH REQUEST TO THE CRYPTOFR MAIN FORUM WITH THE MARKED ARTICLE JUST PUBLISHED ON THE WORDPRESS BLOG  
@@ -63,28 +58,11 @@
 			// var_dump($data);
 
 			$publishCommand='publish('.$data.',"'.NODEBB_URL.'","'.$publishURL.'","'.$publishPHP.'")'; 
-
-
+ 
 			wp_enqueue_script('publish',"/wp-content/plugins/cryptofr-comments/js/publish.js",'','',true);
 			wp_add_inline_script( 'publish', $publishCommand ); 
 
-		}		
+		}
 	}
 
-	// -- MARK AN ARTICLE ON THE WORDPRES DATABASE, READY TO BE PUBLISH TO THE CRYPTOFR MAIN FORUM 
-	function markPostOnPublish($ID=false, $post=false)  {
-
-		global $wpdb;
-		$table_name = $wpdb->prefix . 'posts';
-
-		if (!$ID || $post) return false;
- 
-		$sqlCommand = "SELECT * FROM ".$table_name." WHERE ID=%s AND cryptofrcomments='Disabled'";
-		$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
-
-		if ($wpdb->last_result){
-			$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Marked' WHERE ID=%s";
-			$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
-		}  
-	} 
 ?>

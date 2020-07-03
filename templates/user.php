@@ -1,19 +1,4 @@
 <?php 
-global $wpdb; 
-if (isset($_POST['cid'])) {
-	if (ctype_digit($_POST['cid'])){
-		$sqlCommand = "UPDATE cryptofrcomments SET cid=%s";
-		$wpdb->query($wpdb->prepare($sqlCommand, $_POST['cid'] ));     
-	}
-} 
-
-$cid="";
-
-$sqlCommand = "SELECT * from cryptofrcomments";
-$wpdb->query($sqlCommand);
-
-if (isset($wpdb->last_result[0]->cid)) 
-	$cid= $wpdb->last_result[0]->cid;
 
 ?>
 

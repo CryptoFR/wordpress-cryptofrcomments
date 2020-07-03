@@ -37,9 +37,9 @@ class cryptofrcomments{
 		include (PLUGIN_PATH."/includes/methods.php"); 
 
 		//-- Hooks
-		
-		add_action('publish_post', 'markPostOnPublish',10,2); // When a post is published
-		add_action('admin_enqueue_scripts', 'publish'); // When a admin page is loaded
+
+		add_action('publish_post',array($this,'markPostOnPublish'),10,2 ); // When a post is published
+		add_action('admin_enqueue_scripts', 'publish'); // When an admin page is loaded
 		add_action('admin_menu','add_admin_pages'); // When the admin menu is loaded
 		add_action( 'get_footer', 'front'); // When the footer on the front is loaded
 		
@@ -50,7 +50,7 @@ class cryptofrcomments{
 		add_action( 'rest_api_init', function () { 
 		  register_rest_route( 'cryptofr-comments', '/getbloggerendpoint/(?P<post_author>\d+)', array(
 		    'methods' => 'GET',
-		    'callback' => getbloggerendpoint()
+		    'callback' => 'getbloggerendpoint'
 		  ) ); 
 		} ); 
 
@@ -58,7 +58,7 @@ class cryptofrcomments{
 		add_action( 'rest_api_init', function () {
 		  register_rest_route( 'cryptofr-comments', '/publishendpoint', array(
 		    'methods' => 'POST',
-		    'callback' => publishendpoint()
+		    'callback' => 'publishendpoint'
 		  ) );  
 		} );
 
@@ -66,7 +66,7 @@ class cryptofrcomments{
 		add_action( 'rest_api_init', function () { 
 		  register_rest_route( 'cryptofr-comments', '/publishendpointarray', array(
 		    'methods' => 'POST',
-		    'callback' => publishendpointarray()
+		    'callback' => 'publishendpointarray'
 		  ) );  
 		} );
 
@@ -74,7 +74,7 @@ class cryptofrcomments{
 		add_action( 'rest_api_init', function () { 
 		  register_rest_route( 'cryptofr-comments', '/getbloggerbypostid/(?P<post_id>\d+)', array(
 		    'methods' => 'GET',
-		    'callback' => getbloggerbypostid()
+		    'callback' => 'getbloggerbypostid'
 		  ) ); 
 		} ); 
 
@@ -88,6 +88,25 @@ class cryptofrcomments{
 		add_filter("plugin_action_links_$this->plugin_name", 'settings_link'); 
 		
 	}
+
+
+
+	// -- MARK AN ARTICLE ON THE WORDPRES DATABASE, READY TO BE PUBLISH TO THE CRYPTOFR MAIN FORUM 
+	function markPostOnPublish($ID, $post)  {
+
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'posts';
+
+		// if (!$ID || !$post) return false;
+	
+		$sqlCommand = "SELECT * FROM ".$table_name." WHERE ID=%s AND cryptofrcomments='Disabled'";
+		$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
+
+		if ($wpdb->last_result){
+			$sqlCommand = "UPDATE ".$table_name." SET cryptofrcomments='Marked' WHERE ID=%s";
+			$wpdb->query($wpdb->prepare($sqlCommand, $post->ID ));
+		}  
+	} 
 
 	 
 
