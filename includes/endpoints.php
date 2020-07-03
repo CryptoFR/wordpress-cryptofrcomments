@@ -48,7 +48,7 @@
 	function publishendpoint($data){
 		global $wpdb; 
 
-		if (!isset($data['status']) || !isset($data['id']) || !is_numeric($data['id']) || is_string($data['status'])) return "false";
+		if (!isset($data['status']) || !isset($data['id']) || !is_numeric($data['id']) || !is_string($data['status'])) return "false";
 
 		$status=$data['status']; 
 		$id=$data['id'];
