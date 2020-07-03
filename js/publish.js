@@ -21,21 +21,7 @@ function newFetch(path, data ={}) {
       body: encodedString
     })
   }
-
-  // function encodedstring2(data) {    
-  //   let str = '';
-  //   str="cid="+data.cid+"&";    
-
-  //   for(let i = 0; i < data.length; i++) {       
-  //     str += `query[${i}][blogger]=${encodeURIComponent(data[i].blogger)}&query[${i}][id]=${encodeURIComponent(data[i].id)}`       
-  //     if (i + 1 < data.length) {          
-  //       str +="&"       
-  //     }    
-
-  //   } 
-  //   return str;
-  // }
-
+ 
 
 
   // POST REQUEST without encoding
@@ -72,7 +58,7 @@ function publish(data,nodeBBURL,publishURL,publishPHP,manualButton=null){
 	
 	console.log(data)
 
-	// GET Request to get csrf Token
+	// GET Request to get csrf Token and UID of the CryptoFR forum
 	newFetchGet(nodeBBURL+"/comments/token/")
 	.then(res => {
 		  status = res.status
@@ -84,6 +70,7 @@ function publish(data,nodeBBURL,publishURL,publishPHP,manualButton=null){
 		data._csrf=res.token;
 		data.uid=res.uid; 
 
+		// Publish the article to CryptoFR Forum
 		newFetch(publishURL,data)
 		.then(res => {
 			  status = res.status
@@ -95,10 +82,10 @@ function publish(data,nodeBBURL,publishURL,publishPHP,manualButton=null){
 			console.log('status',status)
 			console.log('res',res)
 
-			if (status=='403'){
+			if (status=='403'){ // Not published correctly
 				status="Pending"
 			}else{
-				status="Published"
+				status="Published" // OK 
 			}
 
 			id=data.id;
@@ -109,8 +96,14 @@ function publish(data,nodeBBURL,publishURL,publishPHP,manualButton=null){
 
 			console.log(publishPHP);
 
+			// Set the cryptofrcommment status attribute of the article in the wp database to Published or Pending
 			newFetch(publishPHP,data)
-			.then(function(){
+			.then(res => res.json())
+			.then(function(res){
+				if (res=="false"){
+					console.log('Error during Wordpress Database store endpoint');
+					return false;
+				}
 				if (manualButton) {
 					alert('Article has been manually Published to forum');
 					location.reload();
@@ -123,11 +116,12 @@ function publish(data,nodeBBURL,publishURL,publishPHP,manualButton=null){
 }
 
 
-
+// 
 function publishOldArticles(data,nodeBBURL,publishURL,publishPHP){ 
 	
 	console.log('data', data)
   
+	// GET Request to get csrf Token and UID of the CryptoFR forum 
 	newFetchGet(nodeBBURL+"/comments/token/")
 	.then(res => {
 		  status = res.status
@@ -139,6 +133,8 @@ function publishOldArticles(data,nodeBBURL,publishURL,publishPHP){
 		data._csrf=res.token;
 		data.uid=res.uid; 
 
+
+		// Publish all the articles to CryptoFR Forum
 		newFetch2(publishURL,data)
 		.then(res => {
 			  status = res.status
@@ -147,18 +143,18 @@ function publishOldArticles(data,nodeBBURL,publishURL,publishPHP){
 		.then(res => res.json())
 		.then(function(res){
  
-			if (status!='200'){
+			if (status!='200'){ // If there was an error publishing the articles in the CryptoFR forum
 				alert('Error publishing Old Articles to the Forum. Try Again Later');
 				console.log(res);
 				return;
 			}
 
- 
+			// Set the cryptofrcommment status attribute of all the articles in the wp database to Published
 			newFetch2(publishPHP,res.ids)
 			.then(res => res.json()) 
 			.then(function(res){
 				console.log(res) 
-				if (res!=false){
+				if (res!='false'){
 					alert('Old Articles has been manually Published to the forum');
 					location.reload();
 				}else {

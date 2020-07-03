@@ -275,11 +275,6 @@
 	  }
 	}
 
-	
-
-
-
-
 
 
 
@@ -380,6 +375,13 @@
 		.then(res => res.json())
 		.then(function(res){
 
+
+			if (res=="false"){
+				console.log('error on getblogger endpoint');
+				return false;
+			} 
+
+
 			data={
 				"markdown": button.getAttribute('data-post_content'),
 				"title": button.getAttribute('data-post_title'),
@@ -424,23 +426,29 @@
 		data=res; 
 		console.log(data); 
 
-		setUSerData(); 
 		
-		if (status==401){
+		if (status==401){ // IF NOT CONNECTED
 			document.querySelector('#cryptofr-login').classList.add('in','active');
 			document.querySelector('.cryptofr-login-tab').style.display="block";
 			document.querySelector('.cryptofr-login-tab').classList.add('active');
 			addSocialAuthListeners(document.querySelector('#login-modal')) 
 			return;
-		}else if (status==403){
+		}else if (status==403){ // IF NOT AUTHORIZED
 			document.querySelector('.logout-box').style.display="block";
 			document.querySelector('.error-cryptofr-auth').style.display="block";
 			document.querySelector('#cryptofr-user').classList.add('in','active');
 			document.querySelector('.cryptofr-user-tab').style.display="block";
 			document.querySelector('.cryptofr-user-tab').classList.add('active');
+			setUSerData(); 
 			return; 
 		}
 
+		setUSerData(); 
+
+		// YOU ARE AUTHORIZED
+
+
+		// -- Display tabs on dashboard menu
 		document.querySelector('#cryptofr-comments').classList.add('in','active');
 		document.querySelector('.cryptofr-comments-tab').style.display="block";
 		document.querySelector('.cryptofr-comments-tab').classList.add('active');
@@ -448,11 +456,11 @@
 		document.querySelector('.cryptofr-user-tab').style.display="block";
 		document.querySelector('.cryptofr-publish-tab').style.display="block";
 		document.querySelector('.cryptofr-old-articles-tab').style.display="block";
-		
-
+		 
 		document.querySelector('.logout-box').style.display="block";
 
 
+		// Group comments by articles
 		for (const l of data.posts) {
 	      if (!articles.hasOwnProperty(l.tid)) {
 	        articles[l.tid] = {
@@ -466,6 +474,8 @@
  
         siteTable=  setDataTable(document.querySelector('#grid'),data.posts);
   
+
+  		// Set a datatable to each article
 		for (const article of articles){
 
 			let table = document.createElement('table')
@@ -486,14 +496,9 @@
 	});
 
 
-
 	setDataTableMarkedArticles(document.querySelector('#marked-articles-table'),markedArticles);
-
-
-
-
-	console.log('oldArticles',oldArticles);
-
+ 
+	// If there are old articles, button to publish all the Old Articles at the same time on the CryptoFR Forum
 	if (document.querySelector('#publish-old-articles'))
 	document.querySelector('#publish-old-articles').addEventListener('click',async function(){
 
@@ -502,10 +507,16 @@
 		dataArray['posts']=[];
 		dataArray['cid']=cid;
 		
+		// Append to array the Old Articles with its respective blogger info
 		for (let article of oldArticles){
 			await newFetchGet(bloggerPHP+"/"+article.post_author) 
 			.then(res => res.json())
-			.then(function(res){
+			.then(function(res){ 
+
+				if (res=="false"){
+					console.log('error on getblogger endpoint');
+					return false;
+				}  
 
 				let data={
 					"markdown": escapeContent(article.post_content),
