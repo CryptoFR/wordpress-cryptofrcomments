@@ -1,7 +1,3 @@
-<?php 
-
-?>
-
 <div class="container"> 
 	<div class="form-group">
 		<label>Name:</label>

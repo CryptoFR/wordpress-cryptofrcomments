@@ -415,6 +415,9 @@
 	var articles={}; 
 
 
+
+
+
 	// GET COMMENTS FROM CATEGORY AND CATEGORIZE THEM BY ARTICLE/TOPIC
 	newFetchGet(nodeBBURL+"/comments/bycid/"+cid)
 	.then(res => {
@@ -491,6 +494,9 @@
 			let articleTable =  setDataTable(table,article[1].posts) 
 
 		}
+
+		if (!cid || cid==0) 
+			document.querySelector('.error-cryptofr-cid').style.display="block";
 
  
 	});
