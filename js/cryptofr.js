@@ -4,6 +4,8 @@
 	// Data Table init for Comments from nodebb
 	function setDataTable(table,data){
 		table.innerHTML='<thead><tr><th class="article-user">User</th><th class="article-comment">Comment</th><th class="article-date">Date</th><th class="article-votes">Votes</th><th class="article-actions">Actions</th><th class="article-children">Children</th><th class="article-expand"></th></tr></thead><tbody></tbody>';
+		console.log("1",data)
+		if (data)
 		return $(table).DataTable( {  
             "bAutoWidth": false,
             // ajax: '../php/sites.php', 
@@ -70,7 +72,8 @@
 
 
 	function setDataTableMarkedArticles(table,data){
-
+		console.log("2",data)
+		if (data)
 		return $(table).DataTable( {  
             "bAutoWidth": false,
             // ajax: '../php/sites.php', 
@@ -87,7 +90,8 @@
 	                "data": "cryptofrcomments",
 	                "className": "article-status" 
 	            },{
-	                "className": "article-error", render: function(data,display,object){
+	            	"data": "post_title",
+	                "className": "article-error", render: function(data,display,object){ 
 	                	if (escapeContent(object.post_content).length <= 8){
 	                		return "Post content can not be less than 8 chars";
 	                	}
