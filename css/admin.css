@@ -34,7 +34,8 @@ body.wp-admin{
 .wp-admin .cryptofrcomments-tabs .cryptofr-publish-tab,
 .wp-admin .cryptofrcomments-tabs .cryptofr-old-articles-tab,
 .wp-admin .cryptofrcomments-tabs .logout-box,
-.error-cryptofr-auth{
+.error-cryptofr-auth,
+.error-cryptofr-cid{
 	display: none;
 }
 
@@ -75,6 +76,7 @@ tr.shown td.details-control {
 
 
 #marked-articles-table .article-status,
+#marked-articles-table .article-error,
 #marked-articles-table .article-date,
 #marked-articles-table .article-actions {
   width: 125px;

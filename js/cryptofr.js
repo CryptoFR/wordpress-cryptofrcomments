@@ -87,6 +87,13 @@
 	                "data": "cryptofrcomments",
 	                "className": "article-status" 
 	            },{
+	                "className": "article-error", render: function(data,display,object){
+	                	if (escapeContent(object.post_content).length <= 8){
+	                		return "Post content can not be less than 8 chars";
+	                	}
+	                }
+
+	            },{
 	                "data": "cryptofrcomments", 
 	                "className": "article-actions", render: function(data,display,object){ 
 	                	return '<button data-post_content="'+escapeContent(object.post_content) +'" data-post_title="'+object.post_title+'" data-post_author="'+object.post_author+'" data-id="'+object.ID+'" data-guid="'+object.guid+'" data-cid="'+cid+'" class="publish-button">Publish</button>'; 
