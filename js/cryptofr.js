@@ -94,7 +94,7 @@
 	                "className": "article-error", render: function(data,display,object){ 
 	                	if (escapeContent(object.post_content).length <= 8){
 	                		return "Post content can not be less than 8 chars";
-	                	}
+	                	}else return "";
 	                }
 
 	            },{
