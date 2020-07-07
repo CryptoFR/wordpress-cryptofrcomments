@@ -347,7 +347,7 @@
 
 	$(document).on('click', '.logout-box', function () {
 		console.log('logout')
-		newFetch(nodeBBURL + "/logout", {
+		newFetch(nodeBBURL + "/ulogout", {
 		  _csrf: data.token,
 		  noscript: false
 		}).then(() => location.reload() );
