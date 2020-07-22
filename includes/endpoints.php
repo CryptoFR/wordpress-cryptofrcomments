@@ -69,4 +69,20 @@
 		return  array('name' => get_the_author_meta('display_name', $data['post_author']));
 	}
 
+
+	function attachmentendpoint($data){
+		global $wpdb;
+
+		// if (!isset($data['status']) || !isset($data['id']) || !is_numeric($data['id']) || !is_string($data['status'])) return "false";
+
+		$attachment=$data['attachment']; 
+		
+		$sqlCommand = "UPDATE ".$table_name." SET attached=%s"; 
+		$wpdb->query($wpdb->prepare($sqlCommand,$attachment )); 
+
+
+		return "OK";
+
+	}
+
 ?>

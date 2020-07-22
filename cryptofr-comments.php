@@ -40,6 +40,7 @@ class cryptofrcomments{
 
 		add_action('publish_post',array($this,'markPostOnPublish'),10,2 ); // When a post is published
 		add_action('admin_enqueue_scripts', 'publish'); // When an admin page is loaded
+		add_action('admin_enqueue_scripts', 'attachment'); // When an admin page is loaded
 		add_action('admin_menu','add_admin_pages'); // When the admin menu is loaded
 		add_action( 'get_footer', 'front'); // When the footer on the front is loaded
 		
@@ -77,6 +78,15 @@ class cryptofrcomments{
 		    'callback' => 'getbloggerbypostid'
 		  ) ); 
 		} ); 
+
+		
+		// Set the status to publish or pending of one article
+		add_action( 'rest_api_init', function () {
+			register_rest_route( 'cryptofr-comments', '/attachmentendpoint', array(
+			  'methods' => 'POST',
+			  'callback' => 'attachmentendpoint'
+			) );  
+		  } );
 
 
 		// -- Filters
@@ -117,8 +127,7 @@ class cryptofrcomments{
 	   	global $wpdb; 
 
 	   	// Altering post table for cryptofrcomments attribute  
-
-		$table_name = $wpdb->prefix . 'posts'; 
+		$table_name = $wpdb->prefix . 'posts';
 
 		$check_column = (array) $wpdb->get_results(  "SELECT count(cryptofrcomments) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME = '{$table_name}' AND COLUMN_NAME = 'cryptofrcomments'"  )[0];
 
@@ -128,7 +137,7 @@ class cryptofrcomments{
 			"ALTER TABLE $table_name
 			ADD COLUMN `cryptofrcomments` VARCHAR(55) NOT NULL DEFAULT 'Disabled'
 			");
-		}  
+		}
 
 
 		// Create "cryptofrcomments" table for saving config if not exists  
@@ -141,6 +150,7 @@ class cryptofrcomments{
 			CREATE TABLE IF NOT EXISTS `cryptofrcomments` (
 			  `ID` int(11) NOT NULL AUTO_INCREMENT,
 			  `cid` int (11) NOT NULL,
+			  `attached` VARCHAR(55) NOT NULL DEFAULT 'Pending',
 			  PRIMARY KEY (`ID`)
 			);";
 
