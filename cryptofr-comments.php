@@ -174,10 +174,7 @@ class cryptofrcomments{
 
 		flush_rewrite_rules(); 
 	}
-
  
-	
-  
 }
 
 

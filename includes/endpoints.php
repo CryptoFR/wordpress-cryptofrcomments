@@ -20,31 +20,31 @@
 		global $wpdb;
 
 		$ids=$ids->get_json_params(); 
-
 		$idKeys="";
 
 		if (count($ids)==0) return "false";
 
 		foreach ($ids as $id) {
 			if (!is_numeric($id)) return "false";
-
 			$idKeys.= "%s, ";
 		}  
 
 		$idKeys=substr($idKeys, 0, -2);
-
 		$table_name = $wpdb->prefix . 'posts';  
-		
 		$sqlCommand ="UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID in (".$idKeys.")";
-
 		$sqlCommand= $wpdb->prepare($sqlCommand,$ids); 
-		
 		$wpdb->query($sqlCommand);  
+		
+
+		$table_name = 'cryptofrcomments';		
+		$sqlCommand = "UPDATE ".$table_name." SET attached='Done'"; 
+		$wpdb->query($sqlCommand); 
+
 	
 		return "OK";
 	}
 
-	// -- SET THE STATUS TO PUBLISH OR PENDING OF ONE ARTICLE
+	// -- SET THE STATUS TO PUBLISHED OR PENDING OF ONE ARTICLE
 	function publishendpoint($data){
 		global $wpdb; 
 
@@ -76,10 +76,21 @@
 		// if (!isset($data['status']) || !isset($data['id']) || !is_numeric($data['id']) || !is_string($data['status'])) return "false";
 
 		$attachment=$data['attachment']; 
+
+
+		$table_name = 'cryptofrcomments';
 		
 		$sqlCommand = "UPDATE ".$table_name." SET attached=%s"; 
 		$wpdb->query($wpdb->prepare($sqlCommand,$attachment )); 
- 
+
+		if ($attachment=="Done"){
+			// -- GET OLD ARTICLES
+			$table_name = $wpdb->prefix . 'posts';
+			$sqlCommand="UPDATE ".$table_name." SET `cryptofrcomments`='Published'  WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish'";
+			$wpdb->query($sqlCommand); 
+
+		}
+		
 		return "OK";
 
 	}

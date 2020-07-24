@@ -498,19 +498,32 @@ if (document.querySelector('#publish-old-articles'))
             uid: '',
             _csrf: '',
           };
-
           dataArray['posts'].push(data);
         });
     }
-
     publishOldArticles(dataArray, nodeBBURL, publishURLArray, publishPHPArray);
   });
 
-async function constructDataForAttachment(data, bloggerPHP) {
-  let dataArray = [];
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}
+
+function getUniqueBloggers(articles) {
+  let uniqueBloggers = [];
+  for (let article of articles) {
+    uniqueBloggers.push(article.post_author);
+  }
+  return uniqueBloggers.filter(onlyUnique);
+}
+
+async function constructDataForAttachment(oldArticles, bloggerPHP) {
+  let dataArray = {};
   dataArray['list'] = [];
-  for (let article of data) {
-    await newFetchGet(bloggerPHP + '/' + article.post_author)
+
+  let uniqueBloggers = getUniqueBloggers(oldArticles);
+
+  for (let blogger of uniqueBloggers) {
+    await newFetchGet(bloggerPHP + '/' + blogger)
       .then(res => res.json())
       .then(function (res) {
         if (res == 'false') {
@@ -518,16 +531,22 @@ async function constructDataForAttachment(data, bloggerPHP) {
           return false;
         }
 
-        let dateobj = new Date(article.post_date);
+        let filteredByBlogger = oldArticles.filter(obj => {
+          return obj.post_author === blogger;
+        });
 
-        let data = {
-          title: article.post_title,
-          date: dateobj.toISOString(),
-          id: article.ID,
-          blogger: res.name,
-        };
+        for (const article of filteredByBlogger) {
+          let dateobj = new Date(article.post_date);
 
-        dataArray['list'].push(data);
+          let data = {
+            title: article.post_title,
+            date: dateobj.toISOString(),
+            id: article.ID,
+            blogger: res.name,
+          };
+
+          dataArray['list'].push(data);
+        }
       });
   }
   return dataArray;
@@ -550,5 +569,21 @@ if (document.querySelector('#attach-old-articles'))
       .then(function (res) {
         console.log('status', status);
         console.log('res', res);
+
+        attachStatus = 'Pending';
+        if (status == 200 && res.message == 'Topics attached') {
+          attachStatus = 'Attached';
+        }
+
+        newFetch2(attachmentPHP, attachStatus)
+          .then(res => {
+            status = res.status;
+            return res;
+          })
+          .then(res => res.json())
+          .then(function (res) {
+            alert('Old Articles had been Attached correctly');
+            location.reload();
+          });
       });
   });
