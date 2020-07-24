@@ -33,13 +33,11 @@
 		$table_name = $wpdb->prefix . 'posts';  
 		$sqlCommand ="UPDATE ".$table_name." SET cryptofrcomments='Published' WHERE ID in (".$idKeys.")";
 		$sqlCommand= $wpdb->prepare($sqlCommand,$ids); 
-		$wpdb->query($sqlCommand);  
-		
+		$wpdb->query($sqlCommand);   
 
 		$table_name = 'cryptofrcomments';		
 		$sqlCommand = "UPDATE ".$table_name." SET attached='Done'"; 
-		$wpdb->query($sqlCommand); 
-
+		$wpdb->query($sqlCommand);  
 	
 		return "OK";
 	}
@@ -83,7 +81,7 @@
 		$sqlCommand = "UPDATE ".$table_name." SET attached=%s"; 
 		$wpdb->query($wpdb->prepare($sqlCommand,$attachment )); 
 
-		if ($attachment=="Done"){
+		if ($attachment=="Attached"){
 			// -- GET OLD ARTICLES
 			$table_name = $wpdb->prefix . 'posts';
 			$sqlCommand="UPDATE ".$table_name." SET `cryptofrcomments`='Published'  WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish'";

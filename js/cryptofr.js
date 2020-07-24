@@ -575,7 +575,11 @@ if (document.querySelector('#attach-old-articles'))
           attachStatus = 'Attached';
         }
 
-        newFetch2(attachmentPHP, attachStatus)
+        let attachmentData = {};
+        attachmentData.status = status;
+        attachmentData.attachment = attachStatus;
+
+        newFetch2(attachmentPHP, attachmentData)
           .then(res => {
             status = res.status;
             return res;
