@@ -10,14 +10,7 @@
       $wpdb->query($wpdb->prepare($sqlCommand, $_POST['cid'] ));     
     }
   } 
-
-  $cid="";
-
-  $sqlCommand = "SELECT * from cryptofrcomments";
-  $wpdb->query($sqlCommand);
-
-  if (isset($wpdb->last_result[0]->cid)) 
-    $cid= $wpdb->last_result[0]->cid;
+ 
 
 
 
@@ -116,30 +109,30 @@
   </div>
 </div>
 
-
-
-
-
-<script type="text/javascript">
-	var cid= <?php echo $config->cid; ?>;
-
-  var markedArticles= <?php echo $markedArticles; ?>;
-  var publishedArticles= <?php echo $publishedArticles; ?>;
-  var oldArticles= <?php echo $oldArticles; ?>;
-
-  var nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>';
-  var siteURL = '<?php echo get_site_url(); ?>';
-
-  var publishURL = nodeBBURL+'/comments/publish';  
-  var publishURLArray = nodeBBURL+'/comments/publish-batch';  
   
-  var publishPHP = siteURL+'/wp-json/cryptofr-comments/publishendpoint';  
-  var publishPHPArray = siteURL+'/wp-json/cryptofr-comments/publishendpointarray';  
+<script type="text/javascript">
+	const cid= <?php echo $config->cid; ?>;
+
+  const markedArticles= <?php echo $markedArticles; ?>;
+  const publishedArticles= <?php echo $publishedArticles; ?>;
+  const oldArticles= <?php echo $oldArticles; ?>;
+
+  const nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>';
+  const siteURL = '<?php echo get_site_url(); ?>';
+
+  const publishURL = nodeBBURL+'/comments/publish';  
+  const publishURLArray = nodeBBURL+'/comments/publish-batch';  
+  
+  const publishPHP = siteURL+'/wp-json/cryptofr-comments/publishendpoint';  
+  const publishPHPArray = siteURL+'/wp-json/cryptofr-comments/publishendpointarray'; 
+  
+  const attachmentURL = nodeBBURL + '/attach-topic'; 
+  const attachmentPHP = siteURL + '/wp-json/cryptofr-comments/attachmentendpoint';  
     
-  var bloggerPHP = siteURL+'/wp-json/cryptofr-comments/getbloggerendpoint';
+  const bloggerPHP = siteURL+'/wp-json/cryptofr-comments/getbloggerendpoint';
 </script>
 
 <script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/publish.js"></script>
 
-<script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/cryptofr.js"></script>
+<script src="<?php echo get_site_url(); ?>/wp-content/plugins/cryptofr-comments/js/cryptofr.js"></script> 
 

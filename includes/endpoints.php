@@ -70,7 +70,7 @@
 	}
 
 
-	function attachmentendpoint($data){
+	function attachmentendpoint($data){ // Done - Pending
 		global $wpdb;
 
 		// if (!isset($data['status']) || !isset($data['id']) || !is_numeric($data['id']) || !is_string($data['status'])) return "false";
@@ -79,8 +79,7 @@
 		
 		$sqlCommand = "UPDATE ".$table_name." SET attached=%s"; 
 		$wpdb->query($wpdb->prepare($sqlCommand,$attachment )); 
-
-
+ 
 		return "OK";
 
 	}

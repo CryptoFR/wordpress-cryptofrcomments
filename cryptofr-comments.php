@@ -36,11 +36,9 @@ class cryptofrcomments{
  		
 		include (PLUGIN_PATH."/includes/methods.php"); 
 
-		//-- Hooks
-
+		//-- Hooks 
 		add_action('publish_post',array($this,'markPostOnPublish'),10,2 ); // When a post is published
-		add_action('admin_enqueue_scripts', 'publish'); // When an admin page is loaded
-		add_action('admin_enqueue_scripts', 'attachment'); // When an admin page is loaded
+		add_action('admin_enqueue_scripts', 'publish'); // When an admin page is loaded 
 		add_action('admin_menu','add_admin_pages'); // When the admin menu is loaded
 		add_action( 'get_footer', 'front'); // When the footer on the front is loaded
 		

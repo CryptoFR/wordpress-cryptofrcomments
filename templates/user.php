@@ -8,7 +8,7 @@
 
 	<form id="config-form" action="?page=cryptofr_comments_plugin" method="POST" >
 		<label for="cid">Category ID</label>
-		<input id="cid" type="text" name="cid" value="<?php echo $cid; ?>">
+		<input id="cid" type="text" name="cid" value="<?php echo $config->cid; ?>">
 		<button>Send</button>
 	</form>
 </div>

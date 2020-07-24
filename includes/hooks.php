@@ -65,37 +65,6 @@
 		}
 	}
 
-	
-	// -- 
-	function attachment(){ 
-		global $wpdb;
-		
-		$attachmentURL = NODEBB_URL.'/comments/attachmment'; 
-		$attachmentPHP = get_site_url().'/wp-json/cryptofr-comments/attachmentendpoint';  
-
-		$table_name = 'cryptofrcomments';  
-
-		$sqlCommand = "SELECT * from ".$table_name." WHERE attached='Pending'";
-		$wpdb->query($sqlCommand);
-		
-		foreach ($wpdb->last_result as $attach){
-			
-			$sqlCommand = "UPDATE ".$table_name." SET attached='Processing'";
-			$wpdb->query($sqlCommand); 
-
-			// -- GET OLD ARTICLES
-			$sqlCommand="SELECT * FROM ".$table_name." WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' ORDER BY post_date ASC";
-			$wpdb->query($sqlCommand); 
-			
-			$oldArticles=json_encode($wpdb->last_result);
-			
-			$attachCommand='attachOldArticles('.$oldArticles.',"'.NODEBB_URL.'","'.$attachmentURL.'","'.$attachmentPHP.'")'; 
- 
-			wp_enqueue_script('publish',"/wp-content/plugins/cryptofr-comments/js/attachment.js",'','',true);
-			wp_add_inline_script( 'attachOldArticles', $attachCommand );
-			
-		}
-
-	}
+	 
 
 ?>
