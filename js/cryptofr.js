@@ -552,6 +552,14 @@ async function constructDataForAttachment(oldArticles, bloggerPHP) {
   return dataArray;
 }
 
+function filterResponse(response, code = 0) {
+  let filteredResponse = [];
+  for (const res of response) {
+    if (res.code == code) filteredResponse.push(res);
+  }
+  return filteredResponse;
+}
+
 // If there are old articles, button to publish all the Old Articles at the same time on the CryptoFR Forum
 if (document.querySelector('#attach-old-articles'))
   document.querySelector('#attach-old-articles').addEventListener('click', async function () {
@@ -571,13 +579,17 @@ if (document.querySelector('#attach-old-articles'))
         console.log('res', res);
 
         attachStatus = 'Pending';
-        if (status == 200 && res.message == 'Topics attached') {
+        message = res.message;
+        if (status == 200 && message == 'Topics attached') {
           attachStatus = 'Attached';
         }
 
         let attachmentData = {};
         attachmentData.status = status;
         attachmentData.attachment = attachStatus;
+        attachmentData.attachedArticles = filterResponse(res.response);
+        attachmentData.conflictedArticles = filterResponse(res.response, 1);
+        attachmentData.corruptedArticles = filterResponse(res.response, 2);
 
         newFetch2(attachmentPHP, attachmentData)
           .then(res => {
@@ -586,8 +598,8 @@ if (document.querySelector('#attach-old-articles'))
           })
           .then(res => res.json())
           .then(function (res) {
-            alert('Old Articles had been Attached correctly');
-            location.reload();
+            alert(message);
+            // location.reload();
           });
       });
   });
