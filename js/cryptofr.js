@@ -307,7 +307,6 @@ function addSocialAuthListeners(modal) {
       var w = window.open(this.getAttribute('data-link'), this.getAttribute('data-network'), 'menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes');
       var interval = setInterval(function checkSocialAuth() {
         if (w === null || w.closed === true) {
-          setTimeout(closeModal, 1000);
           clearInterval(interval);
         }
       }, 1000);
