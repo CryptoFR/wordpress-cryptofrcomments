@@ -5,7 +5,7 @@
 		return "false";
 		if (!isset($data['post_id']) || !is_numeric($data['post_id'])) return "false"; 
 	   	
-		$table_name = $wpdb->prefix . 'posts';     
+		$table_name = $wpdb->prefix . 'posts';
 
 		$sqlCommand = "SELECT * from ".$table_name." WHERE ID=%s";
 		$wpdb->query($wpdb->prepare($sqlCommand,$data['post_id']));
@@ -88,7 +88,7 @@
 			$attachedArticles=$data['attachedArticles'];
 			$attachedIds=[];
 			foreach ($attachedArticles as $article) {
-				$attachedIds[]=$article->articleId
+				$attachedIds[]=$article->articleId;
 			} 
 			if ($count($attachedIds)>0){
 				$sqlCommand="UPDATE ".$table_name." SET `cryptofrcomments`='Published'  WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' AND ID in (".$attachedIds.")";
@@ -99,7 +99,7 @@
 			$conflictedArticles=$data['conflictedArticles'];
 			$conflictedIds=[];
 			foreach ($conflictedArticles as $article) {
-				$conflictedIds[]=$article->articleId
+				$conflictedIds[]=$article->articleId;
 			} 
 			if ($count($conflictedIds)>0){
 				$sqlCommand="UPDATE ".$table_name." SET `cryptofrcomments`='Conflicted'  WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' AND ID in (".$conflictedIds.")";
@@ -110,7 +110,7 @@
 			$corruptedArticles=$data['corruptedArticles'];
 			$corruptedIds=[];
 			foreach ($corruptedArticles as $article) {
-				$corruptedIds[]=$article->articleId
+				$corruptedIds[]=$article->articleId;
 			} 
 			if ($count($corruptedIds)>0){
 				$sqlCommand="UPDATE ".$table_name." SET `cryptofrcomments`='Pending'  WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' AND ID in (".$corruptedIds.")";

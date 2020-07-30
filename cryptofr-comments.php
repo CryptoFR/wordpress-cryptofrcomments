@@ -66,7 +66,7 @@ class cryptofrcomments{
 		  register_rest_route( 'cryptofr-comments', '/publishendpointarray', array(
 		    'methods' => 'POST',
 		    'callback' => 'publishendpointarray'
-		  ) );  
+		  ) );
 		} );
 
 		// Get the blogg info from the article

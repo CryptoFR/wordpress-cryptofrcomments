@@ -39,8 +39,7 @@
   $wpdb->query($sqlCommand); 
 
   $publishedArticles=json_encode($wpdb->last_result);
-
-
+ 
   
   // -- GET OLD ARTICLES
   $sqlCommand="SELECT * FROM ".$table_name." WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' ORDER BY post_date ASC";
@@ -49,6 +48,14 @@
   $oldArticlesArray=$wpdb->last_result;
 
   $oldArticles=json_encode($wpdb->last_result);
+
+  
+  // -- GET CONFLICTED ARTICLES
+  $sqlCommand="SELECT * FROM ".$table_name." WHERE `cryptofrcomments`='Conflicted' AND post_type='post' AND post_status='publish' ORDER BY post_date ASC";
+  $wpdb->query($sqlCommand); 
+ 
+
+  $conflictedArticles=json_encode($wpdb->last_result);
 ?>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -116,6 +123,7 @@
   const markedArticles= <?php echo $markedArticles; ?>;
   const publishedArticles= <?php echo $publishedArticles; ?>;
   const oldArticles= <?php echo $oldArticles; ?>;
+  const conflictedArticles= <?php echo $conflictedArticles; ?>;
 
   const nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>';
   const siteURL = '<?php echo get_site_url(); ?>';

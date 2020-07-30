@@ -3,7 +3,7 @@
 // Data Table init for Comments from nodebb
 function setDataTable(table, data) {
   table.innerHTML = '<thead><tr><th class="article-user">User</th><th class="article-comment">Comment</th><th class="article-date">Date</th><th class="article-votes">Votes</th><th class="article-actions">Actions</th><th class="article-children">Children</th><th class="article-expand"></th></tr></thead><tbody></tbody>';
-  console.log('1', data);
+  // console.log('1', data);
   if (data)
     return $(table).DataTable({
       bAutoWidth: false,
@@ -79,7 +79,7 @@ function setDataTable(table, data) {
 }
 
 function setDataTableMarkedArticles(table, data) {
-  console.log('2', data);
+  // console.log('2', data);
   if (data)
     return $(table).DataTable({
       bAutoWidth: false,
@@ -113,6 +113,42 @@ function setDataTableMarkedArticles(table, data) {
           className: 'article-actions',
           render: function (data, display, object) {
             return '<button data-post_content="' + escapeContent(object.post_content) + '" data-post_title="' + object.post_title + '" data-post_author="' + object.post_author + '" data-id="' + object.ID + '" data-guid="' + object.guid + '" data-cid="' + cid + '" class="publish-button">Publish</button>';
+          },
+        },
+      ],
+      select: {
+        style: 'os',
+        selector: 'td:not(:first-child)',
+      },
+    });
+}
+
+function setDataTableConflictedArticles(table, data) {
+  // console.log('2', data);
+  if (data)
+    return $(table).DataTable({
+      bAutoWidth: false,
+      // ajax: '../php/sites.php',
+      order: [1, 'desc'],
+      aaData: data,
+      columns: [
+        {
+          data: 'post_title',
+          className: 'article-title',
+        },
+        {
+          data: 'post_date',
+          className: 'article-date',
+        },
+        {
+          data: 'cryptofrcomments',
+          className: 'article-status',
+        },
+        {
+          data: 'cryptofrcomments',
+          className: 'article-actions',
+          render: function (data, display, object) {
+            return '<button data-post_content="' + escapeContent(object.post_content) + '" data-post_title="' + object.post_title + '" data-post_author="' + object.post_author + '" data-id="' + object.ID + '" data-guid="' + object.guid + '" data-cid="' + cid + '" class="conflict-button">Attach</button>';
           },
         },
       ],
@@ -603,3 +639,5 @@ if (document.querySelector('#attach-old-articles'))
           });
       });
   });
+
+setDataTableConflictedArticles(document.querySelector('#conflicted-articles-table'), conflictedArticles);
