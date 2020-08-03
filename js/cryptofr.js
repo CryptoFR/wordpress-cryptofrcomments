@@ -254,37 +254,59 @@ function destroyChild(row, cell) {
 
 // SET VALUES TO USER TAB
 function setUSerData() {
-  document.querySelector('.user-name').innerText = data.user.username;
-  if (data.user.picture) {
-    document.querySelector('.user-image').setAttribute('src', data.user.picture);
-    document.querySelector('.user-image').setAttribute('alt', data.user.username);
-    document.querySelector('.user-image').setAttribute('title', data.user.username);
+  document.querySelector('.user-name').innerText = localStorage.username;
+  if ('picture' in localStorage) {
+    document.querySelector('.user-image').setAttribute('src', localStorage.picture);
+    document.querySelector('.user-image').setAttribute('alt', localStorage.username);
+    document.querySelector('.user-image').setAttribute('title', localStorage.username);
     removeNodes(document.querySelector('.user-icon'));
   } else {
-    document.querySelector('.user-icon').setAttribute('title', data.user.username);
-    document.querySelector('.user-icon').setAttribute('alt', data.user.username);
-    document.querySelector('.user-icon').innerText = data.user['icon:text'];
-    document.querySelector('.user-icon').style.backgroundColor = data.user['icon:bgColor'];
+    document.querySelector('.user-icon').setAttribute('title', localStorage.username);
+    document.querySelector('.user-icon').setAttribute('alt', localStorage.username);
+    document.querySelector('.user-icon').innerText = localStorage.innerText;
+    document.querySelector('.user-icon').style.backgroundColor = localStorage.backgroundColor;
     removeNodes(document.querySelector('.user-image'));
   }
 }
 
 // LOGIN CALL WHEN FORM SUBMIT
-function login(username, password, token) {
-  return newFetch(nodeBBURL + '/login', {
-    username: username,
-    password: password,
-    _csrf: token,
-    remember: 'on',
-    noscript: false,
-  }).then(res => {
-    const loginSuccess = res.status === 200;
-    if (!loginSuccess) {
-      loginError("L'identifiant et/ou le mot de passe sont erronés");
-      var loginButton = document.querySelector('#login-modal button.login-button');
-      loginButton.classList.remove('loading-button');
-    } else location.reload();
-  });
+function login(username, password) {
+  return newFetch(
+    nodeBBURL + '/comments/login',
+    {
+      username: username,
+      password: password,
+    },
+    localStorage.token
+  )
+    .then(res => res.json())
+    .then(res => {
+      console.log('LOGIN RES', res);
+      if (res.ok) {
+        localStorage.clear();
+        localStorage.token = res.token;
+        localStorage.status = 200;
+        localStorage.uid = res.user.uid;
+        localStorage.username = res.user.username;
+        if (res.user.picture) localStorage.picture = res.user.picture;
+        else {
+          localStorage.innerText = res.user['icon:text'];
+          localStorage.backgroundColor = res.user['icon:bgColor'];
+        }
+        // location.reload();
+      } else {
+        localStorage.clear();
+        loginError("L'identifiant et/ou le mot de passe sont erronés");
+        var loginButton = document.querySelector('#login-modal button.login-button');
+        loginButton.classList.remove('loading-button');
+      }
+      // if (!loginSuccess) {
+      //   loginError("L'identifiant et/ou le mot de passe sont erronés");
+      //   var loginButton = document.querySelector('#login-modal button.login-button');
+      //   loginButton.classList.remove('loading-button');
+      // }
+      // else
+    });
 }
 
 // DISPLAY LOGIN ERROR
@@ -318,7 +340,7 @@ function addSocialAuthListeners(modal) {
 
 // WHEN TAB IS CHANGED IT CHECKS IF LOGIN STATE HAS CHANGE AND RELOADS THE PAGE
 document.addEventListener('visibilitychange', function () {
-  newFetchGet(nodeBBURL + '/comments/bycid/' + cid)
+  newFetchGet(nodeBBURL + '/comments/bycid/' + cid, localStorage.token)
     .then(res => res.json())
     .then(function (res) {
       console.log(res);
@@ -366,18 +388,15 @@ $(document).on('click', '.comments-tables .moderate', function () {
     let tr = this.closest('tr');
     let pidCell = tr.querySelector('.article-expand');
     let pid = pidCell.getAttribute('data-pid');
-    newFetch(nodeBBURL + '/comments/delete/' + pid, {}).then(function () {
+    newFetch(nodeBBURL + '/comments/delete/' + pid, {}, localStorage.token).then(function () {
       location.reload();
     });
   }
 });
 
 $(document).on('click', '.logout-box', function () {
-  console.log('logout');
-  newFetch(nodeBBURL + '/ulogout', {
-    _csrf: data.token,
-    noscript: false,
-  }).then(() => location.reload());
+  localStorage.clear();
+  location.reload();
 });
 
 // WHEN LOGIN FORM SUBMIT, SEND POST REQUEST THROUGH FETCH
@@ -385,7 +404,7 @@ $(document).on('submit', '#login-form', function (event) {
   event.preventDefault();
   let username = this.querySelector("[name='email']").value;
   let password = this.querySelector("[name='password']").value;
-  login(username, password, data.token);
+  login(username, password);
 });
 
 $(document).on('click', '.publish-button', function (event) {
@@ -400,7 +419,6 @@ $(document).on('click', '.publish-button', function (event) {
         console.log('error on getblogger endpoint');
         return false;
       }
-
       data = {
         markdown: button.getAttribute('data-post_content'),
         title: button.getAttribute('data-post_title'),
@@ -418,126 +436,13 @@ $(document).on('click', '.publish-button', function (event) {
     });
 });
 
-// ----- MAIN
-
-var data = null;
-var siteTable = null;
-var status = null;
-var articles = {};
-
-// GET COMMENTS FROM CATEGORY AND CATEGORIZE THEM BY ARTICLE/TOPIC
-newFetchGet(nodeBBURL + '/comments/bycid/' + cid)
-  .then(res => {
-    status = res.status;
-    return res;
-  })
-  .then(res => res.json())
-  .then(function (res) {
-    data = res;
-    console.log(data);
-
-    if (status == 401) {
-      // IF NOT CONNECTED
-      document.querySelector('#cryptofr-login').classList.add('in', 'active');
-      document.querySelector('.cryptofr-login-tab').style.display = 'block';
-      document.querySelector('.cryptofr-login-tab').classList.add('active');
-      addSocialAuthListeners(document.querySelector('#login-modal'));
-      return;
-    } else if (status == 403) {
-      // IF NOT AUTHORIZED
-      document.querySelector('.logout-box').style.display = 'block';
-      document.querySelector('.error-cryptofr-auth').style.display = 'block';
-      document.querySelector('#cryptofr-user').classList.add('in', 'active');
-      document.querySelector('.cryptofr-user-tab').style.display = 'block';
-      document.querySelector('.cryptofr-user-tab').classList.add('active');
-      setUSerData();
-      return;
-    }
-
-    setUSerData();
-
-    // YOU ARE AUTHORIZED
-
-    // -- Display tabs on dashboard menu
-    document.querySelector('#cryptofr-comments').classList.add('in', 'active');
-    document.querySelector('.cryptofr-comments-tab').style.display = 'block';
-    document.querySelector('.cryptofr-comments-tab').classList.add('active');
-
-    document.querySelector('.cryptofr-user-tab').style.display = 'block';
-    document.querySelector('.cryptofr-publish-tab').style.display = 'block';
-    document.querySelector('.cryptofr-old-articles-tab').style.display = 'block';
-
-    document.querySelector('.logout-box').style.display = 'block';
-
-    // Group comments by articles
-    for (const l of data.posts) {
-      if (!articles.hasOwnProperty(l.tid)) {
-        articles[l.tid] = {
-          topic: l.topic,
-          posts: [],
-        };
-      }
-      articles[l.tid].posts.push(l);
-    }
-    articles = Object.entries(articles);
-
-    siteTable = setDataTable(document.querySelector('#grid'), data.posts);
-
-    // Set a datatable to each article
-    for (const article of articles) {
-      let table = document.createElement('table');
-      $(table).addClass('article-table').addClass('display').attr('id', article[1].topic.tid).css('width', '100%');
-      let div = document.createElement('div');
-      $(div).addClass('article-table-container');
-      let h2 = document.createElement('h2');
-      h2.innerText = article[1].topic.title;
-      div.append(h2);
-      div.append(table);
-      document.querySelector('.comments-tables').append(div);
-
-      let articleTable = setDataTable(table, article[1].posts);
-    }
-
-    if (!cid || cid == 0) document.querySelector('.error-cryptofr-cid').style.display = 'block';
-  });
-
-setDataTableMarkedArticles(document.querySelector('#marked-articles-table'), markedArticles);
-
-// If there are old articles, button to publish all the Old Articles at the same time on the CryptoFR Forum
-if (document.querySelector('#publish-old-articles'))
-  document.querySelector('#publish-old-articles').addEventListener('click', async function () {
-    let dataArray = {};
-
-    dataArray['posts'] = [];
-    dataArray['cid'] = cid;
-
-    // Append to array the Old Articles with its respective blogger info
-    for (let article of oldArticles) {
-      await newFetchGet(bloggerPHP + '/' + article.post_author)
-        .then(res => res.json())
-        .then(function (res) {
-          if (res == 'false') {
-            console.log('error on getblogger endpoint');
-            return false;
-          }
-
-          let data = {
-            markdown: escapeContent(article.post_content),
-            title: article.post_title,
-            cid: cid,
-            blogger: res.name,
-            tags: '',
-            id: article.ID,
-            url: article.guid,
-            timestamp: Date.now(),
-            uid: '',
-            _csrf: '',
-          };
-          dataArray['posts'].push(data);
-        });
-    }
-    publishOldArticles(dataArray, nodeBBURL, publishURLArray, publishPHPArray);
-  });
+function filterResponse(response, code = 0) {
+  let filteredResponse = [];
+  for (const res of response) {
+    if (res.code == code) filteredResponse.push(res);
+  }
+  return filteredResponse;
+}
 
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
@@ -587,56 +492,166 @@ async function constructDataForAttachment(oldArticles, bloggerPHP) {
   return dataArray;
 }
 
-function filterResponse(response, code = 0) {
-  let filteredResponse = [];
-  for (const res of response) {
-    if (res.code == code) filteredResponse.push(res);
-  }
-  return filteredResponse;
-}
+// ----- MAIN
 
-// If there are old articles, button to publish all the Old Articles at the same time on the CryptoFR Forum
-if (document.querySelector('#attach-old-articles'))
-  document.querySelector('#attach-old-articles').addEventListener('click', async function () {
-    dataArray = await constructDataForAttachment(oldArticles, bloggerPHP);
-    console.log('dataArray', dataArray);
-    console.log('attachmentURL', attachmentURL);
-    console.log('cid', cid);
-    status = null;
-    newFetch2(attachmentURL + '/' + cid, dataArray)
-      .then(res => {
-        status = res.status;
-        return res;
-      })
-      .then(res => res.json())
-      .then(function (res) {
-        console.log('status', status);
-        console.log('res', res);
+var data = null;
+var siteTable = null;
+var status = null;
+var articles = {};
 
-        attachStatus = 'Pending';
-        message = res.message;
-        if (status == 200 && message == 'Topics attached') {
-          attachStatus = 'Attached';
+// CHECK IF YOU ARE AUTHORIZED
+if ('token' in localStorage && localStorage.status === '200') {
+  // GET COMMENTS FROM CATEGORY AND CATEGORIZE THEM BY ARTICLE/TOPIC
+  newFetchGet(nodeBBURL + '/comments/bycid/' + cid, localStorage.token)
+    .then(res => {
+      status = res.status;
+      return res;
+    })
+    .then(res => res.json())
+    .then(function (res) {
+      data = res;
+      console.log(data);
+
+      setUSerData();
+
+      // -- Display tabs on dashboard menu
+      document.querySelector('#cryptofr-comments').classList.add('in', 'active');
+      document.querySelector('.cryptofr-comments-tab').style.display = 'block';
+      document.querySelector('.cryptofr-comments-tab').classList.add('active');
+
+      document.querySelector('.cryptofr-user-tab').style.display = 'block';
+      document.querySelector('.cryptofr-publish-tab').style.display = 'block';
+      document.querySelector('.cryptofr-old-articles-tab').style.display = 'block';
+
+      document.querySelector('.logout-box').style.display = 'block';
+
+      // Group comments by articles
+      for (const l of data.posts) {
+        if (!articles.hasOwnProperty(l.tid)) {
+          articles[l.tid] = {
+            topic: l.topic,
+            posts: [],
+          };
         }
+        articles[l.tid].posts.push(l);
+      }
+      articles = Object.entries(articles);
 
-        let attachmentData = {};
-        attachmentData.status = status;
-        attachmentData.attachment = attachStatus;
-        attachmentData.attachedArticles = filterResponse(res.response);
-        attachmentData.conflictedArticles = filterResponse(res.response, 1);
-        attachmentData.corruptedArticles = filterResponse(res.response, 2);
+      siteTable = setDataTable(document.querySelector('#grid'), data.posts);
 
-        newFetch2(attachmentPHP, attachmentData)
-          .then(res => {
-            status = res.status;
-            return res;
-          })
+      // Set a datatable to each article
+      for (const article of articles) {
+        let table = document.createElement('table');
+        $(table).addClass('article-table').addClass('display').attr('id', article[1].topic.tid).css('width', '100%');
+        let div = document.createElement('div');
+        $(div).addClass('article-table-container');
+        let h2 = document.createElement('h2');
+        h2.innerText = article[1].topic.title;
+        div.append(h2);
+        div.append(table);
+        document.querySelector('.comments-tables').append(div);
+
+        setDataTable(table, article[1].posts);
+      }
+
+      if (!cid || cid == 0) document.querySelector('.error-cryptofr-cid').style.display = 'block';
+    });
+
+  setDataTableMarkedArticles(document.querySelector('#marked-articles-table'), markedArticles);
+
+  // If there are old articles, button to publish all the Old Articles at the same time on the CryptoFR Forum
+  if (document.querySelector('#publish-old-articles'))
+    document.querySelector('#publish-old-articles').addEventListener('click', async function () {
+      let dataArray = {};
+
+      dataArray['posts'] = [];
+      dataArray['cid'] = cid;
+
+      // Append to array the Old Articles with its respective blogger info
+      for (let article of oldArticles) {
+        await newFetchGet(bloggerPHP + '/' + article.post_author)
           .then(res => res.json())
           .then(function (res) {
-            alert(message);
-            // location.reload();
-          });
-      });
-  });
+            if (res == 'false') {
+              console.log('error on getblogger endpoint');
+              return false;
+            }
 
-setDataTableConflictedArticles(document.querySelector('#conflicted-articles-table'), conflictedArticles);
+            let data = {
+              markdown: escapeContent(article.post_content),
+              title: article.post_title,
+              cid: cid,
+              blogger: res.name,
+              tags: '',
+              id: article.ID,
+              url: article.guid,
+              timestamp: Date.now(),
+              uid: '',
+              _csrf: '',
+            };
+            dataArray['posts'].push(data);
+          });
+      }
+      publishOldArticles(dataArray, nodeBBURL, publishURLArray, publishPHPArray);
+    });
+
+  // If there are old articles, button to publish all the Old Articles at the same time on the CryptoFR Forum
+  if (document.querySelector('#attach-old-articles'))
+    document.querySelector('#attach-old-articles').addEventListener('click', async function () {
+      dataArray = await constructDataForAttachment(oldArticles, bloggerPHP);
+      console.log('dataArray', dataArray);
+      console.log('attachmentURL', attachmentURL);
+      console.log('cid', cid);
+      status = null;
+      newFetch2(attachmentURL + '/' + cid, dataArray, localStorage.token)
+        .then(res => {
+          status = res.status;
+          return res;
+        })
+        .then(res => res.json())
+        .then(function (res) {
+          console.log('status', status);
+          console.log('res', res);
+
+          attachStatus = 'Pending';
+          message = res.message;
+          if (status == 200 && message == 'Topics attached') {
+            attachStatus = 'Attached';
+          }
+
+          let attachmentData = {};
+          attachmentData.status = status;
+          attachmentData.attachment = attachStatus;
+          attachmentData.attachedArticles = filterResponse(res.response);
+          attachmentData.conflictedArticles = filterResponse(res.response, 1);
+          attachmentData.corruptedArticles = filterResponse(res.response, 2);
+
+          newFetch2(attachmentPHP, attachmentData)
+            .then(res => {
+              status = res.status;
+              return res;
+            })
+            .then(res => res.json())
+            .then(function (res) {
+              alert(message);
+              // location.reload();
+            });
+        });
+    });
+
+  setDataTableConflictedArticles(document.querySelector('#conflicted-articles-table'), conflictedArticles);
+} else if (status == '403') {
+  // NOT AUTHORIZED
+  document.querySelector('.logout-box').style.display = 'block';
+  document.querySelector('.error-cryptofr-auth').style.display = 'block';
+  document.querySelector('#cryptofr-user').classList.add('in', 'active');
+  document.querySelector('.cryptofr-user-tab').style.display = 'block';
+  document.querySelector('.cryptofr-user-tab').classList.add('active');
+  setUSerData();
+} else if (!localStorage.length || localStorage.status == '401') {
+  // NOT CONNECTED
+  document.querySelector('#cryptofr-login').classList.add('in', 'active');
+  document.querySelector('.cryptofr-login-tab').style.display = 'block';
+  document.querySelector('.cryptofr-login-tab').classList.add('active');
+  addSocialAuthListeners(document.querySelector('#login-modal'));
+}
