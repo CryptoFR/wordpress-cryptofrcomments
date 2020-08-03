@@ -17,7 +17,7 @@ function newFetch(path, data = {}, token = null) {
     credentials: 'include',
     body: encodedString,
   };
-  if (token) fetchData.headers.token = token;
+  if (token) fetchData.headers.Authorization = 'Bearer ' + token;
   return fetch(path, fetchData);
 }
 
@@ -31,7 +31,7 @@ function newFetch2(path, data, token = null) {
     credentials: 'include',
     body: JSON.stringify(data),
   };
-  if (token) fetchData.headers.token = token;
+  if (token) fetchData.headers.Authorization = 'Bearer ' + token;
   return fetch(path, fetchData);
 }
 
@@ -44,7 +44,7 @@ function newFetchGet(path, token = null) {
     },
     credentials: 'include',
   };
-  if (token) fetchData.headers.token = token;
+  if (token) fetchData.headers.Authorization = 'Bearer ' + token;
   return fetch(path, fetchData);
 }
 

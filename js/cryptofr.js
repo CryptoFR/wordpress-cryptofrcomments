@@ -281,7 +281,7 @@ function login(username, password) {
   )
     .then(res => res.json())
     .then(res => {
-      console.log('LOGIN RES', res);
+      // console.log('LOGIN RES', res);
       if (res.ok) {
         localStorage.clear();
         localStorage.token = res.token;
@@ -293,19 +293,13 @@ function login(username, password) {
           localStorage.innerText = res.user['icon:text'];
           localStorage.backgroundColor = res.user['icon:bgColor'];
         }
-        // location.reload();
+        location.reload();
       } else {
         localStorage.clear();
         loginError("L'identifiant et/ou le mot de passe sont erronés");
         var loginButton = document.querySelector('#login-modal button.login-button');
         loginButton.classList.remove('loading-button');
       }
-      // if (!loginSuccess) {
-      //   loginError("L'identifiant et/ou le mot de passe sont erronés");
-      //   var loginButton = document.querySelector('#login-modal button.login-button');
-      //   loginButton.classList.remove('loading-button');
-      // }
-      // else
     });
 }
 
@@ -511,8 +505,18 @@ if ('token' in localStorage && localStorage.status === '200') {
     .then(function (res) {
       data = res;
       console.log(data);
-
       setUSerData();
+
+      if (status == '403') {
+        // NOT AUTHORIZED
+        document.querySelector('.logout-box').style.display = 'block';
+        document.querySelector('.error-cryptofr-auth').style.display = 'block';
+        document.querySelector('#cryptofr-user').classList.add('in', 'active');
+        document.querySelector('.cryptofr-user-tab').style.display = 'block';
+        document.querySelector('.cryptofr-user-tab').classList.add('active');
+        setUSerData();
+        return;
+      }
 
       // -- Display tabs on dashboard menu
       document.querySelector('#cryptofr-comments').classList.add('in', 'active');
@@ -555,100 +559,92 @@ if ('token' in localStorage && localStorage.status === '200') {
       }
 
       if (!cid || cid == 0) document.querySelector('.error-cryptofr-cid').style.display = 'block';
-    });
 
-  setDataTableMarkedArticles(document.querySelector('#marked-articles-table'), markedArticles);
+      setDataTableMarkedArticles(document.querySelector('#marked-articles-table'), markedArticles);
 
-  // If there are old articles, button to publish all the Old Articles at the same time on the CryptoFR Forum
-  if (document.querySelector('#publish-old-articles'))
-    document.querySelector('#publish-old-articles').addEventListener('click', async function () {
-      let dataArray = {};
+      // If there are old articles, button to publish all the Old Articles at the same time on the CryptoFR Forum
+      if (document.querySelector('#publish-old-articles'))
+        document.querySelector('#publish-old-articles').addEventListener('click', async function () {
+          let dataArray = {};
 
-      dataArray['posts'] = [];
-      dataArray['cid'] = cid;
+          dataArray['posts'] = [];
+          dataArray['cid'] = cid;
 
-      // Append to array the Old Articles with its respective blogger info
-      for (let article of oldArticles) {
-        await newFetchGet(bloggerPHP + '/' + article.post_author)
-          .then(res => res.json())
-          .then(function (res) {
-            if (res == 'false') {
-              console.log('error on getblogger endpoint');
-              return false;
-            }
+          // Append to array the Old Articles with its respective blogger info
+          for (let article of oldArticles) {
+            await newFetchGet(bloggerPHP + '/' + article.post_author)
+              .then(res => res.json())
+              .then(function (res) {
+                if (res == 'false') {
+                  console.log('error on getblogger endpoint');
+                  return false;
+                }
 
-            let data = {
-              markdown: escapeContent(article.post_content),
-              title: article.post_title,
-              cid: cid,
-              blogger: res.name,
-              tags: '',
-              id: article.ID,
-              url: article.guid,
-              timestamp: Date.now(),
-              uid: '',
-              _csrf: '',
-            };
-            dataArray['posts'].push(data);
-          });
-      }
-      publishOldArticles(dataArray, nodeBBURL, publishURLArray, publishPHPArray);
-    });
-
-  // If there are old articles, button to publish all the Old Articles at the same time on the CryptoFR Forum
-  if (document.querySelector('#attach-old-articles'))
-    document.querySelector('#attach-old-articles').addEventListener('click', async function () {
-      dataArray = await constructDataForAttachment(oldArticles, bloggerPHP);
-      console.log('dataArray', dataArray);
-      console.log('attachmentURL', attachmentURL);
-      console.log('cid', cid);
-      status = null;
-      newFetch2(attachmentURL + '/' + cid, dataArray, localStorage.token)
-        .then(res => {
-          status = res.status;
-          return res;
-        })
-        .then(res => res.json())
-        .then(function (res) {
-          console.log('status', status);
-          console.log('res', res);
-
-          attachStatus = 'Pending';
-          message = res.message;
-          if (status == 200 && message == 'Topics attached') {
-            attachStatus = 'Attached';
+                let data = {
+                  markdown: escapeContent(article.post_content),
+                  title: article.post_title,
+                  cid: cid,
+                  blogger: res.name,
+                  tags: '',
+                  id: article.ID,
+                  url: article.guid,
+                  timestamp: Date.now(),
+                  uid: '',
+                  _csrf: '',
+                };
+                dataArray['posts'].push(data);
+              });
           }
+          publishOldArticles(dataArray, nodeBBURL, publishURLArray, publishPHPArray);
+        });
 
-          let attachmentData = {};
-          attachmentData.status = status;
-          attachmentData.attachment = attachStatus;
-          attachmentData.attachedArticles = filterResponse(res.response);
-          attachmentData.conflictedArticles = filterResponse(res.response, 1);
-          attachmentData.corruptedArticles = filterResponse(res.response, 2);
-
-          newFetch2(attachmentPHP, attachmentData)
+      // If there are old articles, button to publish all the Old Articles at the same time on the CryptoFR Forum
+      if (document.querySelector('#attach-old-articles'))
+        document.querySelector('#attach-old-articles').addEventListener('click', async function () {
+          dataArray = await constructDataForAttachment(oldArticles, bloggerPHP);
+          console.log('dataArray', dataArray);
+          console.log('attachmentURL', attachmentURL);
+          console.log('cid', cid);
+          status = null;
+          newFetch2(attachmentURL + '/' + cid, dataArray, localStorage.token)
             .then(res => {
               status = res.status;
               return res;
             })
             .then(res => res.json())
             .then(function (res) {
-              alert(message);
-              // location.reload();
+              console.log('status', status);
+              console.log('res', res);
+
+              attachStatus = 'Pending';
+              message = res.message;
+              if (status == 200 && message == 'Topics attached') {
+                attachStatus = 'Attached';
+              }
+
+              let attachmentData = {};
+              attachmentData.status = status;
+              attachmentData.attachment = attachStatus;
+              attachmentData.attachedArticles = filterResponse(res.response);
+              attachmentData.conflictedArticles = filterResponse(res.response, 1);
+              attachmentData.corruptedArticles = filterResponse(res.response, 2);
+
+              newFetch2(attachmentPHP, attachmentData)
+                .then(res => {
+                  status = res.status;
+                  return res;
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                  alert(message);
+                  // location.reload();
+                });
             });
         });
-    });
 
-  setDataTableConflictedArticles(document.querySelector('#conflicted-articles-table'), conflictedArticles);
-} else if (status == '403') {
-  // NOT AUTHORIZED
-  document.querySelector('.logout-box').style.display = 'block';
-  document.querySelector('.error-cryptofr-auth').style.display = 'block';
-  document.querySelector('#cryptofr-user').classList.add('in', 'active');
-  document.querySelector('.cryptofr-user-tab').style.display = 'block';
-  document.querySelector('.cryptofr-user-tab').classList.add('active');
-  setUSerData();
-} else if (!localStorage.length || localStorage.status == '401') {
+      setDataTableConflictedArticles(document.querySelector('#conflicted-articles-table'), conflictedArticles);
+    });
+} else {
   // NOT CONNECTED
   document.querySelector('#cryptofr-login').classList.add('in', 'active');
   document.querySelector('.cryptofr-login-tab').style.display = 'block';
