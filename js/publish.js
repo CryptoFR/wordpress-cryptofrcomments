@@ -26,7 +26,7 @@ function newFetch2(path, data, token = null) {
   let fetchData = {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
     credentials: 'include',
     body: JSON.stringify(data),
@@ -54,7 +54,7 @@ function publish(data, nodeBBURL, publishURL, publishPHP, manualButton = null) {
   console.log(data);
   if ('token' in localStorage && localStorage.status === '200') {
     // Publish the article to CryptoFR Forum
-    newFetch(publishURL, data, localStorage)
+    newFetch(publishURL, data, localStorage.token)
       .then(res => {
         status = res.status;
         return res;

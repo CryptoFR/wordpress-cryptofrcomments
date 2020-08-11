@@ -271,14 +271,10 @@ function setUSerData() {
 
 // LOGIN CALL WHEN FORM SUBMIT
 function login(username, password) {
-  return newFetch(
-    nodeBBURL + '/comments/login',
-    {
-      username: username,
-      password: password,
-    },
-    localStorage.token
-  )
+  return newFetch(nodeBBURL + '/comments/login', {
+    username: username,
+    password: password,
+  })
     .then(res => res.json())
     .then(res => {
       // console.log('LOGIN RES', res);
