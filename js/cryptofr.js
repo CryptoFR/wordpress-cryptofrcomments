@@ -133,7 +133,7 @@ function setDataTableConflictedArticles(table, data) {
       aaData: data,
       columns: [
         {
-          data: 'post_title',
+          data: 'title',
           className: 'article-title',
         },
         {
@@ -148,7 +148,7 @@ function setDataTableConflictedArticles(table, data) {
           data: 'cryptofrcomments',
           className: 'article-actions',
           render: function (data, display, object) {
-            return '<button data-post_content="' + escapeContent(object.post_content) + '" data-post_title="' + object.post_title + '" data-post_author="' + object.post_author + '" data-id="' + object.ID + '" data-guid="' + object.guid + '" data-cid="' + cid + '" class="conflict-button">Attach</button>';
+            return '<button data-post_tid="' + object.obj.tid + '" data-post_title="' + object.title + '" data-id="' + object.ID + '" class="conflict-button">Attach</button>';
           },
         },
       ],
@@ -610,7 +610,7 @@ if ('token' in localStorage && localStorage.status === '200') {
             .then(res => res.json())
             .then(function (res) {
               console.log('status', status);
-              console.log('res', res);
+              console.log('res attach', res);
 
               attachStatus = 'Pending';
               message = res.message;
@@ -625,6 +625,10 @@ if ('token' in localStorage && localStorage.status === '200') {
               attachmentData.conflictedArticles = filterResponse(res.response, 1);
               attachmentData.corruptedArticles = filterResponse(res.response, 2);
 
+              conflictedArticles = attachmentData.conflictedArticles;
+
+              console.log(conflictedArticles);
+
               newFetch2(attachmentPHP, attachmentData)
                 .then(res => {
                   status = res.status;
@@ -633,12 +637,13 @@ if ('token' in localStorage && localStorage.status === '200') {
                 .then(res => res.json())
                 .then(function (res) {
                   alert(message);
+
+                  // setDataTableConflictedArticles(document.querySelector('#conflicted-articles-table'), conflictedArticles);
+
                   // location.reload();
                 });
             });
         });
-
-      setDataTableConflictedArticles(document.querySelector('#conflicted-articles-table'), conflictedArticles);
     });
 } else {
   // NOT CONNECTED
