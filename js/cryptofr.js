@@ -135,6 +135,9 @@ function setDataTableConflictedArticles(table, data) {
         {
           data: 'title',
           className: 'article-title',
+          render: function (data, display, object) {
+            return '<a href="' + object.guid + '" target="_blank">' + data + '</a>';
+          },
         },
         {
           data: 'date',
@@ -147,7 +150,7 @@ function setDataTableConflictedArticles(table, data) {
             let buttons = '';
             for (let tid of data) {
               if (buttons) buttons += '</br>';
-              buttons += '<button data-post_tid="' + tid + '" data-post_title="' + object.title + '" data-id="' + object.ArticleId + '" data-post_author="' + object.author + '" class="conflicted-article-button">Attach ' + tid + '</button>';
+              buttons += '<button data-post_tid="' + tid + '" data-post_title="' + object.title + '" data-id="' + object.articleId + '" data-post_author="' + object.author + '" class="conflicted-article-button">Attach ' + tid + '</button>';
               buttons += '&nbsp;<a href="' + nodeBBURL + '/topic/' + tid + '" target="_blank">Forum Topic</a>';
             }
             return buttons;
@@ -505,13 +508,30 @@ $(document).on('click', '.conflicted-article-button', function (event) {
       }
       let data = {};
       data.blogger = res.name;
-      newFetch2(nodeBBURL + '/attach-single-topic/' + cid + '/' + button.getAttribute('data-tid') + '/' + button.getAttribute('data-id'), data, localStorage.token)
+
+      newFetch2(nodeBBURL + '/attach-single-topic/' + cid + '/' + button.getAttribute('data-post_tid') + '/' + button.getAttribute('data-id'), data, localStorage.token)
         .then(res => res.json())
         .then(function (res) {
-          console.log(res);
-        });
+          if (res.ok) {
+            data = {};
+            data.status = 'Published';
+            data.id = button.getAttribute('data-id');
 
-      // publish(data, nodeBBURL, publishURL, publishPHP, button);
+            // Set the cryptofrcommment status attribute of the article in the wp database to Published or Pending
+            newFetch(publishPHP, data)
+              .then(res => res.json())
+              .then(function (res) {
+                if (res == 'false') {
+                  console.log('Error during Wordpress Database store endpoint');
+                  return false;
+                }
+                alert('Manual Attachment is done');
+              });
+          } else {
+            alert('Error');
+            console.log(res);
+          }
+        });
     });
 });
 
@@ -662,19 +682,17 @@ if ('token' in localStorage && localStorage.status === '200') {
 
               attachmentData.conflictedArticles = joinOldArticlesWithConflicted(oldArticles, attachmentData.conflictedArticles);
 
-              // newFetch2(attachmentPHP, attachmentData)
-              //   .then(res => {
-              //     status = res.status;
-              //     return res;
-              //   })
-              //   .then(res => res.json())
-              //   .then(function (res) {
-              //     alert(message);
+              newFetch2(attachmentPHP, attachmentData)
+                .then(res => {
+                  status = res.status;
+                  return res;
+                })
+                .then(res => res.json())
+                .then(function (res) {
+                  if (attachmentData.conflictedArticles.length) setDataTableConflictedArticles(document.querySelector('#conflicted-articles-table'), attachmentData.conflictedArticles);
 
-              setDataTableConflictedArticles(document.querySelector('#conflicted-articles-table'), attachmentData.conflictedArticles);
-
-              // location.reload();
-              // });
+                  // location.reload();
+                });
             });
         });
     });

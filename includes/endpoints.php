@@ -78,7 +78,7 @@
 
 		$table_name = 'cryptofrcomments';
 		
-		$sqlCommand = "UPDATE ".$table_name." SET attached=%s"; 
+		$sqlCommand = "UPDATE ".$table_name." SET attached='Hola'"; 
 		$wpdb->query($wpdb->prepare($sqlCommand,$attachment )); 
 
 		if ($attachment=="Attached"){
@@ -92,7 +92,7 @@
 			} 
 			if ($count($attachedIds)>0){
 				$sqlCommand="UPDATE ".$table_name." SET `cryptofrcomments`='Published'  WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' AND ID in (".$attachedIds.")";
-				$wpdb->query($sqlCommand); 
+				$wpdb->query($sqlCommand);
 			}
 
 			
@@ -117,11 +117,10 @@
 				$wpdb->query($sqlCommand); 
 			}
 
-
 		}
-		
 		return "OK";
 
 	}
+ 
 
 ?>
