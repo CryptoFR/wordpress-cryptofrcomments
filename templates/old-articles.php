@@ -15,9 +15,9 @@
 					<tr>
 						<th class="article-title">Article Title</th>
 						<th class="article-date">Date</th>
-						<th class="article-status">Status</th>
-						<th class="article-error">Error</th>
-						<th class="article-actions">Actions</th>
+						 <!-- <th class="article-status">Status</th>
+						<th class="article-error">Error</th> -->
+						<th class="article-actions">Actions</th> 
 					</tr>			
 				</thead>
 				<tbody>

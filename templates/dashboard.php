@@ -122,8 +122,8 @@
 
   const markedArticles= <?php echo $markedArticles; ?>;
   const publishedArticles= <?php echo $publishedArticles; ?>;
-  const oldArticles= <?php echo $oldArticles; ?>;
-  const conflictedArticles= <?php echo $conflictedArticles; ?>;
+  let oldArticles= <?php echo $oldArticles; ?>;
+  let conflictedArticles= <?php echo $conflictedArticles; ?>;
 
   const nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>';
   const siteURL = '<?php echo get_site_url(); ?>';

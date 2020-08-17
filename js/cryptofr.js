@@ -124,7 +124,7 @@ function setDataTableMarkedArticles(table, data) {
 }
 
 function setDataTableConflictedArticles(table, data) {
-  // console.log('2', data);
+  console.log('conflicted table', data);
   if (data)
     return $(table).DataTable({
       bAutoWidth: false,
@@ -137,18 +137,20 @@ function setDataTableConflictedArticles(table, data) {
           className: 'article-title',
         },
         {
-          data: 'post_date',
+          data: 'date',
           className: 'article-date',
         },
         {
-          data: 'cryptofrcomments',
-          className: 'article-status',
-        },
-        {
-          data: 'cryptofrcomments',
+          data: 'tids',
           className: 'article-actions',
           render: function (data, display, object) {
-            return '<button data-post_tid="' + object.obj.tid + '" data-post_title="' + object.title + '" data-id="' + object.ID + '" class="conflict-button">Attach</button>';
+            let buttons = '';
+            for (let tid of data) {
+              if (buttons) buttons += '</br>';
+              buttons += '<button data-post_tid="' + tid + '" data-post_title="' + object.title + '" data-id="' + object.ArticleId + '" data-post_author="' + object.author + '" class="conflicted-article-button">Attach ' + tid + '</button>';
+              buttons += '&nbsp;<a href="' + nodeBBURL + '/topic/' + tid + '" target="_blank">Forum Topic</a>';
+            }
+            return buttons;
           },
         },
       ],
@@ -326,6 +328,72 @@ function addSocialAuthListeners(modal) {
   }
 }
 
+function filterResponse(response, code = 0) {
+  let filteredResponse = [];
+  for (const res of response) {
+    if (res.code == code) filteredResponse.push(res);
+  }
+  return filteredResponse;
+}
+
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}
+
+function getUniqueBloggers(articles) {
+  let uniqueBloggers = [];
+  for (let article of articles) {
+    uniqueBloggers.push(article.post_author);
+  }
+  return uniqueBloggers.filter(onlyUnique);
+}
+
+async function constructDataForAttachment(oldArticles, bloggerPHP) {
+  let dataArray = {};
+  dataArray['list'] = [];
+
+  let uniqueBloggers = getUniqueBloggers(oldArticles);
+
+  for (let blogger of uniqueBloggers) {
+    await newFetchGet(bloggerPHP + '/' + blogger)
+      .then(res => res.json())
+      .then(function (res) {
+        if (res == 'false') {
+          console.log('error on getblogger endpoint');
+          return false;
+        }
+
+        let filteredByBlogger = oldArticles.filter(obj => {
+          return obj.post_author === blogger;
+        });
+
+        for (const article of filteredByBlogger) {
+          let dateobj = new Date(article.post_date);
+
+          let data = {
+            title: article.post_title,
+            date: dateobj.toISOString(),
+            id: article.ID,
+            blogger: res.name,
+          };
+          dataArray['list'].push(data);
+        }
+      });
+  }
+  return dataArray;
+}
+
+function joinOldArticlesWithConflicted(oldArticles, conflictedArticles) {
+  for (let conflictedArticle of conflictedArticles) {
+    let oldArticle = oldArticles.filter(i => [conflictedArticle.articleId].includes(i.ID));
+    conflictedArticle.title = oldArticle[0].post_title;
+    conflictedArticle.author = oldArticle[0].post_author;
+    conflictedArticle.date = oldArticle[0].post_date;
+    conflictedArticle.guid = oldArticle[0].guid;
+  }
+  return conflictedArticles;
+}
+
 // ----- EVENTS
 
 // WHEN TAB IS CHANGED IT CHECKS IF LOGIN STATE HAS CHANGE AND RELOADS THE PAGE
@@ -426,61 +494,26 @@ $(document).on('click', '.publish-button', function (event) {
     });
 });
 
-function filterResponse(response, code = 0) {
-  let filteredResponse = [];
-  for (const res of response) {
-    if (res.code == code) filteredResponse.push(res);
-  }
-  return filteredResponse;
-}
-
-function onlyUnique(value, index, self) {
-  return self.indexOf(value) === index;
-}
-
-function getUniqueBloggers(articles) {
-  let uniqueBloggers = [];
-  for (let article of articles) {
-    uniqueBloggers.push(article.post_author);
-  }
-  return uniqueBloggers.filter(onlyUnique);
-}
-
-async function constructDataForAttachment(oldArticles, bloggerPHP) {
-  let dataArray = {};
-  dataArray['list'] = [];
-
-  let uniqueBloggers = getUniqueBloggers(oldArticles);
-
-  for (let blogger of uniqueBloggers) {
-    await newFetchGet(bloggerPHP + '/' + blogger)
-      .then(res => res.json())
-      .then(function (res) {
-        if (res == 'false') {
-          console.log('error on getblogger endpoint');
-          return false;
-        }
-
-        let filteredByBlogger = oldArticles.filter(obj => {
-          return obj.post_author === blogger;
+$(document).on('click', '.conflicted-article-button', function (event) {
+  button = this;
+  newFetchGet(bloggerPHP + '/' + button.getAttribute('data-post_author'))
+    .then(res => res.json())
+    .then(function (res) {
+      if (res == 'false') {
+        console.log('error on getblogger endpoint');
+        return false;
+      }
+      let data = {};
+      data.blogger = res.name;
+      newFetch2(nodeBBURL + '/attach-single-topic/' + cid + '/' + button.getAttribute('data-tid') + '/' + button.getAttribute('data-id'), data, localStorage.token)
+        .then(res => res.json())
+        .then(function (res) {
+          console.log(res);
         });
 
-        for (const article of filteredByBlogger) {
-          let dateobj = new Date(article.post_date);
-
-          let data = {
-            title: article.post_title,
-            date: dateobj.toISOString(),
-            id: article.ID,
-            blogger: res.name,
-          };
-
-          dataArray['list'].push(data);
-        }
-      });
-  }
-  return dataArray;
-}
+      // publish(data, nodeBBURL, publishURL, publishPHP, button);
+    });
+});
 
 // ----- MAIN
 
@@ -488,6 +521,8 @@ var data = null;
 var siteTable = null;
 var status = null;
 var articles = {};
+
+console.log('oldArticles', oldArticles);
 
 // CHECK IF YOU ARE AUTHORIZED
 if ('token' in localStorage && localStorage.status === '200') {
@@ -609,7 +644,7 @@ if ('token' in localStorage && localStorage.status === '200') {
             })
             .then(res => res.json())
             .then(function (res) {
-              console.log('status', status);
+              // console.log('status', status);
               console.log('res attach', res);
 
               attachStatus = 'Pending';
@@ -625,23 +660,21 @@ if ('token' in localStorage && localStorage.status === '200') {
               attachmentData.conflictedArticles = filterResponse(res.response, 1);
               attachmentData.corruptedArticles = filterResponse(res.response, 2);
 
-              conflictedArticles = attachmentData.conflictedArticles;
+              attachmentData.conflictedArticles = joinOldArticlesWithConflicted(oldArticles, attachmentData.conflictedArticles);
 
-              console.log(conflictedArticles);
+              // newFetch2(attachmentPHP, attachmentData)
+              //   .then(res => {
+              //     status = res.status;
+              //     return res;
+              //   })
+              //   .then(res => res.json())
+              //   .then(function (res) {
+              //     alert(message);
 
-              newFetch2(attachmentPHP, attachmentData)
-                .then(res => {
-                  status = res.status;
-                  return res;
-                })
-                .then(res => res.json())
-                .then(function (res) {
-                  alert(message);
+              setDataTableConflictedArticles(document.querySelector('#conflicted-articles-table'), attachmentData.conflictedArticles);
 
-                  // setDataTableConflictedArticles(document.querySelector('#conflicted-articles-table'), conflictedArticles);
-
-                  // location.reload();
-                });
+              // location.reload();
+              // });
             });
         });
     });
