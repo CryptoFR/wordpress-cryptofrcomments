@@ -703,3 +703,5 @@ if ('token' in localStorage && localStorage.status === '200') {
   document.querySelector('.cryptofr-login-tab').classList.add('active');
   addSocialAuthListeners(document.querySelector('#login-modal'));
 }
+
+console.log(wpComments);

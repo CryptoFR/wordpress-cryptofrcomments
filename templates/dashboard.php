@@ -56,6 +56,20 @@
  
 
   $conflictedArticles=json_encode($wpdb->last_result);
+
+  
+  // -- GET COMMENTS
+  $table_name = $wpdb->prefix . 'comments';
+
+  $sqlCommand="SELECT * FROM ".$table_name;
+  $wpdb->query($sqlCommand); 
+  
+  $wpComments=json_encode($wpdb->last_result);
+  
+  
+  
+
+
 ?>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -124,6 +138,7 @@
   const publishedArticles= <?php echo $publishedArticles; ?>;
   let oldArticles= <?php echo $oldArticles; ?>;
   let conflictedArticles= <?php echo $conflictedArticles; ?>;
+  let wpComments= <?php echo $wpComments; ?>;
 
   const nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>';
   const siteURL = '<?php echo get_site_url(); ?>';
