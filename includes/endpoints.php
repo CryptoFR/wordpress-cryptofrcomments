@@ -78,10 +78,11 @@
 
 		$table_name = 'cryptofrcomments';
 		
-		$sqlCommand = "UPDATE ".$table_name." SET attached='Hola'"; 
+		$sqlCommand = "UPDATE ".$table_name." SET attached=%s"; 
 		$wpdb->query($wpdb->prepare($sqlCommand,$attachment )); 
-
-		if ($attachment=="Attached"){
+		
+		
+		if ($attachment=="Attached"){ 
 			
 			$table_name = $wpdb->prefix . 'posts';
 
@@ -90,32 +91,32 @@
 			foreach ($attachedArticles as $article) {
 				$attachedIds[]=$article->articleId;
 			} 
-			if ($count($attachedIds)>0){
+			if (count($attachedIds)>0){
 				$sqlCommand="UPDATE ".$table_name." SET `cryptofrcomments`='Published'  WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' AND ID in (".$attachedIds.")";
 				$wpdb->query($sqlCommand);
 			}
 
 			
-			$conflictedArticles=$data['conflictedArticles'];
-			$conflictedIds=[];
-			foreach ($conflictedArticles as $article) {
-				$conflictedIds[]=$article->articleId;
-			} 
-			if ($count($conflictedIds)>0){
-				$sqlCommand="UPDATE ".$table_name." SET `cryptofrcomments`='Conflicted'  WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' AND ID in (".$conflictedIds.")";
-				$wpdb->query($sqlCommand); 
-			}
+			// $conflictedArticles=$data['conflictedArticles'];
+			// $conflictedIds=[];
+			// foreach ($conflictedArticles as $article) {
+			// 	$conflictedIds[]=$article->articleId;
+			// } 
+			// if (count($conflictedIds)>0){
+			// 	$sqlCommand="UPDATE ".$table_name." SET `cryptofrcomments`='Conflicted'  WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' AND ID in (".$conflictedIds.")";
+			// 	$wpdb->query($sqlCommand); 
+			// }
 
 			
-			$corruptedArticles=$data['corruptedArticles'];
-			$corruptedIds=[];
-			foreach ($corruptedArticles as $article) {
-				$corruptedIds[]=$article->articleId;
-			} 
-			if ($count($corruptedIds)>0){
-				$sqlCommand="UPDATE ".$table_name." SET `cryptofrcomments`='Pending'  WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' AND ID in (".$corruptedIds.")";
-				$wpdb->query($sqlCommand); 
-			}
+			// $corruptedArticles=$data['corruptedArticles'];
+			// $corruptedIds=[];
+			// foreach ($corruptedArticles as $article) {
+			// 	$corruptedIds[]=$article->articleId;
+			// } 
+			// if (count($corruptedIds)>0){
+			// 	$sqlCommand="UPDATE ".$table_name." SET `cryptofrcomments`='Pending'  WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' AND ID in (".$corruptedIds.")";
+			// 	$wpdb->query($sqlCommand); 
+			// }
 
 		}
 		return "OK";
