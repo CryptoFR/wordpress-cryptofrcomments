@@ -534,6 +534,9 @@ $(document).on('click', '.conflicted-article-button', function (event) {
         });
     });
 });
+$(document).on('click', '#export-comments', function (event) {
+  console.log(wpComments);
+});
 
 // ----- MAIN
 
@@ -541,6 +544,7 @@ var data = null;
 var siteTable = null;
 var status = null;
 var articles = {};
+wpComments = structureWpComments();
 
 console.log('oldArticles', oldArticles);
 
@@ -719,10 +723,6 @@ function groupCommentsByArticleID(auxWpComments) {
       auxgroup.comments.push(comment);
       groupedComments.push(auxgroup);
     }
-
-    // if (!(comment.articleId in groupedComments)) groupedComments[comment.articleId] = [];
-    // let group = {};
-    // groupedComments[comment.articleId].push(comment);
   }
   return groupedComments;
 }
@@ -771,7 +771,3 @@ function structureWpComments() {
   }
   return groupCommentsByArticleID(auxWpComments);
 }
-
-console.log('wpComments before', wpComments);
-wpComments = structureWpComments();
-console.log('wpComments after', wpComments);

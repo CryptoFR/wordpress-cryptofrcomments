@@ -28,6 +28,6 @@
 		}else{
 			echo "<p>You have no Old Articles to publish.</p>";
 		}
-
 	?>  
+	<button id='export-comments'>Export Comments</button>
 </div>
