@@ -704,4 +704,74 @@ if ('token' in localStorage && localStorage.status === '200') {
   addSocialAuthListeners(document.querySelector('#login-modal'));
 }
 
-console.log(wpComments);
+function groupCommentsByArticleID(auxWpComments) {
+  let groupedComments = [];
+  for (let comment of auxWpComments) {
+    let group = groupedComments.filter(obj => {
+      return obj.articleId === comment.articleId;
+    });
+
+    if (group.length) group[0].comments.push(comment);
+    else {
+      let auxgroup = {};
+      auxgroup.articleId = comment.articleId;
+      auxgroup.comments = [];
+      auxgroup.comments.push(comment);
+      groupedComments.push(auxgroup);
+    }
+
+    // if (!(comment.articleId in groupedComments)) groupedComments[comment.articleId] = [];
+    // let group = {};
+    // groupedComments[comment.articleId].push(comment);
+  }
+  return groupedComments;
+}
+
+function insertWpCommentChildren(wpComments, auxWpComments, auxParentComment, auxComment, superRecursive) {
+  auxParentComment = auxWpComments.filter(obj => {
+    return obj.commentId === superRecursive[0].comment_ID;
+  });
+  if (auxParentComment.length == 0) {
+    superRecursive = wpComments.filter(obj => {
+      return obj.comment_ID === superRecursive[0].comment_parent;
+    });
+    return insertWpCommentChildren(wpComments, auxWpComments, auxParentComment, auxComment, superRecursive);
+  } else if (auxParentComment[0].commentId != auxComment.parentId) {
+    auxWpComments = auxParentComment[0].children;
+    superRecursive = wpComments.filter(obj => {
+      return obj.comment_ID === auxComment.parentId;
+    });
+    return insertWpCommentChildren(wpComments, auxWpComments, auxParentComment, auxComment, superRecursive);
+  }
+
+  auxParentComment[0].children.push(auxComment);
+}
+
+function structureWpComments() {
+  let auxWpComments = [];
+  for (let comment of wpComments) {
+    let auxComment = {};
+
+    auxComment.commentId = comment.comment_ID;
+    auxComment.articleId = comment.comment_post_ID;
+    auxComment.parentId = comment.comment_parent;
+    auxComment.date = comment.comment_date;
+    auxComment.user = comment.comment_author;
+    auxComment.userEmail = comment.comment_author_email;
+    auxComment.content = comment.comment_content;
+    auxComment.children = [];
+
+    if (auxComment.parentId > 0) {
+      let superRecursive = wpComments.filter(obj => {
+        return obj.comment_ID === auxComment.parentId;
+      });
+
+      insertWpCommentChildren(wpComments, auxWpComments, null, auxComment, superRecursive);
+    } else auxWpComments.push(auxComment);
+  }
+  return groupCommentsByArticleID(auxWpComments);
+}
+
+console.log('wpComments before', wpComments);
+wpComments = structureWpComments();
+console.log('wpComments after', wpComments);
