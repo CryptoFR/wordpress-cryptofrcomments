@@ -771,3 +771,5 @@ function structureWpComments() {
   }
   return groupCommentsByArticleID(auxWpComments);
 }
+
+console.log('optionalCids', optionalCids);

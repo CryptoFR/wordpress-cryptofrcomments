@@ -67,6 +67,14 @@
   $wpComments=json_encode($wpdb->last_result);
   
   
+  // -- GET COMMENTS
+  $table_name = 'cryptofrcomments_cids';
+  $sqlCommand="SELECT cid FROM ".$table_name;
+  $wpdb->query($sqlCommand); 
+  
+  $optionalCids=json_encode($wpdb->last_result);
+  
+  
   
 
 
@@ -139,6 +147,7 @@
   let oldArticles= <?php echo $oldArticles; ?>;
   let conflictedArticles= <?php echo $conflictedArticles; ?>;
   let wpComments= <?php echo $wpComments; ?>;
+  let optionalCids= <?php echo $optionalCids; ?>;
 
   const nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>';
   const siteURL = '<?php echo get_site_url(); ?>';

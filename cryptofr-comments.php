@@ -138,21 +138,33 @@ class cryptofrcomments{
 		}
 
 
+		
+		
 		// Create "cryptofrcomments" table for saving config if not exists  
 		$sqlCommand= "DROP TABLE IF EXISTS `cryptofrcomments`";
-
 		$wpdb->query($sqlCommand);
-
-
 		$sqlCommand ="
-			CREATE TABLE IF NOT EXISTS `cryptofrcomments` (
+		CREATE TABLE IF NOT EXISTS `cryptofrcomments` (
+			`ID` int(11) NOT NULL AUTO_INCREMENT,
+			`cid` int (11) NOT NULL,
+			`attached` VARCHAR(55) NOT NULL DEFAULT 'Pending',
+			PRIMARY KEY (`ID`)
+		);";
+		$wpdb->query($sqlCommand); 
+		
+		
+		// Create "cryptofrcomments_cids" table for saving optional cids  
+		$sqlCommand= "DROP TABLE IF EXISTS `cryptofrcomments_cids`";
+		$wpdb->query($sqlCommand);
+		$sqlCommand ="
+			CREATE TABLE IF NOT EXISTS `cryptofrcomments_cids` (
 			  `ID` int(11) NOT NULL AUTO_INCREMENT,
 			  `cid` int (11) NOT NULL,
-			  `attached` VARCHAR(55) NOT NULL DEFAULT 'Pending',
 			  PRIMARY KEY (`ID`)
 			);";
 
 		$wpdb->query($sqlCommand); 
+
 
 
 		$sqlCommand ="
