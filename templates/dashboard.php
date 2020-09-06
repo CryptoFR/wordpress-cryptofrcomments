@@ -3,13 +3,29 @@
 
   global $wpdb; 
 
-  // -- POST REQUEST TO UPDATE CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
+  // -- UPDATE CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
   if (isset($_POST['cid'])) {
     if (ctype_digit($_POST['cid'])){
       $sqlCommand = "UPDATE cryptofrcomments SET cid=%s";
       $wpdb->query($wpdb->prepare($sqlCommand, $_POST['cid'] ));     
     }
-  } 
+  }
+  
+  // -- INSERT OPTIONAL CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
+  if (isset($_POST['optionalCid'])) {
+    if (ctype_digit($_POST['optionalCid'])){
+		  $sqlCommand ="INSERT INTO `cryptofrcomments_cids` (cid) VALUES (%s);";
+      $wpdb->query($wpdb->prepare($sqlCommand, $_POST['optionalCid'] ));     
+    }
+  }
+  
+  // -- DELETE OPTIONAL CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
+  if (isset($_POST['selectedCid'])) {
+    if (ctype_digit($_POST['selectedCid'])){
+		  $sqlCommand ="DELETE FROM `cryptofrcomments_cids` WHERE cid=%s";
+      $wpdb->query($wpdb->prepare($sqlCommand, $_POST['selectedCid'] ));
+    }
+  }
  
 
 
@@ -71,7 +87,7 @@
   $table_name = 'cryptofrcomments_cids';
   $sqlCommand="SELECT cid FROM ".$table_name;
   $wpdb->query($sqlCommand); 
-  
+  $optionalCidsArray=$wpdb->last_result;
   $optionalCids=json_encode($wpdb->last_result);
   
   

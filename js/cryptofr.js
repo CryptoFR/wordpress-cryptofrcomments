@@ -397,6 +397,117 @@ function joinOldArticlesWithConflicted(oldArticles, conflictedArticles) {
   return conflictedArticles;
 }
 
+function groupCommentsByArticleID(auxWpComments) {
+  let groupedComments = [];
+  for (let comment of auxWpComments) {
+    let group = groupedComments.filter(obj => {
+      return obj.articleId === comment.articleId;
+    });
+
+    if (group.length) group[0].comments.push(comment);
+    else {
+      let auxgroup = {};
+      auxgroup.articleId = comment.articleId;
+      auxgroup.comments = [];
+      auxgroup.comments.push(comment);
+      groupedComments.push(auxgroup);
+    }
+  }
+  return groupedComments;
+}
+
+function insertWpCommentChildren(wpComments, auxWpComments, auxParentComment, auxComment, superRecursive) {
+  auxParentComment = auxWpComments.filter(obj => {
+    return obj.commentId === superRecursive[0].comment_ID;
+  });
+  if (auxParentComment.length == 0) {
+    superRecursive = wpComments.filter(obj => {
+      return obj.comment_ID === superRecursive[0].comment_parent;
+    });
+    return insertWpCommentChildren(wpComments, auxWpComments, auxParentComment, auxComment, superRecursive);
+  } else if (auxParentComment[0].commentId != auxComment.parentId) {
+    auxWpComments = auxParentComment[0].children;
+    superRecursive = wpComments.filter(obj => {
+      return obj.comment_ID === auxComment.parentId;
+    });
+    return insertWpCommentChildren(wpComments, auxWpComments, auxParentComment, auxComment, superRecursive);
+  }
+
+  auxParentComment[0].children.push(auxComment);
+}
+
+function structureWpComments() {
+  let auxWpComments = [];
+  for (let comment of wpComments) {
+    let auxComment = {};
+
+    auxComment.commentId = comment.comment_ID;
+    auxComment.articleId = comment.comment_post_ID;
+    auxComment.parentId = comment.comment_parent;
+    auxComment.date = comment.comment_date;
+    auxComment.user = comment.comment_author;
+    auxComment.userEmail = comment.comment_author_email;
+    auxComment.content = comment.comment_content;
+    auxComment.children = [];
+
+    if (auxComment.parentId > 0) {
+      let superRecursive = wpComments.filter(obj => {
+        return obj.comment_ID === auxComment.parentId;
+      });
+
+      insertWpCommentChildren(wpComments, auxWpComments, null, auxComment, superRecursive);
+    } else auxWpComments.push(auxComment);
+  }
+  return groupCommentsByArticleID(auxWpComments);
+}
+
+function setDataTableToEachArticle(articles) {
+  // Set a datatable to each articles
+  for (const article of articles) {
+    let table = document.createElement('table');
+    $(table)
+      .addClass('article-table')
+      .addClass('display')
+      .attr('id', 'table-' + article[1].topic.tid)
+      .css('width', '100%');
+
+    let div = document.createElement('div');
+    $(div)
+      .addClass('article-table-container')
+      .attr('id', 'div-' + article[1].topic.tid);
+
+    let h2 = document.createElement('h2');
+    $(h2).attr('id', 'h2-' + article[1].topic.tid);
+    h2.innerText = article[1].topic.title;
+
+    let select = document.createElement('select');
+    $(select).attr('id', 'select-' + article[1].topic.tid);
+    for (let optCid of optionalCidsCopy) {
+      var option = document.createElement('option');
+      option.value = optCid.cid;
+      option.text = optCid.cid;
+      select.add(option);
+    }
+    $(select)
+      .find('option[value="' + article[1].topic.cid + '"]')
+      .prop('selected', true);
+
+    let button = document.createElement('button');
+    $(button)
+      .attr('id', 'button-' + article[1].topic.tid)
+      .attr('class', 'change-cid');
+    button.innerText = 'Change CategoryID';
+
+    div.append(h2);
+    div.append(select);
+    div.append(button);
+    div.append(table);
+    document.querySelector('.comments-tables').append(div);
+
+    setDataTable(table, article[1].posts);
+  }
+}
+
 // ----- EVENTS
 
 // WHEN TAB IS CHANGED IT CHECKS IF LOGIN STATE HAS CHANGE AND RELOADS THE PAGE
@@ -404,7 +515,7 @@ document.addEventListener('visibilitychange', function () {
   newFetchGet(nodeBBURL + '/comments/bycid/' + cid, localStorage.token)
     .then(res => res.json())
     .then(function (res) {
-      console.log(res);
+      // console.log(res);
       // Now im logged in
       if (data.error && !res.error) {
         location.reload();
@@ -418,6 +529,13 @@ document.addEventListener('visibilitychange', function () {
 
       data = res;
     });
+});
+
+$(document).on('click', '.change-cid', function () {
+  let optCid = $(this).attr('id');
+  optCid = optCid.substring(7);
+  let select = document.querySelector('#select-' + optCid);
+  console.log('new cid', select.value);
 });
 
 // WHEN EXPAND ICON IS CLICKED, CREATES OR DESTROY THE CHILD COMMENTS TABLE
@@ -545,6 +663,8 @@ var siteTable = null;
 var status = null;
 var articles = {};
 wpComments = structureWpComments();
+let optionalCidsCopy = optionalCids.map(x => x);
+optionalCidsCopy.push({ cid: cid });
 
 console.log('oldArticles', oldArticles);
 
@@ -585,6 +705,8 @@ if ('token' in localStorage && localStorage.status === '200') {
       document.querySelector('.logout-box').style.display = 'block';
 
       // Group comments by articles
+
+      copyArticles = Object.assign({}, articles);
       for (const l of data.posts) {
         if (!articles.hasOwnProperty(l.tid)) {
           articles[l.tid] = {
@@ -598,20 +720,7 @@ if ('token' in localStorage && localStorage.status === '200') {
 
       siteTable = setDataTable(document.querySelector('#grid'), data.posts);
 
-      // Set a datatable to each article
-      for (const article of articles) {
-        let table = document.createElement('table');
-        $(table).addClass('article-table').addClass('display').attr('id', article[1].topic.tid).css('width', '100%');
-        let div = document.createElement('div');
-        $(div).addClass('article-table-container');
-        let h2 = document.createElement('h2');
-        h2.innerText = article[1].topic.title;
-        div.append(h2);
-        div.append(table);
-        document.querySelector('.comments-tables').append(div);
-
-        setDataTable(table, article[1].posts);
-      }
+      setDataTableToEachArticle(articles);
 
       if (!cid || cid == 0) document.querySelector('.error-cryptofr-cid').style.display = 'block';
 
@@ -699,6 +808,42 @@ if ('token' in localStorage && localStorage.status === '200') {
                 });
             });
         });
+
+      //-- OPTIONAL CIDS
+      for (let optcid of optionalCids) {
+        newFetchGet(nodeBBURL + '/comments/bycid/' + optcid.cid, localStorage.token)
+          .then(res => {
+            status = res.status;
+            return res;
+          })
+          .then(res => res.json())
+          .then(function (res) {
+            data = res;
+
+            if (status == '403') {
+              // NOT AUTHORIZED
+              document.querySelector('.error-cryptofr-auth').style.display = 'block';
+              return;
+            }
+
+            // Group comments by articles
+            for (const l of data.posts) {
+              if (!copyArticles.hasOwnProperty(l.tid)) {
+                copyArticles[l.tid] = {
+                  topic: l.topic,
+                  posts: [],
+                };
+              }
+              copyArticles[l.tid].posts.push(l);
+            }
+            copyArticles = Object.entries(copyArticles);
+
+            // siteTable = setDataTable(document.querySelector('#grid'), data.posts);
+
+            // Set a datatable to each article
+            setDataTableToEachArticle(copyArticles);
+          });
+      }
     });
 } else {
   // NOT CONNECTED
@@ -706,70 +851,6 @@ if ('token' in localStorage && localStorage.status === '200') {
   document.querySelector('.cryptofr-login-tab').style.display = 'block';
   document.querySelector('.cryptofr-login-tab').classList.add('active');
   addSocialAuthListeners(document.querySelector('#login-modal'));
-}
-
-function groupCommentsByArticleID(auxWpComments) {
-  let groupedComments = [];
-  for (let comment of auxWpComments) {
-    let group = groupedComments.filter(obj => {
-      return obj.articleId === comment.articleId;
-    });
-
-    if (group.length) group[0].comments.push(comment);
-    else {
-      let auxgroup = {};
-      auxgroup.articleId = comment.articleId;
-      auxgroup.comments = [];
-      auxgroup.comments.push(comment);
-      groupedComments.push(auxgroup);
-    }
-  }
-  return groupedComments;
-}
-
-function insertWpCommentChildren(wpComments, auxWpComments, auxParentComment, auxComment, superRecursive) {
-  auxParentComment = auxWpComments.filter(obj => {
-    return obj.commentId === superRecursive[0].comment_ID;
-  });
-  if (auxParentComment.length == 0) {
-    superRecursive = wpComments.filter(obj => {
-      return obj.comment_ID === superRecursive[0].comment_parent;
-    });
-    return insertWpCommentChildren(wpComments, auxWpComments, auxParentComment, auxComment, superRecursive);
-  } else if (auxParentComment[0].commentId != auxComment.parentId) {
-    auxWpComments = auxParentComment[0].children;
-    superRecursive = wpComments.filter(obj => {
-      return obj.comment_ID === auxComment.parentId;
-    });
-    return insertWpCommentChildren(wpComments, auxWpComments, auxParentComment, auxComment, superRecursive);
-  }
-
-  auxParentComment[0].children.push(auxComment);
-}
-
-function structureWpComments() {
-  let auxWpComments = [];
-  for (let comment of wpComments) {
-    let auxComment = {};
-
-    auxComment.commentId = comment.comment_ID;
-    auxComment.articleId = comment.comment_post_ID;
-    auxComment.parentId = comment.comment_parent;
-    auxComment.date = comment.comment_date;
-    auxComment.user = comment.comment_author;
-    auxComment.userEmail = comment.comment_author_email;
-    auxComment.content = comment.comment_content;
-    auxComment.children = [];
-
-    if (auxComment.parentId > 0) {
-      let superRecursive = wpComments.filter(obj => {
-        return obj.comment_ID === auxComment.parentId;
-      });
-
-      insertWpCommentChildren(wpComments, auxWpComments, null, auxComment, superRecursive);
-    } else auxWpComments.push(auxComment);
-  }
-  return groupCommentsByArticleID(auxWpComments);
 }
 
 console.log('optionalCids', optionalCids);
