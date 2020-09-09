@@ -675,6 +675,17 @@ $(document).on('click', '.conflicted-article-button', function (event) {
 // EXPORT COMMENTS
 $(document).on('click', '#export-comments', function (event) {
   console.log(wpComments);
+
+  newFetch2(nodeBBURL + '/comments/import', wpComments, localStorage.token)
+    .then(res => res.json())
+    .then(function (res) {
+      console.log(res);
+      if (!res.ok) {
+        console.log('error on import endpoint');
+        return false;
+      }
+      // location.reload();
+    });
 });
 
 // ----- MAIN
