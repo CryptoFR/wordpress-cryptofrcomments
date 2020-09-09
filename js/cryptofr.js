@@ -531,11 +531,27 @@ document.addEventListener('visibilitychange', function () {
     });
 });
 
+// MOVE CID FROM TOPIC
 $(document).on('click', '.change-cid', function () {
-  let optCid = $(this).attr('id');
-  optCid = optCid.substring(7);
-  let select = document.querySelector('#select-' + optCid);
+  let topicID = $(this).attr('id');
+  topicID = topicID.substring(7);
+  let select = document.querySelector('#select-' + topicID);
   console.log('new cid', select.value);
+
+  let data = {};
+  data.tid = topicID;
+  data.newCid = select.value;
+
+  newFetch2(nodeBBURL + '/comments/move', data, localStorage.token)
+    .then(res => res.json())
+    .then(function (res) {
+      console.log(res);
+      if (!res.ok) {
+        console.log('error on move endpoint');
+        return false;
+      }
+      location.reload();
+    });
 });
 
 // WHEN EXPAND ICON IS CLICKED, CREATES OR DESTROY THE CHILD COMMENTS TABLE
@@ -573,6 +589,7 @@ $(document).on('click', '.comments-tables .moderate', function () {
   }
 });
 
+// LOGOUT
 $(document).on('click', '.logout-box', function () {
   localStorage.clear();
   location.reload();
@@ -586,6 +603,7 @@ $(document).on('submit', '#login-form', function (event) {
   login(username, password);
 });
 
+// PUBLISH SINGLE
 $(document).on('click', '.publish-button', function (event) {
   event.preventDefault();
 
@@ -615,6 +633,7 @@ $(document).on('click', '.publish-button', function (event) {
     });
 });
 
+// CONFLICTED ARTICLE ATTACHMENT
 $(document).on('click', '.conflicted-article-button', function (event) {
   button = this;
   newFetchGet(bloggerPHP + '/' + button.getAttribute('data-post_author'))
@@ -652,6 +671,8 @@ $(document).on('click', '.conflicted-article-button', function (event) {
         });
     });
 });
+
+// EXPORT COMMENTS
 $(document).on('click', '#export-comments', function (event) {
   console.log(wpComments);
 });
