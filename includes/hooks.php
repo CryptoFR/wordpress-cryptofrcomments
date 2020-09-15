@@ -42,18 +42,19 @@
 
 			$cid= $wpdb->last_result[0]->cid;
  
-			$data="{".
-  				"markdown:  '$escapedContent',".
-  				"title: '$title',".
-  				"cid: $cid,".
-  				"blogger: '$meta',".
-  				"tags: '',".
-  				"id: '$id',".
-  				"url: '$url',".
-  				"timestamp: Date.now(),".
-  				"uid: '',".
-  				"_csrf: ''".
-			"}";
+			 
+			$data = json_encode([
+				'markdown' => $escapedContent,
+				'title' => $title,
+				'cid' => $cid,
+				'blogger' => $meta,
+				'tags'=> '',
+				'id' => $id,
+				'url' => $url,
+				'timestamp' => '',
+				'uid'=>'',
+				'_csrf'=> ''
+			 ]);
 
 			// var_dump($data);
 

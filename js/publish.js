@@ -50,6 +50,7 @@ function newFetchGet(path, token = null) {
 
 function publish(data, nodeBBURL, publishURL, publishPHP, manualButton = null) {
   data.markdown = data.markdown + "\n <b>Click <a href='" + data.url + "'>here</a> to see the full blog post</b>";
+  data.timestamp = Date.now();
 
   console.log(data);
   if ('token' in localStorage && localStorage.status === '200') {
