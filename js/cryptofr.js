@@ -12,8 +12,12 @@ function setDataTable(table, data) {
       aaData: data,
       columns: [
         {
-          data: 'user.username',
+          data: 'username',
           className: 'article-user',
+          render: function (data, display, object) {
+            if (data === '[[global:guest]]') return object.handle;
+            return data;
+          },
         },
         {
           data: 'content',
@@ -70,10 +74,10 @@ function setDataTable(table, data) {
           pidCell.classList.remove('details-control');
         }
 
-        if (data.topic.externalLink) {
-          let commentCell = row.querySelector('.article-comment');
-          $(commentCell).wrapInner('<a href="' + data.topic.externalLink + '" target="_blank" ></a>');
-        }
+        // if (data.topic.externalLink) {
+        //   let commentCell = row.querySelector('.article-comment');
+        //   $(commentCell).wrapInner('<a href="' + data.topic.externalLink + '" target="_blank" ></a>');
+        // }
       },
     });
 }
@@ -672,23 +676,56 @@ $(document).on('click', '.conflicted-article-button', function (event) {
     });
 });
 
-// EXPORT COMMENTS
-$(document).on('click', '#export-comments', function (event) {
-  console.log(JSON.stringify(wpComments));
+function paginateExportedComments(wpComments) {
+  console.log('wpComments', wpComments);
+  let paginatedComments = [];
+  let totalCount = 0;
+  for (let parentArticle of wpComments) {
+    let articleId = parentArticle.articleId;
+    let count = 0;
+    for (let comment of parentArticle.comments) {
+      if (count % paginationCount === 0) paginatedComments.push([{ articleId: articleId, comments: [] }]);
+      paginatedComments[paginatedComments.length - 1][0].comments.push(comment);
+      count++;
+      totalCount++;
+    }
+  }
+  return [paginatedComments, totalCount];
+}
 
-  // newFetch2(nodeBBURL + '/comments/import', wpComments, localStorage.token)
-  //   .then(res => res.json())
-  //   .then(function (res) {
-  //     if (!res.ok) {
-  //       console.log('error on import endpoint');
-  //       return false;
-  //     }
-  //     // location.reload();
-  //   });
+// EXPORT COMMENTS
+$(document).on('click', '#export-comments', async function (event) {
+  // console.log(JSON.stringify(wpComments));
+  let [paginatedComments, count] = paginateExportedComments(wpComments);
+
+  console.log('paginatedComments', paginatedComments);
+  let pageCount = 1;
+  for (let page of paginatedComments) {
+    console.log('Exporting Comments...');
+    await newFetch2(nodeBBURL + '/comments/import', page, localStorage.token)
+      .then(res => res.json())
+      .then(function (res) {
+        if (res.ok) {
+          if (pageCount != paginatedComments.length) console.log('Done with ' + pageCount * paginationCount + ' of ' + count + ' comments');
+          else console.log('Done with ' + count + ' of ' + count + ' comments');
+        }
+        pageCount++;
+
+        if (!res.ok) {
+          console.log('error on import endpoint');
+          return false;
+        }
+        // location.reload();
+      })
+      .catch(function (error) {
+        console.log('error', error);
+      });
+  }
 });
 
 // ----- MAIN
 
+let paginationCount = 100;
 var data = null;
 var siteTable = null;
 var status = null;
@@ -697,12 +734,12 @@ wpComments = structureWpComments();
 let optionalCidsCopy = optionalCids.map(x => x);
 optionalCidsCopy.push({ cid: cid });
 
-console.log('oldArticles', oldArticles);
+// console.log('oldArticles', oldArticles);
 
 // CHECK IF YOU ARE AUTHORIZED
 if ('token' in localStorage && localStorage.status === '200') {
   // GET COMMENTS FROM CATEGORY AND CATEGORIZE THEM BY ARTICLE/TOPIC
-  newFetchGet(nodeBBURL + '/comments/bycid/' + cid, localStorage.token)
+  newFetchGet(nodeBBURL + '/comments/bycid/' + cid + '?pagination=0', localStorage.token)
     .then(res => {
       status = res.status;
       return res;
@@ -741,7 +778,7 @@ if ('token' in localStorage && localStorage.status === '200') {
       for (const l of data.posts) {
         if (!articles.hasOwnProperty(l.tid)) {
           articles[l.tid] = {
-            topic: l.topic,
+            topic: { tid: l.tid, title: l.title, cid: l.cid },
             posts: [],
           };
         }
@@ -820,6 +857,7 @@ if ('token' in localStorage && localStorage.status === '200') {
               let attachmentData = {};
               attachmentData.status = status;
               attachmentData.attachment = attachStatus;
+              console.log(res.response);
               attachmentData.attachedArticles = filterResponse(res.response);
               attachmentData.conflictedArticles = filterResponse(res.response, 1);
               attachmentData.corruptedArticles = filterResponse(res.response, 2);
@@ -884,4 +922,4 @@ if ('token' in localStorage && localStorage.status === '200') {
   addSocialAuthListeners(document.querySelector('#login-modal'));
 }
 
-console.log('optionalCids', optionalCids);
+// console.log('optionalCids', optionalCids);
