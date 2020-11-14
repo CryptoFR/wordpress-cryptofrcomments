@@ -107,13 +107,11 @@
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins:300,400,400i,500,600,700&display=swap">
 
 
-
-<h1>CryptoFR Comments</h1>
+ 
 <p class="error-cryptofr-auth">You are not Authorized</p>
 <p class="error-cryptofr-cid">Missing Category ID</p>
 
 <ul class="nav nav-tabs cryptofrcomments-tabs">
-  <li class="cryptofr-login-tab"><a data-toggle="tab" href="#cryptofr-login" id="a-login">Login</a></li>
   <li class="cryptofr-comments-tab"><a data-toggle="tab" href="#cryptofr-comments" id="a-comments">Comments</a></li>
   <li class="cryptofr-publish-tab"><a data-toggle="tab" href="#cryptofr-publish" id="a-publish">Pending</a></li>
   <li class="cryptofr-old-articles-tab"><a data-toggle="tab" href="#cryptofr-old-articles" id="a-old-articles">Old Articles</a></li>

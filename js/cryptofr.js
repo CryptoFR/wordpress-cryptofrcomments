@@ -298,6 +298,7 @@ function login(username, password) {
           localStorage.innerText = res.user['icon:text'];
           localStorage.backgroundColor = res.user['icon:bgColor'];
         }
+        localStorage.date=new Date();
         location.reload();
       } else {
         localStorage.clear();
@@ -734,9 +735,25 @@ wpComments = structureWpComments();
 let optionalCidsCopy = optionalCids.map(x => x);
 optionalCidsCopy.push({ cid: cid });
 
+'token' in localStorage && localStorage.status === '200'
+
+
+
 // console.log('oldArticles', oldArticles);
 
 // CHECK IF YOU ARE AUTHORIZED
+if ('token' in localStorage && localStorage.status === '200') {
+  
+  var now = new Date();
+  var difference = now.getTime() - new Date(localStorage.date);
+  var days = Math.ceil(difference / (1000 * 3600 * 24));
+  console.log(localStorage.date)
+  console.log(now)
+  console.log(days)
+  if (days>=7) localStorage.clear();
+}
+
+  
 if ('token' in localStorage && localStorage.status === '200') {
   // GET COMMENTS FROM CATEGORY AND CATEGORIZE THEM BY ARTICLE/TOPIC
   newFetchGet(nodeBBURL + '/comments/bycid/' + cid + '?pagination=0', localStorage.token)

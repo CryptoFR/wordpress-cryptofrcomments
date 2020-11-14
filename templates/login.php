@@ -1,4 +1,6 @@
 <div class="container">
+	<img src="<?php echo constant("NODEBB_URL"); ?>/plugins/nodebb-plugin-blog-comments-cryptofr/icons/cryptofr-comments.png" alt="CryptoFR" class="icon_title">
+
 	<div id="login-modal" class="modal" data-closed="0" style="display: block;">
 	  <!-- Modal content -->
 	  <div class="modal-content">
