@@ -298,7 +298,7 @@ function login(username, password) {
           localStorage.innerText = res.user['icon:text'];
           localStorage.backgroundColor = res.user['icon:bgColor'];
         }
-        localStorage.date=new Date();
+        localStorage.date = new Date();
         location.reload();
       } else {
         localStorage.clear();
@@ -735,25 +735,21 @@ wpComments = structureWpComments();
 let optionalCidsCopy = optionalCids.map(x => x);
 optionalCidsCopy.push({ cid: cid });
 
-'token' in localStorage && localStorage.status === '200'
-
-
+// 'token' in localStorage && localStorage.status === '200';
 
 // console.log('oldArticles', oldArticles);
 
 // CHECK IF YOU ARE AUTHORIZED
 if ('token' in localStorage && localStorage.status === '200') {
-  
   var now = new Date();
   var difference = now.getTime() - new Date(localStorage.date);
   var days = Math.ceil(difference / (1000 * 3600 * 24));
-  console.log(localStorage.date)
-  console.log(now)
-  console.log(days)
-  if (days>=7) localStorage.clear();
+  console.log(localStorage.date);
+  console.log(now);
+  console.log(days);
+  if (days >= 7) localStorage.clear();
 }
 
-  
 if ('token' in localStorage && localStorage.status === '200') {
   // GET COMMENTS FROM CATEGORY AND CATEGORIZE THEM BY ARTICLE/TOPIC
   newFetchGet(nodeBBURL + '/comments/bycid/' + cid + '?pagination=0', localStorage.token)
@@ -769,23 +765,31 @@ if ('token' in localStorage && localStorage.status === '200') {
 
       if (status == '403') {
         // NOT AUTHORIZED
-        document.querySelector('.logout-box').style.display = 'block';
-        document.querySelector('.error-cryptofr-auth').style.display = 'block';
-        document.querySelector('#cryptofr-user').classList.add('in', 'active');
-        document.querySelector('.cryptofr-user-tab').style.display = 'block';
-        document.querySelector('.cryptofr-user-tab').classList.add('active');
-        setUSerData();
+        // document.querySelector('.logout-box').style.display = 'block';
+        // document.querySelector('.error-cryptofr-auth').style.display = 'block';
+        // document.querySelector('#cryptofr-user').classList.add('in', 'active');
+        // document.querySelector('.cryptofr-user-tab').style.display = 'block';
+        // document.querySelector('.cryptofr-user-tab').classList.add('active');
+        // setUSerData();
+
+        document.querySelector('#cryptofr-login').classList.add('in', 'active');
+        document.querySelector('.cryptofr-login-tab').style.display = 'block';
+        document.querySelector('.cryptofr-login-tab').classList.add('active');
+        addSocialAuthListeners(document.querySelector('#login-modal'));
         return;
       }
 
+      document.querySelector('.cryptofrcomments-tabs').style.display = 'inline-block';
+      document.querySelector('.tab-content').style.display = 'inline-block';
       // -- Display tabs on dashboard menu
-      document.querySelector('#cryptofr-comments').classList.add('in', 'active');
+      document.querySelector('#cryptofr-moderation').classList.add('in', 'active');
+      document.querySelector('.cryptofr-moderation-tab').classList.add('active');
+
       document.querySelector('.cryptofr-comments-tab').style.display = 'block';
-      document.querySelector('.cryptofr-comments-tab').classList.add('active');
+      document.querySelector('.dashboard-header-icon').style.display = 'block';
 
       document.querySelector('.cryptofr-user-tab').style.display = 'block';
       document.querySelector('.cryptofr-publish-tab').style.display = 'block';
-      document.querySelector('.cryptofr-old-articles-tab').style.display = 'block';
 
       document.querySelector('.logout-box').style.display = 'block';
 
@@ -934,8 +938,8 @@ if ('token' in localStorage && localStorage.status === '200') {
 } else {
   // NOT CONNECTED
   document.querySelector('#cryptofr-login').classList.add('in', 'active');
-  document.querySelector('.cryptofr-login-tab').style.display = 'block';
-  document.querySelector('.cryptofr-login-tab').classList.add('active');
+  document.querySelector('#login-modal').style.display = 'block';
+  document.querySelector('#login-modal').classList.add('active');
   addSocialAuthListeners(document.querySelector('#login-modal'));
 }
 

@@ -6,7 +6,6 @@
 	  <div class="modal-content">
 	    <div class="modal-body clearfix">
 	      <div class="modal-login-form">
-	        <h4 class="modal-subtitle">Se connecter à CryptoFR</h4>
 	        <form action="<?php echo constant("NODEBB_URL"); ?>/login" id="login-form" method="POST">
 	          <div class="email-input">
 	            <svg class="svg-inline--fa fa-user fa-w-14" aria-hidden="true" focusable="false" data-prefix="fad" data-icon="user" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><g class="fa-group"><path class="fa-secondary" fill="currentColor" d="M352 128A128 128 0 1 1 224 0a128 128 0 0 1 128 128z"></path><path class="fa-primary" fill="currentColor" d="M313.6 288h-16.7a174.1 174.1 0 0 1-145.8 0h-16.7A134.43 134.43 0 0 0 0 422.4V464a48 48 0 0 0 48 48h352a48 48 0 0 0 48-48v-41.6A134.43 134.43 0 0 0 313.6 288z"></path></g></svg><!-- <i class="fad fa-user"></i> -->
@@ -53,15 +52,7 @@
 	          </li>
 	        </ul>
 	      </div>
-	    </div>
-	    <div class="modal-footer">
-	      <div class="register-link">
-	        Vous n'avez pas encore de compte? <a href="<?php echo constant("NODEBB_URL"); ?>/register" class="register-modal-open">S'inscrire</a>
-	      </div>
-	      <div class="logo">
-	        <img src="<?php echo constant("NODEBB_URL"); ?>/plugins/nodebb-plugin-blog-comments-cryptofr/icons/cryptofr-comments.svg" alt="CryptoFR" class="icon">
-	      </div>
-	    </div>
+	    </div> 
 	  </div>
 	</div> 
 </div>

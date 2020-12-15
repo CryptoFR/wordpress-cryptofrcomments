@@ -18,14 +18,24 @@ body.wp-admin {
   background: none;
   /* transform: translateY(12.5%); */
   padding-top: 5px;
+  margin-top: 10px;
 }
 
 .wp-admin #login-modal .modal-content {
   /* margin-left: 0px; */
 }
 
+
+
 .cryptofrcomments-tabs {
   position: relative;
+  width: 150px;
+  height: calc(100vh - 300px);
+  display: none;
+}
+
+.cryptofrcomments-tabs li{
+  width: 100%;
 }
 
 .wp-admin .cryptofrcomments-tabs #cryptofr-login .wp-admin .cryptofrcomments-tabs #cryptofr-comments,
@@ -196,6 +206,30 @@ tr.shown td.details-control {
   margin-top: 30px;
 }
 
+.dashboard-profile{
+  float: right;
+}
+
+.dashboard-header-icon{
+  display: none;
+  margin: 30px 0px;
+  width: 95%;
+}
+
+.dashboard_title {
+  width: 40%;
+  max-width: 450px;
+  display: inline-block;
+  margin-top: 0px;
+  vertical-align: middle;
+}
+
+.dashboard-version{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+
 /* Modal Content */
 .modal-content {
   position: relative;
@@ -212,6 +246,36 @@ tr.shown td.details-control {
   border-radius: 10px !important;
   box-shadow: none !important;
   border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+
+/*******************
+
+   Dashboard Styles
+
+********************/
+
+.cryptofrcomments-tabs.nav-tabs>li.active>a,.cryptofrcomments-tabs.nav-tabs>li.active>a:focus,.cryptofrcomments-tabs.nav-tabs>li.active>a:hover {
+  color: white;
+  cursor: default;
+  background-color: #434a81;
+  border: none!important;
+  border-bottom-color: none!important;
+}
+
+.cryptofrcomments-tabs.nav-tabs>li>a{
+  border-radius: 0px!important;
+}
+
+.cryptofrcomments-tabs.nav-tabs>li{
+  margin-bottom: 0px;
+}
+
+.tab-content{
+  display: inline-block;
+  width: calc(100% - 200px)!important;
+  vertical-align: top;
+  padding-left: 15px;
 }
 
 /* Add Animation */
@@ -323,7 +387,7 @@ tr.shown td.details-control {
 }
 
 .modal-body {
-  padding: 15px 70px;
+  padding: 40px 70px;
   position: relative;
 }
 
