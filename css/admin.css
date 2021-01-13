@@ -27,12 +27,6 @@ body.wp-admin {
 
 
 
-.cryptofrcomments-tabs {
-  position: relative;
-  width: 150px;
-  height: calc(100vh - 300px);
-  display: none;
-}
 
 .cryptofrcomments-tabs li{
   width: 100%;
@@ -161,7 +155,7 @@ tr.shown td.details-control {
 }
 
 /**************
-  LOGIN DIV RULES 
+  LOGIN DIV RULES
   **************/
 
 .modal {
@@ -271,12 +265,32 @@ tr.shown td.details-control {
   margin-bottom: 0px;
 }
 
+.cryptofrcomments-tabs {
+  position: relative;
+  width: 150px;
+  height: calc(100vh - 300px);
+  display: none;
+  margin-right: -5px;
+  margin-top: 1px;
+}
+
 .tab-content{
   display: inline-block;
   width: calc(100% - 200px)!important;
   vertical-align: top;
   padding-left: 15px;
+  padding: 15px;
+  /* background: white; */
+  border-radius: 0px 7px 7px 0px;
+  min-height: calc(100vh - 300px);
 }
+
+.tab-content .form-control{
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
 
 /* Add Animation */
 @-webkit-keyframes animatetop {
@@ -568,4 +582,31 @@ svg.svg-inline--fa {
 
 .nav-tabs {
   border: none;
+}
+
+wp-core-ui.select {
+border-color: transparent;
+}
+
+select.category-comments{
+  background-color: #F1F1F1;
+  border-color: transparent;
+  font-size: 16px;
+  color: #545454;
+  padding-right: 165px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+input.search-comment{
+  background-color: #F1F1F1;
+  border-color: transparent;
+  padding-right: 165px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  color: #0c0c0c;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='#434885' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
 }

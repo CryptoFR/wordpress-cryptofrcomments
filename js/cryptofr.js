@@ -2,7 +2,7 @@
 
 // Data Table init for Comments from nodebb
 function setDataTable(table, data) {
-  table.innerHTML = '<thead><tr><th class="article-user">User</th><th class="article-comment">Comment</th><th class="article-date">Date</th><th class="article-votes">Votes</th><th class="article-actions">Actions</th><th class="article-children">Children</th><th class="article-expand"></th></tr></thead><tbody></tbody>';
+  table.innerHTML = '<thead><tr><th class="article-user">User</th><th class="article-comment">Comment</th><th class="article-date">Date</th><th class="article-expand"></th></tr></thead><tbody></tbody>';
   // console.log('1', data);
   if (data)
     return $(table).DataTable({
@@ -34,24 +34,6 @@ function setDataTable(table, data) {
           className: 'article-date',
         },
         {
-          data: 'votes',
-          className: 'article-votes',
-        },
-        {
-          data: null,
-          defaultContent: '<button class="moderate">Delete</button>',
-          className: 'article-actions',
-        },
-        {
-          data: 'children',
-          render: function (data) {
-            if (data) {
-              return data.length;
-            } else return 0;
-          },
-          className: 'article-children',
-        },
-        {
           className: 'details-control article-expand',
           orderable: false,
           data: 'pid',
@@ -68,10 +50,10 @@ function setDataTable(table, data) {
         pidCell.setAttribute('data-pid', pid);
         pidCell.innerText = '';
 
-        let childrenCell = row.querySelector('.article-children');
-        let length = childrenCell.innerText;
-        if (length == '0') {
-          pidCell.classList.remove('details-control');
+        //let childrenCell = row.querySelector('.article-children');
+        //let length = childrenCell.innerText;
+        //if (length == '0') {
+          //pidCell.classList.remove('details-control');
         }
 
         // if (data.topic.externalLink) {
@@ -807,8 +789,8 @@ if ('token' in localStorage && localStorage.status === '200') {
       }
       articles = Object.entries(articles);
 
-      siteTable = setDataTable(document.querySelector('#grid'), data.posts);
-
+      //siteTable = setDataTable(document.querySelector('#grid'), data.posts);
+      siteTable = setDataTableToEachArticle(document.querySelector('#grid',articles)
       setDataTableToEachArticle(articles);
 
       if (!cid || cid == 0) document.querySelector('.error-cryptofr-cid').style.display = 'block';
