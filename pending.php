@@ -63,14 +63,14 @@
 				<div id="forum-tab" class="column is-9">
 					<div class="form-check">
 					  <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-					  <label class="label1" for="defaultCheck1">
+					  <label class="form-check-label" for="defaultCheck1">
 							Automatically post all approved
 								comments to the forum
 					  </label>
 					</div>
 					<div class="form-check">
 						<input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-						<label class="label1" for="defaultCheck1">
+						<label class="form-check-label" for="defaultCheck1">
 							Allow obtaining forum comments
 						</label>
 					</div>

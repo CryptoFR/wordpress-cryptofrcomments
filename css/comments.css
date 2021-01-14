@@ -1,0 +1,14 @@
+
+#category-comments .wp-core-ui .select {
+border-color: transparent;
+}
+
+.wp-core-ui .select .category-comments{
+  background-color: gray;
+  border-color: transparent;
+}
+
+.search-post{
+  background-color: gray;
+  border-color: transparent !important;
+}

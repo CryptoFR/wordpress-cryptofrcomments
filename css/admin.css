@@ -607,6 +607,60 @@ input.search-comment{
   color: #0c0c0c;
   font-size: 16px;
   font-weight: 400;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', 'sans-serif';
   background-image: url("data:image/svg+xml;utf8,<svg fill='#434885' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+}
+
+.container-back{
+  background-color: white;
+  border-radius: 0.5em;
+  padding: 2rem;
+}
+
+.container-medium{
+  padding: 2rem;
+  border-radius: 0.5em;
+  background-color: #F1F1F1;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.nav-tabs .nav-item {
+    margin-bottom: -1px;
+}
+
+.nav-tabs .nav-link.active {
+    color: #424B81;
+    background-color: #ffffff;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.nav-tabs .nav-link {
+    color: #424B81;
+}
+
+.container-panel{
+background-color: #ffffff;
+height: 24rem;
+border-bottom: 1px solid #dee2e6;
+border-left: 1px solid #dee2e6;
+border-right: 1px solid #dee2e6;
+border-radius: 4px;
+padding: 1.5em;
+}
+
+.btn-sync{
+  color: #fff;
+  background-color: #424B81;
+  border-color: #424B81;
+  margin-top: 1em;
+}
+
+.label1{
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: 200;
 }
