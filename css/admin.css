@@ -664,3 +664,8 @@ padding: 1.5em;
   margin-bottom: 5px;
   font-weight: 200;
 }
+
+.tab_content{
+  display: none;
+  
+}

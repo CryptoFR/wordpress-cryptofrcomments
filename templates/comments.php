@@ -1,6 +1,6 @@
 
-<div class="container comments-tables" style="background-color: white">
-    <div class="form-control">
+<div class="container-back">
+      <div class="container-back" >
       <div class="column is-9">
         <select id="category-comments" class="category-comments">
             <option value="">Category</option>
