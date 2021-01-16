@@ -643,7 +643,7 @@ input.search-comment{
 
 .container-panel{
 background-color: #ffffff;
-height: 24rem;
+height: 50rem;
 border-bottom: 1px solid #dee2e6;
 border-left: 1px solid #dee2e6;
 border-right: 1px solid #dee2e6;
@@ -665,7 +665,100 @@ padding: 1.5em;
   font-weight: 200;
 }
 
+.label2{
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: 400;
+}
+
+.rules-margin{
+  margin-top: 2em;
+}
+
 .tab_content{
-  display: none;
-  
+  display: block;
+  height: 100%;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 8px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 14px;
+  left: -1px;
+  bottom: -3px;
+  background-color: #424B81;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #80808024;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+input.censored{
+  background-color: #8080802b;
+  border: transparent;
+  width: 18em;
+}
+
+.column-2 {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+  box-sizing: border-box;
+}
+
+/* Clear floats after the columns */
+.row-moderation:after {
+  content: "";
+  display: table;
+  clear: both;
+  height: 100%;
 }

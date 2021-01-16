@@ -49,25 +49,27 @@
 
 <div class="container-back">
     <div class="container-medium" >
-			<div class="column is-9">
+			<div id="tabSync" class="column is-9">
 				<ul class="nav nav-tabs">
 				  <li class="nav-item">
-				    <a class="nav-link active" href="#">Forum</a>
+				    <a class="nav-link active" href="#tabForum" onclick="openTab(event,'tabForum')">Forum</a>
 				  </li>
 				  <li class="nav-item">
-				    <a class="nav-link" href="#">Pending Syncs</a>
+				    <a class="nav-link" href="#tabPending"  onclick="openTab(event,'tabPending')">Pending Syncs</a>
 				  </li>
 				</ul>
       </div>
 			<div class="container-panel">
-				<div id="forum-tab" class="column is-9">
-					<div class="form-check">
-					  <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-					  <label class="label1" for="defaultCheck1">
+				<div id="tabForum" class="tab_content">
+					<div class="custom-control custom-switch">
+						<label class="switch">
+						  <input type="checkbox">
+						  <span class="slider round"></span>
+						</label>
+						<label class="label1" for="defaultCheck1">
 							Automatically post all approved
 								comments to the forum
 					  </label>
-					</div>
 					<div class="form-check">
 						<input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
 						<label class="label1" for="defaultCheck1">
@@ -75,9 +77,28 @@
 						</label>
 					</div>
 				</div>
+				<div id="tabPending" class="tab_content">
+					<p> Pending Section</p>
+				</div>
 			</div>
 			<div  class="column is-9">
 				<button type="button" class="btn btn-sync">Save changes</button>
 			</div>
 		</div>
 </div>
+
+<script>
+function openTab(evt, value) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab_content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("nav-link");
+    for (i = 0; i < tabcontent.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(value).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+</script>
