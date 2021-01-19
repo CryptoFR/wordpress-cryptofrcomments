@@ -4,7 +4,7 @@
 			<div  id="tabsModeration" class="column is-9">
 				<ul class="nav nav-tabs">
 				  <li class="nav-item">
-				    <a class="nav-link active" href="#tabComments" onclick="openTab(event,'tabComments')">Comments</a>
+				    <a class="nav-link  active" href="#tabComments" onclick="openTab(event,'tabComments')">Comments</a>
 				  </li>
 				  <li class="nav-item">
 				    <a class="nav-link" href="#tabRules" onclick="openTab(event, 'tabRules')">Rules</a>
@@ -13,7 +13,7 @@
       </div>
 			<div class="container-panel">
 
-        <div class="tab_content" id="tabComments">
+        <div class="tab_content" id="tabComments" style="display:block">
            <p>Table</p>
        </div>
 
@@ -26,30 +26,30 @@
                      <input type="checkbox">
                      <span class="slider round"></span>
                    </label>
-                   <label class="label1" for="defaultCheck1">
+                   <label class="label-switch-rules" for="defaultCheck1">
                      Accept all comments except spam
                    </label>
                  </div>
-                 <div class="form-check">
+                 <div class="form-check switch-margin">
                    <label class="switch">
                      <input type="checkbox">
                      <span class="slider round"></span>
                    </label>
-                   <label class="label1" for="defaultCheck1">
+                   <label class="label-switch-rules" for="defaultCheck1">
                      Moderate all guest comments
                    </label>
                  </div>
-                 <div class="form-check">
+                 <div class="form-check switch-margin">
                    <label class="switch">
                      <input type="checkbox">
                      <span class="slider round"></span>
                    </label>
-                   <label class="label1" for="defaultCheck1">
+                   <label class="label-switch-rules" for="defaultCheck1">
                      Use keywords control
                    </label>
                  </div>
-                 <div>
-                   <label class="label1">Censored keywords</label>
+                 <div class="switch-margin">
+                   <label class="label-censored">Censored keywords</label>
                    <input type="text" class="censored"></input>
                  </div>
 
@@ -105,7 +105,28 @@
            </div>
           </div>
           <div class="column-2">
-               <p> esto es una  prueba  </p>
+            <div>
+               <p> When activated, all comments will be
+                 accepted automatically except those that
+                  contain a prohibited keyword.
+                  If it is desactivated, all comments must base
+                  moderated manually.
+                </p>
+              </div>
+
+              <div>
+                 <p> 'Case insesitive' matching type  is better as it
+                   capturess more words.
+                  </p>
+              </div>
+
+              <div>
+                 <p> You can accepted comments with forbidden
+                   words by replacing them totally or partially
+                   with a especial character.
+                  </p>
+              </div>
+
           </div>
         </div>
       </div>
@@ -119,7 +140,7 @@
 
 <script>
 function openTab(evt, value) {
-    var i, tabcontent, tablinks;
+    let i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tab_content");
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";

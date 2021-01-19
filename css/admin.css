@@ -588,6 +588,7 @@ wp-core-ui.select {
 border-color: transparent;
 }
 
+/*------------------ks --------------*/
 select.category-comments{
   background-color: #F1F1F1;
   border-color: transparent;
@@ -643,7 +644,7 @@ input.search-comment{
 
 .container-panel{
 background-color: #ffffff;
-height: 50rem;
+height: 42em;
 border-bottom: 1px solid #dee2e6;
 border-left: 1px solid #dee2e6;
 border-right: 1px solid #dee2e6;
@@ -656,6 +657,24 @@ padding: 1.5em;
   background-color: #424B81;
   border-color: #424B81;
   margin-top: 1em;
+}
+.label-switch-rules{
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: 200;
+  font-size: medium;
+  margin-left: 3%;
+}
+
+.label-censored{
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: 200;
+  font-size: medium;
+  margin-left: 3%;
+  margin-right: 20%;
 }
 
 .label1{
@@ -672,12 +691,24 @@ padding: 1.5em;
   font-weight: 400;
 }
 
+.label-sync{
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: 200;
+  margin-right: 40%;
+}
+
 .rules-margin{
   margin-top: 2em;
 }
 
+.switch-margin{
+  margin-top: 1.5em;
+}
+
 .tab_content{
-  display: block;
+  display: none;
   height: 100%;
 }
 
@@ -741,10 +772,17 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+input.synckey{
+  background-color: #8080802b;
+  border: transparent;
+  width: 18em;
+}
+
 input.censored{
   background-color: #8080802b;
   border: transparent;
   width: 18em;
+  margin-left: 1.5em;
 }
 
 .column-2 {
@@ -762,3 +800,39 @@ input.censored{
   clear: both;
   height: 100%;
 }
+
+/* For the elements of syncronization, we use the following classes */
+.container-panel{
+background-color: #ffffff;
+height: 42em;
+border-bottom: 1px solid #dee2e6;
+border-left: 1px solid #dee2e6;
+border-right: 1px solid #dee2e6;
+border-radius: 4px;
+padding: 1.5em;
+}
+
+
+#forum-division{
+  margin-bottom: 20px;
+}
+
+#sync-box-small{
+  background-color:rgb(243,243,244);
+  border:transparent;
+  width: 15em;
+}
+
+.margin-p{
+  margin-top:3em;
+}
+
+.sync-key{
+  margin-left:10%;
+}
+
+.sync-key-p{
+  padding: 35px 27rem 0px 0;
+}
+
+/*for divide the tab of syncronization in two use the following two classes */
