@@ -51,6 +51,9 @@
                  <div class="switch-margin">
                    <label class="label-censored">Censored keywords</label>
                    <input type="text" class="censored"></input>
+                    <a class="censored" href="#">
+                      <span class="glyphicon glyphicon-plus-sign"></span>
+                    </a>
                  </div>
 
                  <div class="col-sm-10">
@@ -58,17 +61,14 @@
                      <label class="label2"> Case matching </label>
                    </div>
                     <div class="form-check">
-                      <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-                      <label class="label1" for="gridRadios1">
-                        Case sensitive
-                      </label>
-                    </div>
-                    <div class="form-check">
-                     <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-                     <label class="label1" for="gridRadios2">
-                       Case insesitive
-                     </label>
-                     <spam>(recommended)</spam>
+                      <div class="radio">
+                        <label class="labelradio"><input class="radio-case" type="radio" name="radioCase" checked>Case sensitive</label>
+                      </div>
+                      <div class="radio">
+                        <label class="labelradio" ><input  class="radio-case" type="radio" name="radioCase">Case insesitive</label>
+                        <spam class="recommended">(recommended)</spam>
+                      </div>
+
                    </div>
                </div>
 
@@ -76,37 +76,30 @@
                  <div class="rules-margin">
                    <label class="label2"> Word rendering </label>
                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-                    <label class="label1" for="gridRadios1">
-                      First letter retained
-                    </label>
-                  </div>
-                  <div class="form-check">
-                   <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-                   <label class="label1" for="gridRadios2">
-                     All letters removed
-                   </label>
-                   <spam>(recommended)</spam>
+                 <div class="radio">
+                   <label class="labelradio"><input class="radio-case" type="radio" name="radioWord" checked>First letter retained</label>
+                   <spam class="recommended">(dog=> d**)</spam>
                  </div>
-                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-                  <label class="label1" for="gridRadios2">
-                    First/Last letter contained
-                  </label>
-                  <spam>(recommended)</spam>
-                </div>
+                 <div class="radio">
+                   <label class="labelradio" ><input  class="radio-case" type="radio" name="radioWord">All letters removed</label>
+                   <spam class="recommended">(dog=> ***)</spam>
+                 </div>
+                 <div class="radio">
+                   <label class="labelradio" ><input  class="radio-case" type="radio" name="radioWord">First/Last letter contained</label>
+                   <spam class="recommended">(dog => d*g)</spam>
+                 </div>
              </div>
              <div class="col-sm-10">
              <div class="rules-margin">
                <label class="label2"> Filter character </label>
+               <select>*</select>
              </div>
            </div>
            </div>
           </div>
           <div class="column-2">
-            <div>
-               <p> When activated, all comments will be
+            <div class="exp-rules1">
+               <p class="exp-rules2"> When activated, all comments will be
                  accepted automatically except those that
                   contain a prohibited keyword.
                   If it is desactivated, all comments must base
@@ -114,14 +107,14 @@
                 </p>
               </div>
 
-              <div>
-                 <p> 'Case insesitive' matching type  is better as it
+              <div class="exp-rules3">
+                 <p class="exp-rules2"> 'Case insesitive' matching type  is better as it
                    capturess more words.
                   </p>
               </div>
 
-              <div>
-                 <p> You can accepted comments with forbidden
+              <div class="exp-rules4">
+                 <p class="exp-rules2"> You can accepted comments with forbidden
                    words by replacing them totally or partially
                    with a especial character.
                   </p>
