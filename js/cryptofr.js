@@ -509,7 +509,7 @@ function setDataTableToEachArticle(articles) {
     div.append(table);
     if (document.querySelector('.comments-tables')) document.querySelector('.comments-tables').append(div);
 
-    setDataTable(table, article[1].posts);
+    setDataTableArticle(document.querySelector('#articles'), article[1]);
   }
 }
 
@@ -936,9 +936,9 @@ if ('token' in localStorage && localStorage.status === '200') {
     console.log('group by article', articles);
 
     // ALL COMMENTS table
-    siteTable = setDataTable(document.querySelector('#grid'), data.posts);
+    siteTable = setDataTableToEachArticle(articles);
+    //setDataTable(document.querySelector('#grid'), data.posts);
     // Multiple articles table
-    setDataTableToEachArticle(articles);
 
     if (!cid || cid == 0) document.querySelector('.error-cryptofr-cid').style.display = 'block';
 
@@ -1011,4 +1011,40 @@ function activarTab(unTab) {
     }
   } catch (e) {}
 }
+
+function setDataTableArticle(table, dataSet) {
+  console.log('prueba article', dataSet);
+  table.innerHTML = '<thead><tr><th class="article-user">Article</th><th class="article-comment">Comments</th></tr></thead><tbody></tbody>';
+  //Esto lo cree para ponerlo como cableado
+  let data = {
+    article: 'Manage Bitcoin like a Pro',
+    comments: 101,
+  };
+
+  //Este response es para tener la data lo  mas sencilla posible
+  response = dataSet.topic;
+  console.log('response', response);
+  console.log(table);
+  //En la tabla solo tengo que mostrar el titulo y la cantidad de comentarios
+  if (response)
+    globalTable = $(table).DataTable({
+      bAutoWidth: false,
+      // ajax: '../php/sites.php',
+      order: [0, 'desc'],
+      aaData: response,
+      columns: [
+        {
+          data: 'title',
+          render: function (data) {
+            console.log(data);
+          },
+        },
+        {
+          data: 'tid',
+        },
+      ],
+    });
+  return globalTable;
+}
+
 // console.log('optionalCids', optionalCids);

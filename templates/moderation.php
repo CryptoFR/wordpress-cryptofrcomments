@@ -72,7 +72,7 @@
                    </div>
                </div>
 
-               <div class="col-sm-10">
+               <div class="col-sm-12">
                  <div class="rules-margin">
                    <label class="label2"> Word rendering </label>
                  </div>
@@ -90,11 +90,15 @@
                  </div>
              </div>
              <div class="col-sm-10">
-             <div class="rules-margin">
-               <label class="label2"> Filter character </label>
-               <select>*</select>
-             </div>
+               <div class="rules-margin">
+                 <label class="label2"> Filter character </label>
+               </div>
            </div>
+           <div class="col-sm-10">
+             <select id="category-comments" class="category-comments">
+                 <option value="">*</option>
+             </select>
+         </div>
            </div>
           </div>
           <div class="column-2">
@@ -133,6 +137,7 @@
 
 <script>
 function openTab(evt, value) {
+  console.log('entro en openTab Moderation');
     let i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tab_content");
     for (i = 0; i < tabcontent.length; i++) {

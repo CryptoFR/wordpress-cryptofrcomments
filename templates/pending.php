@@ -49,6 +49,7 @@
 <body>
     <script>
         function openTab(evt, value) {
+					console.log('entro en openTab Pending');
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab_content");
             for (i = 0; i < tabcontent.length; i++) {
@@ -102,7 +103,10 @@
                                     <input type="checkbox">
                                     <span class="slider round">
                                     </span>
-                                </label> Automatically post all approved comments to the forum
+                                </label>
+																<label  class="label-switch-forum" for="defaultCheck1">
+																	Automatically post all approved comments to the forum
+																</label>
                             </div>
                             <br>
                             <div>
@@ -110,7 +114,10 @@
                                     <input type="checkbox">
                                     <span class="slider round">
                                     </span>
-                                </label> Allow obtaining forum comments
+                                </label>
+																<label  class="label-switch-forum" for="defaultCheck1">
+																	 Allow obtaining forum comments
+																 </label>
                             </div>
                             <br>
                             <div>
@@ -118,7 +125,7 @@
                               <label class="label-sync">Sync key</label>
                                 <input type="text" placeholder="Sync key" class="synckey">
 															</div>
-															<div class="sync-key-p">
+															<div class="sync-key2">
                                 <p>
                                     You can run the Sync Wizard to add or remove categories that sync with the forum
                                 </p>
