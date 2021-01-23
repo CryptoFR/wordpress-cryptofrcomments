@@ -509,7 +509,7 @@ function setDataTableToEachArticle(articles) {
     div.append(table);
     if (document.querySelector('.comments-tables')) document.querySelector('.comments-tables').append(div);
 
-    setDataTableArticle(document.querySelector('#articles'), article[1]);
+    setDataTableArticle( document.querySelector('#articles') ,article[1]);
   }
 }
 
@@ -940,6 +940,7 @@ if ('token' in localStorage && localStorage.status === '200') {
     //setDataTable(document.querySelector('#grid'), data.posts);
     // Multiple articles table
 
+
     if (!cid || cid == 0) document.querySelector('.error-cryptofr-cid').style.display = 'block';
 
     // Articles that are pending to be published yet
@@ -1013,38 +1014,21 @@ function activarTab(unTab) {
 }
 
 function setDataTableArticle(table, dataSet) {
-  console.log('prueba article', dataSet);
-  table.innerHTML = '<thead><tr><th class="article-user">Article</th><th class="article-comment">Comments</th></tr></thead><tbody></tbody>';
-  //Esto lo cree para ponerlo como cableado
-  let data = {
-    article: 'Manage Bitcoin like a Pro',
-    comments: 101,
-  };
+table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
+  let comments =(dataSet.posts).length;
+  (dataSet.topic).comments= comments;
 
-  //Este response es para tener la data lo  mas sencilla posible
-  response = dataSet.topic;
-  console.log('response', response);
-  console.log(table);
-  //En la tabla solo tengo que mostrar el titulo y la cantidad de comentarios
-  if (response)
-    globalTable = $(table).DataTable({
-      bAutoWidth: false,
-      // ajax: '../php/sites.php',
-      order: [0, 'desc'],
-      aaData: response,
-      columns: [
-        {
-          data: 'title',
-          render: function (data) {
-            console.log(data);
-          },
-        },
-        {
-          data: 'tid',
-        },
-      ],
+  let response=[];
+  response.push(dataSet.topic);
+
+  if (dataSet)
+    return $(table).DataTable({
+      data: response,
+        columns: [
+          { data: "title" },
+          { data: "comments" }
+        ]
     });
-  return globalTable;
 }
 
 // console.log('optionalCids', optionalCids);

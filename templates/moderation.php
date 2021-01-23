@@ -1,23 +1,44 @@
 
+<body>
+  <script>
+  function openTabM(evt, value)
+      {
+        	console.log('entro en openTab Mode');
+        let i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab_contentM");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("nav-link");
+        for (i = 0; i < tabcontent.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(value).style.display = "block";
+        evt.currentTarget.className += " active";
+
+      }
+  </script>
+</body>
+
 <div class="container-back">
     <div class="container-medium" >
 			<div  id="tabsModeration" class="column is-9">
 				<ul class="nav nav-tabs">
 				  <li class="nav-item">
-				    <a class="nav-link  active" href="#tabComments" onclick="openTab(event,'tabComments')">Comments</a>
+				    <a class="nav-link  active" href="#tabComments" onclick="openTabM(event,'tabComments')">Comments</a>
 				  </li>
 				  <li class="nav-item">
-				    <a class="nav-link" href="#tabRules" onclick="openTab(event, 'tabRules')">Rules</a>
+				    <a class="nav-link" href="#tabRules" onclick="openTabM(event, 'tabRules')">Rules</a>
 				  </li>
 				</ul>
       </div>
 			<div class="container-panel">
 
-        <div class="tab_content" id="tabComments" style="display:block">
+        <div class="tab_contentM" id="tabComments" style="display:block">
            <p>Table</p>
        </div>
 
-       <div class="tab_content" id="tabRules">
+       <div class="tab_contentM" id="tabRules">
          <div class="row-moderation">
            <div class="column-2">
                <div id="forum-tab" class="column is-9">
@@ -133,21 +154,3 @@
         </div>
   </div>
 </div>
-
-
-<script>
-function openTab(evt, value) {
-  console.log('entro en openTab Moderation');
-    let i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tab_content");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("nav-link");
-    for (i = 0; i < tabcontent.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(value).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-</script>

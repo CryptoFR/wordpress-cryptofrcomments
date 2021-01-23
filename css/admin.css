@@ -724,6 +724,11 @@ padding: 1.5em;
   height: 100%;
 }
 
+.tab_contentM{
+  display: none;
+  height: 100%;
+}
+
 .switch {
   position: relative;
   display: inline-block;
@@ -904,6 +909,26 @@ a.censored{
   font-size: medium;
   margin-left: 3%;
   color:#545454;
+}
+
+.dataTables_length > label{
+  font-weight: 100;
+}
+
+.dataTables_filter > label{
+  font-weight: 100;
+}
+
+.comments-margin{
+  margin-bottom: 5%;
+}
+
+#articles_info{
+  display: none !important;
+}
+
+#articles_length{
+  display: none !important;
 }
 
 /*for divide the tab of syncronization in two use the following two classes */

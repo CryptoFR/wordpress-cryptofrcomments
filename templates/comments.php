@@ -7,13 +7,16 @@
 <div class="container-back">
       <div class="container-back" >
       <div class="column is-9">
+        <div class="comments-margin">
         <select id="category-comments" class="category-comments">
             <option value="">Category</option>
         </select>
-        <input type="text" class="search-comment" placeholder='Search'>
+        <!-- <input type="text" class="search-comment" placeholder='Search'> -->
+      </div>
+      </div>
+      <div class="column is-9">
+          <table id="articles" class="table table-striped table-bordered" width="100%"></table>
       </div>
     </div>
-    <div>
-        <table id="articles" class="display" width="100%"></table>
-    </div>
+
 </div>
