@@ -931,4 +931,12 @@ a.censored{
   display: none !important;
 }
 
+button.buttonComment{
+  background-color: #434a81;
+  padding: 8px  ;
+  border-radius: 16px;
+  color: #F1F1F1;
+  border: none;
+}
+
 /*for divide the tab of syncronization in two use the following two classes */

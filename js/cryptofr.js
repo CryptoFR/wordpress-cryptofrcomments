@@ -1021,14 +1021,67 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
   let response=[];
   response.push(dataSet.topic);
 
+  let dataAux= [
+    {
+      "title": "manage bitcoin",
+      "count": "116",
+      "comments": [
+        {
+          "content":"bla bla bla",
+          "username":"crytpoUser"
+        },
+        {
+          "content":"le soux jeux ",
+          "username":"Nicola"
+        }
+      ]
+    },
+    {
+      "title": "Blockchain bitcoin",
+      "count": "81",
+      "comments": [
+        {
+          "content":"preux je t aime",
+          "username":"cry ser"
+        },
+        {
+          "content":"le soux jeux ",
+          "username":"Nicola Ams"
+        }
+      ]
+    },
+    {
+      "title": "Etherium",
+      "count": "52",
+      "comments": [
+        {
+          "content":"etia jex aime",
+          "username":"c ser"
+        },
+        {
+          "content":"le soux foi ",
+          "username":"Nicola Amsterdam"
+        }
+      ]
+    }
+  ];
+
   if (dataSet)
-    return $(table).DataTable({
-      data: response,
+    var tables =  $(table).DataTable({
+      data: dataAux,
         columns: [
           { data: "title" },
-          { data: "comments" }
+          { data: "count" },
+          { "defaultContent":"<button class='buttonComment glyphicon glyphicon-new-window'></button>" }
         ]
     });
+
+    $('#articles tbody').on( 'click', 'button', function () {
+      var data = tables.row( $(this).parents('tr') ).data();
+      alert( " Comment :"+ data.comments[0].content +" by :"+ data.comments[0].username ); 
+    } );
+
+    return tables;
 }
 
 // console.log('optionalCids', optionalCids);
