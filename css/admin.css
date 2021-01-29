@@ -626,6 +626,7 @@ input.search-comment{
 
 .nav-tabs {
     border-bottom: 1px solid #dee2e6;
+    color:#424B81;
 }
 
 .nav-tabs .nav-item {
@@ -976,5 +977,10 @@ font-size: 14px;
 line-height: 24px;
 letter-spacing: -0.045em;
 display: flex;
+}
+
+.button_plus{
+  display: inline;
+  margin-left: 8px;
 }
 /*for divide the tab of syncronization in two use the following two classes */
