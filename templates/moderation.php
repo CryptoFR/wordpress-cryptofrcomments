@@ -1,5 +1,4 @@
 <head>
-  <title>CreacionSubstitucion...</title>
   <style>
     .tag_censored{
     color: #434a81;
@@ -11,6 +10,14 @@
     font-family: sans-serif;
     padding: 5px;
     margin-right: 10px;
+    }
+
+    .tag_close{
+      float: right;
+      padding: 7px;
+      border: transparent;
+      margin-left: 1.1px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%23434a81' class='bi bi-x-circle-fill' viewBox='0 0 16 16'%3E%3Cpath d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z'/%3E%3C/svg%3E");
     }
   </style>
   <script>
@@ -24,11 +31,12 @@
 
       let cont=document.getElementById("tags");
 
-      let closetag=document.createElement("button");
-      closetag.setAttribute("class","close");
-      label_tag.appendChild(closetag);
+      let close_tag=document.createElement("button");
+      close_tag.setAttribute("class","tag_close");
+      label_tag.appendChild(close_tag);
       cont.appendChild(label_tag);
-
+      let input_censored= document.getElementById("text_censored");
+      input_censored.value='';
       $(document).on('click', '.tag_censored', function (event) {
         event.currentTarget.style.display = "none";
       });
@@ -44,10 +52,13 @@
           <li><a data-toggle="tab" href="#rules">Rules</a></li>
         </ul>
       </div>
-			<div class="container-panel">
+			<div class="container-panel-rules">
 
         <div class="tab-pane fade in active" id="comments" style="display:block">
+          <h4> There are 12 new comments pending moderation in 3 entries  </h4>
+          <div class="container-medium">
 
+          </div>
        </div>
 
        <div class="tab-pane fade" id="rules">
@@ -81,19 +92,19 @@
                      Use keywords control
                    </label>
                  </div>
+
                  <div class="switch-margin">
                    <label class="label-censored">Censored keywords</label>
+
+                  <div class="button_plus">
                    <input id="text_censored" type="text" class="censored"></input>
-                   <div class="button_plus">
                     <a class="censored" href="#add_tag" onclick="add_tag()">
                       <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
                       </svg>
                     </a>
                   </div>
-
                     <div class="rules-margin" id="tags"></div>
-
 
                  </div>
 

@@ -1081,14 +1081,58 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
       //alert( " Comment :"+ data.comments[0].content +" by :"+ data.comments[0].username );
       let title = document.querySelector('#ModalCommentTitle');
       title.innerHTML = data.title;
+      //
+      // let content = document.querySelector('#ModalCommentContent');
+      // content.innerHTML = data.comments[0].content;
+      //
+      // let username = document.querySelector('#ModalUsername');
+      // username.innerHTML = data.comments[0].username;
 
-      let content = document.querySelector('#ModalCommentContent');
-      content.innerHTML = data.comments[0].content;
+      let i=$('#articles tbody').on( 'click', 'td', function () {
 
-      let username = document.querySelector('#ModalUsername');
-      username.innerHTML = data.comments[0].username;
+       //  console.log(tables.cell(this).index().row);
+         let j=tables.cell(this).index().row;
+         //Add elements inside the modal
+        let iteration=dataAux[j].comments.length;
+
+        for(let k=0;k<iteration;k++){
+          let cont=document.getElementById("ModalCommentContent");
+          let userDataComment=document.createElement("div");
+          userDataComment.setAttribute("class","section-complete");
+          //Create the picture of user
+          let userImg=document.createElement("img");
+          userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
+          userImg.setAttribute("class","user-picture");
+          userImg.setAttribute("alt","This is an user perfil picture");
+          userDataComment.appendChild(userImg);
+          //Create the name of user
+          let userName=document.createElement("label");
+          let textUser=document.createTextNode(dataAux[j].comments[k].username);
+          userName.setAttribute("class","name-user-m");
+          userName.appendChild(textUser);
+          userDataComment.appendChild(userName);
+          //Create the comment of the user
+          let commentUser=document.createElement("p");
+          let texComment=document.createTextNode(dataAux[j].comments[k].content);
+          commentUser.appendChild(texComment);
+          commentUser.setAttribute("class","comment-user");
+          userDataComment.appendChild(commentUser);
+          //Create the buttons
+          let button1=document.createElement("img");
+          button1.setAttribute("src","https://www.svgrepo.com/show/114127/big-garbage-bin.svg");
+          button1.setAttribute("class","buttonser");
+          userDataComment.appendChild(button1);
+          //Create the separator
+          let separator=document.createElement("div");
+          separator.setAttribute("class","separator-m");
+          userDataComment.appendChild(separator);
+          cont.appendChild(userDataComment);
+       }
+      });
 
     } );
+
+
 
     return tables;
 }
