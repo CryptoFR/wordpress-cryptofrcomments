@@ -1055,8 +1055,16 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
       "count": "52",
       "comments": [
         {
-          "content":"etia jex aime",
-          "username":"c ser"
+          "content":"1etia jex aime",
+          "username":"c1 ser"
+        },
+        {
+          "content":"2etia jex aime",
+          "username":"c2 ser"
+        },
+        {
+          "content":"3etia jex aime",
+          "username":"c3 ser"
         },
         {
           "content":"le soux foi ",
@@ -1076,23 +1084,24 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
         ]
     });
 
+    let buttonCloseModal = document.getElementById('buttonCloseModal');
+    buttonCloseModal.addEventListener('click', function(){
+      let usercomentdata=document.getElementById('ModalCommentContent');
+             while(usercomentdata.firstChild){
+             usercomentdata.removeChild(usercomentdata.lastChild);
+             console.log('borro');
+    }
+  });
+
     $('#articles tbody').on( 'click', 'button', function () {
       let data = tables.row( $(this).parents('tr') ).data();
       //alert( " Comment :"+ data.comments[0].content +" by :"+ data.comments[0].username );
       let title = document.querySelector('#ModalCommentTitle');
       title.innerHTML = data.title;
-      //
-      // let content = document.querySelector('#ModalCommentContent');
-      // content.innerHTML = data.comments[0].content;
-      //
-      // let username = document.querySelector('#ModalUsername');
-      // username.innerHTML = data.comments[0].username;
 
-      let i=$('#articles tbody').on( 'click', 'td', function () {
+      //index of cell
+      let j= tables.row( $(this).parents('tr')).index();
 
-       //  console.log(tables.cell(this).index().row);
-         let j=tables.cell(this).index().row;
-         //Add elements inside the modal
         let iteration=dataAux[j].comments.length;
 
         for(let k=0;k<iteration;k++){
@@ -1118,21 +1127,22 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
           commentUser.setAttribute("class","comment-user");
           userDataComment.appendChild(commentUser);
           //Create the buttons
-          let button1=document.createElement("img");
-          button1.setAttribute("src","https://www.svgrepo.com/show/114127/big-garbage-bin.svg");
+          let button1=document.createElement("button");
+          //button1.setAttribute("src","https://www.svgrepo.com/show/114127/big-garbage-bin.svg");
           button1.setAttribute("class","buttonser");
           userDataComment.appendChild(button1);
+          let button2=document.createElement("button");
+          button2.setAttribute("class","buttonview");
+          userDataComment.appendChild(button2);
+
           //Create the separator
           let separator=document.createElement("div");
           separator.setAttribute("class","separator-m");
-          userDataComment.appendChild(separator);
+          //userDataComment.appendChild(separator);
           cont.appendChild(userDataComment);
+          cont.appendChild(separator);
        }
       });
-
-    } );
-
-
 
     return tables;
 }
