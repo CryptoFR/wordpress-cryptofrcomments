@@ -942,6 +942,14 @@ a.censored{
   display: none !important;
 }
 
+#table_moderation_length{
+  display: none !important;
+}
+
+#table_moderation_filter{
+  display: none !important;
+}
+
 button.buttonComment{
   background-color: #434a81;
   padding: 4px  ;
@@ -1010,7 +1018,7 @@ border-top-right-radius: 10px;
 
 /*Classes for display the comments in modaal*/
 #modalcontent{
-min-width: 34em;
+min-width: 50em;
 }
 
 #ModalCommentContent{
@@ -1043,7 +1051,7 @@ min-width: 34em;
 
 .buttonser{
   position: relative;
-  left: 337px;
+  left: 42em;
   top: -36px;
   padding: 10px;
   border: #FC4850;
@@ -1056,7 +1064,7 @@ min-width: 34em;
   }
 .buttonview{
   position: relative;
-  left: 278px;
+  left: 39em;
   top: -36px;
   padding: 10px;
   border: #FC4850;
@@ -1087,6 +1095,11 @@ min-width: 34em;
   align-content: center;
   height: 1px;
   margin-bottom: 12px;
+}
+
+#tab_content_moderation{
+  padding-left: 0;
+  padding: 0;
 }
 
 

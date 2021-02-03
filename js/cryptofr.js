@@ -510,6 +510,7 @@ function setDataTableToEachArticle(articles) {
     if (document.querySelector('.comments-tables')) document.querySelector('.comments-tables').append(div);
 
     setDataTableArticle( document.querySelector('#articles') ,article[1]);
+    setDataTableModeration(document.querySelector('#table_moderation') ,article[1]);
   }
 }
 
@@ -1143,6 +1144,78 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
           cont.appendChild(separator);
        }
       });
+
+    return tables;
+}
+
+function setDataTableModeration(table, dataSet) {
+table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
+  let comments =(dataSet.posts).length;
+  (dataSet.topic).comments= comments;
+
+  let response=[];
+  response.push(dataSet.topic);
+
+  let dataAux= [
+    {
+      "title": "manage bitcoin",
+      "count": "116",
+      "comments": [
+        {
+          "content":"bla bla bla",
+          "username":"crytpoUser"
+        },
+        {
+          "content":"le soux jeux ",
+          "username":"Nicola"
+        }
+      ]
+    },
+    {
+      "title": "Blockchain bitcoin",
+      "count": "81",
+      "comments": [
+        {
+          "content":"preux je t aime",
+          "username":"cry ser"
+        },
+        {
+          "content":"le soux jeux ",
+          "username":"Nicola Ams"
+        }
+      ]
+    },
+    {
+      "title": "Etherium",
+      "count": "52",
+      "comments": [
+        {
+          "content":"1etia jex aime",
+          "username":"c1 ser"
+        },
+        {
+          "content":"2etia jex aime",
+          "username":"c2 ser"
+        },
+        {
+          "content":"3etia jex aime",
+          "username":"c3 ser"
+        },
+        {
+          "content":"le soux foi ",
+          "username":"Nicola Amsterdam"
+        }
+      ]
+    }
+  ];
+
+  if (dataSet)
+    var tables =  $(table).DataTable({
+      data: dataAux,
+        columns: [
+          { data: "title" }
+        ]
+    });
 
     return tables;
 }
