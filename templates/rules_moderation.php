@@ -90,6 +90,7 @@
             <option value="">*</option>
         </select>
       </div> <!--class col-sm-10 -->
+    </div> <!-- column-2 -->
        <div class="column-2">
          <div class="exp-rules1">
             <p class="exp-rules2"> When activated, all comments will be
@@ -113,6 +114,7 @@
                </p>
            </div> <!--exp-rules4 -->
        </div>  <!--class column-2 -->
-   </div> <!-- column-2 -->
+
+
   </div> <!-- row-moderation -->
  </div> <!-- container-panel-rules -->

@@ -1148,6 +1148,23 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
     return tables;
 }
 
+function formatChildModeration ( comment ) {
+    return '<table cellpadding="5" cellspacing="0" border="0">'+
+        '<tr>'+
+            '<td>Username:</td>'+
+            '<td>'+comment.name+'</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>Comment:</td>'+
+            '<td>'+comment.content+'</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>Extra info:</td>'+
+            '<td>And any further details here (images etc)...</td>'+
+        '</tr>'+
+    '</table>';
+}
+
 function setDataTableModeration(table, dataSet) {
 table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
   let comments =(dataSet.posts).length;
@@ -1213,11 +1230,127 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
     var tables =  $(table).DataTable({
       data: dataAux,
         columns: [
+          {
+                "className":      'details-control',
+                "orderable":      false,
+                "data":           null,
+                "defaultContent": ''
+            },
           { data: "title" }
         ]
     });
 
+    $('#table_moderation tbody').on('click', 'td.details-control', function () {
+      var tr = $(this).closest('tr');
+      var row = tables.row( tr );
+
+      if ( row.child.isShown() ) {
+          // This row is already open - close it
+          row.child.hide();
+          tr.removeClass('shown');
+      }
+      else {
+        console.log(row.data());
+          // Open this row
+          row.child( formatChildModeration(row.data()) ).show();
+          tr.addClass('shown');
+      }
+  } );
+
     return tables;
 }
+window.addEventListener("load",windowSpam);
+function windowSpam()
+{
+ let dataAux= [
+        {
+          "title": "manage bitcoin",
+          "count": "116",
+          "comments": [
+            {
+              "content":"bla bla bla",
+              "username":"crytpoUser"
+            },
+            {
+              "content":"le soux jeux ",
+              "username":"Nicola"
+            }
+          ]
+        },
+        {
+          "title": "Blockchain bitcoin",
+          "count": "81",
+          "comments": [
+            {
+              "content":"preux je t aime",
+              "username":"cry ser"
+            },
+            {
+              "content":"le soux jeux ",
+              "username":"Nicola Ams"
+            }
+          ]
+        },
+        {
+          "title": "Etherium",
+          "count": "52",
+          "comments": [
+            {
+              "content":"etia jex aime",
+              "username":"c ser"
+            },
+            {
+              "content":"le soux foi ",
+              "username":"Nicola Amsterdam"
+            }
+          ]
+        }
+      ];
+ for(let k=0;k<2;k++){
+        console.log('rellenando');
+        let cont=document.getElementById("inside-spam-comment");
+        console.log(cont);
+        let userDataComment=document.createElement("div");
+        userDataComment.setAttribute("class","container-spam");
+        //Create the picture of user
+        let userImg=document.createElement("img");
+        userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
+        userImg.setAttribute("class","user-picture");
+        userImg.setAttribute("alt","This is an user perfil picture");
+        userDataComment.appendChild(userImg);
+        //Create the name of user
+        let userName=document.createElement("label");
+        let textUser=document.createTextNode(dataAux[0].comments[k].username);
+        userName.setAttribute("class","name-user-m");
+        userName.appendChild(textUser);
+        userDataComment.appendChild(userName);
+        //Create IP and email of the user
+        let ipUser=document.createElement("label");
+        let ipText=document.createTextNode("IP xxx xxx xx xx -thecreatorofplate@yahoo.com");
+        let button0=document.createElement("button");
+        button0.setAttribute("class","button-spam0");
+
+        ipUser.setAttribute("class","ip-user-label");
+        ipUser.appendChild(ipText);
+        ipUser.appendChild(button0);
+        userDataComment.appendChild(ipUser);
+
+        //Create the comment of the user
+        let commentUser=document.createElement("p");
+        let texComment=document.createTextNode(dataAux[0].comments[k].content);
+        commentUser.appendChild(texComment);
+        commentUser.setAttribute("class","comment-user-spam");
+        userDataComment.appendChild(commentUser);
+        //Create the buttons
+        let button1=document.createElement("button");
+        button1.setAttribute("class","button-spam1");
+        userDataComment.appendChild(button1);
+        //viewButton
+        let button2=document.createElement("button");
+        button2.setAttribute("class","button-spam2");
+       	userDataComment.appendChild(button2);
+        cont.appendChild(userDataComment);
+      }
+  }
 
 // console.log('optionalCids', optionalCids);
