@@ -656,9 +656,6 @@ padding: 1.5em;
 .container-panel-rules{
 background-color: #ffffff;
 height: 100%;
-border-bottom: 1px solid #dee2e6;
-border-left: 1px solid #dee2e6;
-border-right: 1px solid #dee2e6;
 border-radius: 4px;
 padding: 1.5em;
 }
@@ -1101,6 +1098,10 @@ min-width: 50em;
   padding-left: 0;
   padding: 0;
   width: 100% !important;
+  background: white;
+  border-bottom: 1px solid #dee2e6;
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
 }
 
 td.details-control {
@@ -1182,6 +1183,10 @@ tr.shown td.details-control {
 .comment-user-spam{
   margin-left: 60px;
   color:rgb(93,91,90);
+}
+
+#spam_settings_days{
+  padding-left: 50px;
 }
 
 /*for divide the tab of syncronization in two use the following two classes */
