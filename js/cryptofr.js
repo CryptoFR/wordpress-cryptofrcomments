@@ -1016,71 +1016,22 @@ function activarTab(unTab) {
 
 function setDataTableArticle(table, dataSet) {
 table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
-  let comments =(dataSet.posts).length;
-  (dataSet.topic).comments= comments;
+
+  let count =(dataSet.posts).length;
+  (dataSet.topic).count_comments= count;
+  let posts = [];
+  posts.push(dataSet.posts);
+  (dataSet.topic).posts=posts;
 
   let response=[];
   response.push(dataSet.topic);
 
-  let dataAux= [
-    {
-      "title": "manage bitcoin",
-      "count": "116",
-      "comments": [
-        {
-          "content":"bla bla bla",
-          "username":"crytpoUser"
-        },
-        {
-          "content":"le soux jeux ",
-          "username":"Nicola"
-        }
-      ]
-    },
-    {
-      "title": "Blockchain bitcoin",
-      "count": "81",
-      "comments": [
-        {
-          "content":"preux je t aime",
-          "username":"cry ser"
-        },
-        {
-          "content":"le soux jeux ",
-          "username":"Nicola Ams"
-        }
-      ]
-    },
-    {
-      "title": "Etherium",
-      "count": "52",
-      "comments": [
-        {
-          "content":"1etia jex aime",
-          "username":"c1 ser"
-        },
-        {
-          "content":"2etia jex aime",
-          "username":"c2 ser"
-        },
-        {
-          "content":"3etia jex aime",
-          "username":"c3 ser"
-        },
-        {
-          "content":"le soux foi ",
-          "username":"Nicola Amsterdam"
-        }
-      ]
-    }
-  ];
-
   if (dataSet)
     var tables =  $(table).DataTable({
-      data: dataAux,
+      data: response,
         columns: [
           { data: "title" },
-          { data: "count" },
+          { data: "count_comments" },
           { "defaultContent":"<button class='buttonComment glyphicon glyphicon-new-window' data-toggle='modal' data-target='#ModalComments'></button>" }
         ]
     });
@@ -1090,22 +1041,21 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
       let usercomentdata=document.getElementById('ModalCommentContent');
              while(usercomentdata.firstChild){
              usercomentdata.removeChild(usercomentdata.lastChild);
-             console.log('borro');
+             //console.log('borro');
     }
   });
 
     $('#articles tbody').on( 'click', 'button', function () {
       let data = tables.row( $(this).parents('tr') ).data();
+      console.log('entro aqui en tbody',data);
       //alert( " Comment :"+ data.comments[0].content +" by :"+ data.comments[0].username );
       let title = document.querySelector('#ModalCommentTitle');
       title.innerHTML = data.title;
 
       //index of cell
       let j= tables.row( $(this).parents('tr')).index();
-
-        let iteration=dataAux[j].comments.length;
-
-        for(let k=0;k<iteration;k++){
+        let iteration=(data.posts);
+        for(let k=0;k<iteration[j].length;k++){
           let cont=document.getElementById("ModalCommentContent");
           let userDataComment=document.createElement("div");
           userDataComment.setAttribute("class","section-complete");
@@ -1117,13 +1067,13 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
           userDataComment.appendChild(userImg);
           //Create the name of user
           let userName=document.createElement("label");
-          let textUser=document.createTextNode(dataAux[j].comments[k].username);
+          let textUser=document.createTextNode(iteration[j][k].username);
           userName.setAttribute("class","name-user-m");
           userName.appendChild(textUser);
           userDataComment.appendChild(userName);
           //Create the comment of the user
           let commentUser=document.createElement("p");
-          let texComment=document.createTextNode(dataAux[j].comments[k].content);
+          let texComment=document.createTextNode(iteration[j][k].content);
           commentUser.appendChild(texComment);
           commentUser.setAttribute("class","comment-user");
           userDataComment.appendChild(commentUser);
@@ -1149,14 +1099,15 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
 }
 
 function formatChildModeration ( comment ) {
+  console.log('entro en formatChildModeration', comment.comments);
     return '<table cellpadding="5" cellspacing="0" border="0">'+
         '<tr>'+
             '<td>Username:</td>'+
-            '<td>'+comment.name+'</td>'+
+            '<td>'+comment.comments.username+'</td>'+
         '</tr>'+
         '<tr>'+
             '<td>Comment:</td>'+
-            '<td>'+comment.content+'</td>'+
+            '<td>'+comment.comments.content+'</td>'+
         '</tr>'+
         '<tr>'+
             '<td>Extra info:</td>'+
@@ -1250,7 +1201,6 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
           tr.removeClass('shown');
       }
       else {
-        console.log(row.data());
           // Open this row
           row.child( formatChildModeration(row.data()) ).show();
           tr.addClass('shown');
@@ -1259,9 +1209,9 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
 
     return tables;
 }
+
 window.addEventListener("load",windowSpam);
-function windowSpam()
-{
+function windowSpam(){
  let dataAux= [
         {
           "title": "manage bitcoin",
@@ -1351,6 +1301,138 @@ function windowSpam()
        	userDataComment.appendChild(button2);
         cont.appendChild(userDataComment);
       }
+}
+
+var dataAux= [
+      {
+        "title": "manage bitcoin",
+        "count": "116",
+        "comments": [
+          {
+            "content":"bla bla bla",
+            "username":"crytpoUser"
+          },
+          {
+            "content":"le soux jeux ",
+            "username":"Nicola"
+          }
+        ]
+      },
+      {
+        "title": "Blockchain bitcoin",
+        "count": "81",
+        "comments": [
+          {
+            "content":"preux je t aime",
+            "username":"cry ser"
+          },
+          {
+            "content":"le soux jeux ",
+            "username":"Nicola Ams"
+          }
+        ]
+      },
+      {
+        "title": "Etherium",
+        "count": "52",
+        "comments": [
+          {
+            "content":"etia jex aime",
+            "username":"c ser"
+          },
+          {
+            "content":"le soux foi ",
+            "username":"Nicola Amsterdam"
+          }
+        ]
+      }
+    ];
+
+window.addEventListener("load", fillPostPending);
+
+function fillPostPending(){
+
+  let posts = dataAux.length;
+
+    //This for will fill the post window.
+ for(let k=0;k<posts;k++){
+
+    let cont=document.getElementById("posts-container");
+   // console.log(cont);
+    let userDataComment=document.createElement("div");
+    userDataComment.setAttribute("class","each-post");
+
+    //Create the name of the post
+    let postName=document.createElement("label");
+    let postText=document.createTextNode(dataAux[k].title);
+    postName.setAttribute("class","post-name");
+    //The onclick function is for open the comments windows and fill it with the content of the comment
+    postName.setAttribute("onclick","buildCommentsSync(this)");
+    postName.appendChild(postText);
+    userDataComment.appendChild(postName);
+
+    //Create the buttons
+
+    //EditButton
+    let button1=document.createElement("button");
+    button1.setAttribute("class","button-sync2");
+    userDataComment.appendChild(button1);
+    //SyncButton
+    let button2=document.createElement("button");
+    button2.setAttribute("class","button-sync1");
+   	userDataComment.appendChild(button2);
+    cont.appendChild(userDataComment);
+
   }
+}
+
+//This function is a onclick function, is excuted when we click on a post name  fill the Post-windows
+function buildCommentsSync(arr){
+    //Here just we have the name of the post 'arr', with the following loop, we are gonna get the complete object associated with the post
+    let postNameShowed=arr.innerHTML;
+    for(let i=0;i<dataAux.length;i++){
+      if (dataAux[i].title==postNameShowed)
+      { //Here we are storing the array with the comments of the post
+        var postCommentShowed = dataAux[i].comments
+      }
+    }
+    //console.log(postCommentShowed)
+    //For clean the comments
+    let clean=document.getElementById("comments-posts-container");
+    while(clean.firstChild){
+      clean.removeChild(clean.lastChild);
+    }
+    //This loop is for fill the comment window
+    for (let j=0;j<postCommentShowed.length;j++){
+        //Create the container for the comment
+        let cont=document.getElementById("comments-posts-container");
+        let userDataComment=document.createElement("div");
+        userDataComment.setAttribute("class","each-post");
+        //Create the picture of user
+        let userImg=document.createElement("img");
+        userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
+        userImg.setAttribute("class","user-picture");
+        userImg.setAttribute("alt","This is an user perfil picture");
+        userDataComment.appendChild(userImg);
+        //Create the name of user
+        let userName=document.createElement("label");
+        let textUser=document.createTextNode(postCommentShowed[j].username);
+        userName.setAttribute("class","name-user-m");
+        userName.appendChild(textUser);
+        userDataComment.appendChild(userName);
+
+        //Create the comment of the user
+        let commentUser=document.createElement("p");
+        let texComment=document.createTextNode(postCommentShowed[j].content);
+        commentUser.appendChild(texComment);
+        commentUser.setAttribute("class","comment-user-spam");
+        userDataComment.appendChild(commentUser);
+        //Create the button
+        let button1=document.createElement("button");
+        button1.setAttribute("class","button-sync3");
+        userDataComment.appendChild(button1);
+        cont.appendChild(userDataComment);
+    }
+}
 
 // console.log('optionalCids', optionalCids);

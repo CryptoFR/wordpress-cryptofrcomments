@@ -49,7 +49,6 @@
 <body>
     <script>
         function openTab(evt, value) {
-					console.log('entro en openTab Pending');
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab_content");
             for (i = 0; i < tabcontent.length; i++) {
@@ -89,9 +88,18 @@
                 <div class="container-panel">
 
                     <div class="tab_content" id="pendingSyncs">
-                        <p>
-                        PendingSyncs
-                        </p>
+											<div class="form-check">
+												<label class="label2">Posts</label>
+													<button class="button-sync4"></button>
+											</div>
+												<div id="posts-container"></div>
+												<div class="form-check">
+												<label class="label2pending">Comments</label>
+												<button class="button-sync5"></button>
+											</div>
+												<div id="comments-posts-container"></div>
+												<button class="sync-all-buttom">Sync All</button>
+
                     </div>
                     <div class="tab_content" id="forum" style="display:block">
                         <!--All content about tab forum is here se-->
