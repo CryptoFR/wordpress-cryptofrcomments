@@ -1043,6 +1043,7 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
              usercomentdata.removeChild(usercomentdata.lastChild);
              //console.log('borro');
     }
+
   });
 
     $('#articles tbody').on( 'click', 'button', function () {
@@ -1080,9 +1081,11 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
           //Create the buttons
           let button1=document.createElement("button");
           //button1.setAttribute("src","https://www.svgrepo.com/show/114127/big-garbage-bin.svg");
-          button1.setAttribute("class","buttonser");
+          button1.setAttribute("class","buttonTrash");
+          button1.setAttribute("onclick","clickButtonView(this)");
           userDataComment.appendChild(button1);
           let button2=document.createElement("button");
+          button2.setAttribute("onclick","clickButtonView(this)");
           button2.setAttribute("class","buttonview");
           userDataComment.appendChild(button2);
 
