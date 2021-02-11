@@ -27,7 +27,7 @@
                <div class="modal-body" id="ModalCommentContent">
                </div>
                <div class="modal-footer">
-                 <button type="button" class="btn btn-modal">next</button>
+                 <div id="wrapper" class="pagination"></div>
                </div>
              </div><!-- /.modal-content -->
            </div><!-- /.modal-dialog -->

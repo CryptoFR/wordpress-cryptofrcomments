@@ -1330,3 +1330,35 @@ tr.shown td.details-control {
 #posts-container{
   margin-bottom: 4em;
 }
+
+/*pagination*/
+
+.pagination{
+  margin-left: 10%;
+}
+
+.pagination-button{
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  background-color: rgb(243,243,242);
+  transition: background-color .3s;
+  border: 1px solid transparent;
+  margin: 0 4px;
+  border-radius: 50%;
+  color: rgb(64,72,125);
+}
+
+.pagination-button-active {
+  background-color:rgb(64,72,125);
+  color: white;
+  border: 1px;
+  border-color: transparent;
+  border-radius: 50%;
+}
+
+.pagination-button:hover:not(.active){
+  background-color: rgb(64,72,125);
+  color: rgb(243,243,242)
+}

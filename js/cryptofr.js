@@ -964,6 +964,7 @@ if ('token' in localStorage && localStorage.status === '200') {
   addSocialAuthListeners(document.querySelector('#login-modal'));
 }
 
+
 function activarTab(unTab) {
   try {
     //Los elementos div de todas las pestañas están todos juntos en una
@@ -1014,6 +1015,71 @@ function activarTab(unTab) {
   } catch (e) {}
 }
 
+function paginationModal(querySet, page, row){
+    var trimStart= (page -1)*row;
+    var trimEnd= trimStart +  row;
+    var trimData= querySet.slice(trimStart, trimEnd);
+    var pages= Math.ceil(querySet.length/row);
+
+    return{
+      'querySet':trimData,
+      'page':pages
+    }
+}
+
+function pageButton(pages){
+  var wrapper = document.getElementById('wrapper');
+  wrapper.innerHTML=''
+
+  for (var page=1; page <= pages; page ++){
+    wrapper.innerHTML += `<button value=${page} class='pagination-button'>${page}</button>`;
+  }
+}
+
+function buildModal(data){
+  let iteration=(data);
+  for(let k=0;k<iteration.length;k++){
+    let cont=document.getElementById("ModalCommentContent");
+    let userDataComment=document.createElement("div");
+    userDataComment.setAttribute("class","section-complete");
+    //Create the picture of user
+    let userImg=document.createElement("img");
+    userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
+    userImg.setAttribute("class","user-picture");
+    userImg.setAttribute("alt","This is an user perfil picture");
+    userDataComment.appendChild(userImg);
+    //Create the name of user
+    let userName=document.createElement("label");
+    let textUser=document.createTextNode(iteration[k].username);
+    userName.setAttribute("class","name-user-m");
+    userName.appendChild(textUser);
+    userDataComment.appendChild(userName);
+    //Create the comment of the user
+    let commentUser=document.createElement("p");
+    let texComment=document.createTextNode(iteration[k].content);
+    commentUser.appendChild(texComment);
+    commentUser.setAttribute("class","comment-user");
+    userDataComment.appendChild(commentUser);
+    //Create the buttons
+    let button1=document.createElement("button");
+    //button1.setAttribute("src","https://www.svgrepo.com/show/114127/big-garbage-bin.svg");
+    button1.setAttribute("class","buttonTrash");
+    button1.setAttribute("onclick","clickButtonView(this)");
+    userDataComment.appendChild(button1);
+    let button2=document.createElement("button");
+    button2.setAttribute("onclick","clickButtonView(this)");
+    button2.setAttribute("class","buttonview");
+    userDataComment.appendChild(button2);
+
+    //Create the separator
+    let separator=document.createElement("div");
+    separator.setAttribute("class","separator-m");
+    //userDataComment.appendChild(separator);
+    cont.appendChild(userDataComment);
+    cont.appendChild(separator);
+ }
+}
+
 function setDataTableArticle(table, dataSet) {
 table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
 
@@ -1041,61 +1107,37 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
       let usercomentdata=document.getElementById('ModalCommentContent');
              while(usercomentdata.firstChild){
              usercomentdata.removeChild(usercomentdata.lastChild);
-             //console.log('borro');
-    }
+             }
 
   });
 
     $('#articles tbody').on( 'click', 'button', function () {
       let data = tables.row( $(this).parents('tr') ).data();
-      console.log('entro aqui en tbody',data);
-      //alert( " Comment :"+ data.comments[0].content +" by :"+ data.comments[0].username );
+
       let title = document.querySelector('#ModalCommentTitle');
       title.innerHTML = data.title;
 
-      //index of cell
-      let j= tables.row( $(this).parents('tr')).index();
-        let iteration=(data.posts);
-        for(let k=0;k<iteration[j].length;k++){
-          let cont=document.getElementById("ModalCommentContent");
-          let userDataComment=document.createElement("div");
-          userDataComment.setAttribute("class","section-complete");
-          //Create the picture of user
-          let userImg=document.createElement("img");
-          userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
-          userImg.setAttribute("class","user-picture");
-          userImg.setAttribute("alt","This is an user perfil picture");
-          userDataComment.appendChild(userImg);
-          //Create the name of user
-          let userName=document.createElement("label");
-          let textUser=document.createTextNode(iteration[j][k].username);
-          userName.setAttribute("class","name-user-m");
-          userName.appendChild(textUser);
-          userDataComment.appendChild(userName);
-          //Create the comment of the user
-          let commentUser=document.createElement("p");
-          let texComment=document.createTextNode(iteration[j][k].content);
-          commentUser.appendChild(texComment);
-          commentUser.setAttribute("class","comment-user");
-          userDataComment.appendChild(commentUser);
-          //Create the buttons
-          let button1=document.createElement("button");
-          //button1.setAttribute("src","https://www.svgrepo.com/show/114127/big-garbage-bin.svg");
-          button1.setAttribute("class","buttonTrash");
-          button1.setAttribute("onclick","clickButtonView(this)");
-          userDataComment.appendChild(button1);
-          let button2=document.createElement("button");
-          button2.setAttribute("onclick","clickButtonView(this)");
-          button2.setAttribute("class","buttonview");
-          userDataComment.appendChild(button2);
+      //state is defined for pagination
+      var state = {
+        'querySet' : data.posts[0],
+        'page': 1,
+        'rows': 10
+      }
+      var dataModal= paginationModal(state.querySet, state.page, state.rows);
+      buildModal(dataModal.querySet);
 
-          //Create the separator
-          let separator=document.createElement("div");
-          separator.setAttribute("class","separator-m");
-          //userDataComment.appendChild(separator);
-          cont.appendChild(userDataComment);
-          cont.appendChild(separator);
-       }
+       pageButton(dataModal.page);
+
+       $('.pagination-button').on('click', function(){
+         $('#ModalCommentContent').empty()
+         state.page = $(this).val()
+         let pageActive= $(this)
+         console.log(pageActive);
+         pageActive.addClass("pagination-button-active")
+         var dataModal= paginationModal(state.querySet, state.page, state.rows);
+         buildModal(dataModal.querySet);
+       })
+
       });
 
     return tables;
