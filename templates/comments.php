@@ -27,7 +27,11 @@
                <div class="modal-body" id="ModalCommentContent">
                </div>
                <div class="modal-footer">
-                 <div id="wrapper" class="pagination"></div>
+
+                 <div id="wrapper" class="pagination">
+                   <button class="pagination-button">&#8249;</button>
+                   <button class="pagination-button">&#8250;</button>
+                 </div>
                </div>
              </div><!-- /.modal-content -->
            </div><!-- /.modal-dialog -->

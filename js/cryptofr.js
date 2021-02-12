@@ -1015,6 +1015,24 @@ function activarTab(unTab) {
   } catch (e) {}
 }
 
+function prevPage()
+{
+  console.log('entro en un prevPage');
+    if (current_page > 1) {
+        current_page--;
+        changePage(current_page);
+    }
+}
+
+function nextPage()
+{
+  console.log('entro en un nextPage')
+    if (current_page < numPages()) {
+        current_page++;
+        changePage(current_page);
+    }
+}
+
 function paginationModal(querySet, page, row){
     var trimStart= (page -1)*row;
     var trimEnd= trimStart +  row;
