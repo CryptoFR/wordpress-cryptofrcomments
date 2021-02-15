@@ -26,12 +26,14 @@
                </div>
                <div class="modal-body" id="ModalCommentContent">
                </div>
-               <div class="modal-footer">
-
-                 <div id="wrapper" class="pagination">
-                   <button class="pagination-button">&#8249;</button>
-                   <button class="pagination-button">&#8250;</button>
-                 </div>
+               <div id="modalFooterComments" class="modal-footer">
+                <div class="paginationdiv">
+                 <button class='buttonsnextprev' onclick='previousPage()'><</button>
+               </div>
+                 <div id="wrapper" class="paginationdiv"></div>
+                   <div  class="paginationdiv">
+                     <button class='buttonsnextprev' onclick='nextPage()'>></button>
+                   </div>
                </div>
              </div><!-- /.modal-content -->
            </div><!-- /.modal-dialog -->

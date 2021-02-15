@@ -1015,44 +1015,46 @@ function activarTab(unTab) {
   } catch (e) {}
 }
 
-function prevPage()
-{
-  console.log('entro en un prevPage');
-    if (current_page > 1) {
-        current_page--;
-        changePage(current_page);
-    }
+var pagination = {
+  'querySet': new Array(),
+  'pageList': new Array(),
+  'currentPage':1,
+  'numberPerPage':10,
+  'numberOfPage':0,
 }
 
-function nextPage()
-{
-  console.log('entro en un nextPage')
-    if (current_page < numPages()) {
-        current_page++;
-        changePage(current_page);
-    }
-}
-
-function paginationModal(querySet, page, row){
-    var trimStart= (page -1)*row;
-    var trimEnd= trimStart +  row;
-    var trimData= querySet.slice(trimStart, trimEnd);
-    var pages= Math.ceil(querySet.length/row);
-
+function paginationModal(){
+    var begin= ((pagination.currentPage -1)*pagination.numberPerPage);
+    var end= begin + pagination.numberPerPage;
+    pagination.pageList= (pagination.querySet).slice(begin, end);
+    pagination.numberOfPage= Math.ceil((pagination.querySet).length/(pagination.numberPerPage));
     return{
-      'querySet':trimData,
-      'page':pages
+      'pageList':pagination.pageList,
+      'numberOfPage':pagination.numberOfPage
     }
 }
 
 function pageButton(pages){
   var wrapper = document.getElementById('wrapper');
   wrapper.innerHTML=''
-
-  for (var page=1; page <= pages; page ++){
-    wrapper.innerHTML += `<button value=${page} class='pagination-button'>${page}</button>`;
-  }
+  //for (var page=1; page <= pages+1; page ++){
+    wrapper.innerHTML+= `<button value=${pages} class='pagination-button' >${pages}</button>`;
+    wrapper.innerHTML+= `<button value=${pages+1} class='pagination-button' >${pages+1}</button>`;
+  //}
 }
+
+// $('.pagination-button').on('click', function(){
+//   $('#ModalCommentContent').empty()
+//   console.log('entri en el boton')
+//   pagination.currentPage=$(this).val()
+//   let pageActive= $(this);
+//   console.log(pageActive);
+//
+//   pageActive.addClass("pagination-button-active")
+//   var dataModal= paginationModal();
+//   console.log(dataModal.pageList);
+//   //buildModal(dataModal.pageList);
+// });
 
 function buildModal(data){
   let iteration=(data);
@@ -1098,9 +1100,20 @@ function buildModal(data){
  }
 }
 
-function setDataTableArticle(table, dataSet) {
-table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
+function nextPage() {
+  if(pagination.currentPage< pagination.numberOfPage){
+    pageButton(pagination.currentPage);
+    pagination.currentPage +=1;
+  }
+}
 
+function previousPage() {
+  if(pagination.currentPage>1){
+  pagination.currentPage -=1
+  }
+}
+
+function manageDataArticle(dataSet){
   let count =(dataSet.posts).length;
   (dataSet.topic).count_comments= count;
   let posts = [];
@@ -1109,6 +1122,14 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
 
   let response=[];
   response.push(dataSet.topic);
+  return response;
+}
+
+function setDataTableArticle(table, dataSet) {
+table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
+
+let response = [];
+response = manageDataArticle(dataSet);
 
   if (dataSet)
     var tables =  $(table).DataTable({
@@ -1123,11 +1144,10 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
     let buttonCloseModal = document.getElementById('buttonCloseModal');
     buttonCloseModal.addEventListener('click', function(){
       let usercomentdata=document.getElementById('ModalCommentContent');
-             while(usercomentdata.firstChild){
-             usercomentdata.removeChild(usercomentdata.lastChild);
-             }
-
-  });
+       while(usercomentdata.firstChild){
+       usercomentdata.removeChild(usercomentdata.lastChild);
+       }
+      });
 
     $('#articles tbody').on( 'click', 'button', function () {
       let data = tables.row( $(this).parents('tr') ).data();
@@ -1135,26 +1155,31 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
       let title = document.querySelector('#ModalCommentTitle');
       title.innerHTML = data.title;
 
-      //state is defined for pagination
-      var state = {
-        'querySet' : data.posts[0],
-        'page': 1,
-        'rows': 10
-      }
-      var dataModal= paginationModal(state.querySet, state.page, state.rows);
-      buildModal(dataModal.querySet);
+      pagination.querySet=data.posts[0];
+      var dataModal= paginationModal();
+      buildModal(dataModal.pageList);
 
-       pageButton(dataModal.page);
+      pageButton(pagination.currentPage);
 
        $('.pagination-button').on('click', function(){
          $('#ModalCommentContent').empty()
-         state.page = $(this).val()
-         let pageActive= $(this)
+         console.log('entri en el boton')
+         pagination.currentPage=$(this).val()
+         let pageActive= $(this);
          console.log(pageActive);
+
          pageActive.addClass("pagination-button-active")
-         var dataModal= paginationModal(state.querySet, state.page, state.rows);
-         buildModal(dataModal.querySet);
-       })
+         var dataModal= paginationModal();
+         buildModal(dataModal.pageList);
+       });
+
+       $('.buttonsnextprev').on('click', function(){
+          $('#ModalCommentContent').empty()
+          let pageActive= $(this)
+          pageActive.addClass("pagination-button-active")
+          var dataModal= paginationModal();
+          buildModal(dataModal.pageList);
+        });
 
       });
 

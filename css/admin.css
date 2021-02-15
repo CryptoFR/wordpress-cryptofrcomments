@@ -1332,9 +1332,14 @@ tr.shown td.details-control {
 }
 
 /*pagination*/
+#modalFooterComments{
+  padding-left: 38%;
+}
 
-.pagination{
-  margin-left: 10%;
+.paginationdiv{
+  display: inline-block;
+  padding-left: 0;
+  border-radius: 4px;
 }
 
 .pagination-button{
@@ -1342,7 +1347,7 @@ tr.shown td.details-control {
   float: left;
   padding: 8px 16px;
   text-decoration: none;
-  background-color: rgb(243,243,242);
+  background-color: rgb(73 73 73 / 5%);
   transition: background-color .3s;
   border: 1px solid transparent;
   margin: 0 4px;
@@ -1370,20 +1375,14 @@ tr.shown td.details-control {
 }
 
 .modal-footer > a:hover {
-  background-color: #ddd;
+  background-color: rgb(243,243,242);
   color: black;
 }
 
-.previous {
-  background-color: #f1f1f1;
-  color: black;
-}
-
-.next {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.round {
+.buttonsnextprev{
   border-radius: 50%;
+  padding: 8px 16px;
+  background: rgb(73 73 73 / 5%);
+  border: transparent;
+  color: rgb(64,72,125);
 }
