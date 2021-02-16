@@ -1034,27 +1034,22 @@ function paginationModal(){
     }
 }
 
-function pageButton(pages){
+function pageButton(currentPage){
   var wrapper = document.getElementById('wrapper');
   wrapper.innerHTML=''
   //for (var page=1; page <= pages+1; page ++){
-    wrapper.innerHTML+= `<button value=${pages} class='pagination-button' >${pages}</button>`;
-    wrapper.innerHTML+= `<button value=${pages+1} class='pagination-button' >${pages+1}</button>`;
+    wrapper.innerHTML+= `<button value=${currentPage} class='pagination-button' >${currentPage}</button>`;
+    wrapper.innerHTML+= `<button value=${currentPage+1} class='pagination-button' >${currentPage+1}</button>`;
   //}
+  // let buttonnext = document.getElementById('buttonnext');
+  // buttonnext.addEventListener('click', function(){
+  //   console.log('entro aqui en el boton')
+  //   pagination.currentPage+=1;
+  //   console.log(pagination.currentPage);
+  // });
+
 }
 
-// $('.pagination-button').on('click', function(){
-//   $('#ModalCommentContent').empty()
-//   console.log('entri en el boton')
-//   pagination.currentPage=$(this).val()
-//   let pageActive= $(this);
-//   console.log(pageActive);
-//
-//   pageActive.addClass("pagination-button-active")
-//   var dataModal= paginationModal();
-//   console.log(dataModal.pageList);
-//   //buildModal(dataModal.pageList);
-// });
 
 function buildModal(data){
   let iteration=(data);
@@ -1102,14 +1097,15 @@ function buildModal(data){
 
 function nextPage() {
   if(pagination.currentPage< pagination.numberOfPage){
-    pageButton(pagination.currentPage);
     pagination.currentPage +=1;
+    pageButton(pagination.currentPage);
   }
 }
 
 function previousPage() {
   if(pagination.currentPage>1){
   pagination.currentPage -=1
+  pageButton(pagination.currentPage);
   }
 }
 
@@ -1159,6 +1155,7 @@ response = manageDataArticle(dataSet);
       var dataModal= paginationModal();
       buildModal(dataModal.pageList);
 
+      if(pagination.currentPage ===1)
       pageButton(pagination.currentPage);
 
        $('.pagination-button').on('click', function(){
@@ -1167,7 +1164,6 @@ response = manageDataArticle(dataSet);
          pagination.currentPage=$(this).val()
          let pageActive= $(this);
          console.log(pageActive);
-
          pageActive.addClass("pagination-button-active")
          var dataModal= paginationModal();
          buildModal(dataModal.pageList);
