@@ -1023,11 +1023,13 @@ var pagination = {
   'numberOfPage':0,
 }
 
-function paginationModal(){
-    var begin= ((pagination.currentPage -1)*pagination.numberPerPage);
-    var end= begin + pagination.numberPerPage;
-    pagination.pageList= (pagination.querySet).slice(begin, end);
-    pagination.numberOfPage= Math.ceil((pagination.querySet).length/(pagination.numberPerPage));
+function paginationModal(pagination1){
+  console.log(pagination1)
+    var begin= ((pagination1.currentPage -1)*pagination1.numberPerPage);
+    var end= begin + pagination1.numberPerPage;
+    pagination.pageList= (pagination1.querySet).slice(begin, end);
+    pagination.numberOfPage= Math.ceil((pagination1.querySet).length/(pagination1.numberPerPage));
+    console.log(pagination1.pageList);
     return{
       'pageList':pagination.pageList,
       'numberOfPage':pagination.numberOfPage
@@ -1039,17 +1041,21 @@ function pageButton(currentPage){
   wrapper.innerHTML=''
   //for (var page=1; page <= pages+1; page ++){
     wrapper.innerHTML+= `<button value=${currentPage} class='pagination-button' >${currentPage}</button>`;
-    wrapper.innerHTML+= `<button value=${currentPage+1} class='pagination-button' >${currentPage+1}</button>`;
+    wrapper.innerHTML+= `<button value=${currentPage+1} id='buttonnext' class='pagination-button' >${currentPage+1}</button>`;
+
   //}
-  // let buttonnext = document.getElementById('buttonnext');
-  // buttonnext.addEventListener('click', function(){
-  //   console.log('entro aqui en el boton')
-  //   pagination.currentPage+=1;
-  //   console.log(pagination.currentPage);
-  // });
+  let buttonnext = document.getElementById('buttonnext');
+  buttonnext.addEventListener('click', function(){
+    console.log('entro aqui en el boton')
+    pagination.currentPage=$(this).val();
+    // var dataModal= paginationModal();
+    // console.log(dataModal);
+    // buildModal(dataModal.pageList);
+    console.log(pagination.currentPage);
+    console.log(pagination.pageList);
+  });
 
 }
-
 
 function buildModal(data){
   let iteration=(data);
@@ -1095,18 +1101,17 @@ function buildModal(data){
  }
 }
 
+var liroypagina=1;
+
 function nextPage() {
-  if(pagination.currentPage< pagination.numberOfPage){
-    pagination.currentPage +=1;
-    pageButton(pagination.currentPage);
-  }
+if(liroypagina< pagination.numberOfPage)
+  return liroypagina++;
+
 }
 
 function previousPage() {
-  if(pagination.currentPage>1){
-  pagination.currentPage -=1
-  pageButton(pagination.currentPage);
-  }
+if(liroypagina>1)
+  return liroypagina--;
 }
 
 function manageDataArticle(dataSet){
@@ -1152,7 +1157,7 @@ response = manageDataArticle(dataSet);
       title.innerHTML = data.title;
 
       pagination.querySet=data.posts[0];
-      var dataModal= paginationModal();
+      var dataModal= paginationModal(pagination);
       buildModal(dataModal.pageList);
 
       if(pagination.currentPage ===1)
@@ -1160,26 +1165,53 @@ response = manageDataArticle(dataSet);
 
        $('.pagination-button').on('click', function(){
          $('#ModalCommentContent').empty()
-         console.log('entri en el boton')
+         console.log('soy la pagina 1')
+         var pagination = {
+           'querySet': data.posts[0],
+           'pageList': new Array(),
+           'currentPage':liroypagina,
+           'numberPerPage':10,
+           'numberOfPage':0,
+         }
          pagination.currentPage=$(this).val()
          let pageActive= $(this);
-         console.log(pageActive);
          pageActive.addClass("pagination-button-active")
-         var dataModal= paginationModal();
+         var dataModal= paginationModal(pagination);
          buildModal(dataModal.pageList);
        });
 
+
+
        $('.buttonsnextprev').on('click', function(){
           $('#ModalCommentContent').empty()
+          var pagination = {
+            'querySet': data.posts[0],
+            'pageList': new Array(),
+            'currentPage':liroypagina,
+            'numberPerPage':10,
+            'numberOfPage':0,
+          }
           let pageActive= $(this)
           pageActive.addClass("pagination-button-active")
-          var dataModal= paginationModal();
+          var dataModal= paginationModal(pagination);
           buildModal(dataModal.pageList);
         });
 
       });
 
     return tables;
+}
+
+//DataTable Article - Modal with comments
+function buildCommentsChildren(dataSet, pID){
+  let children = [];
+  //first level
+  for(let i=0;i<dataSet.length;i++){
+    if (dataSet[i].pid === pID){
+      children.push(dataSet[i]);
+    }
+  }
+  return children;
 }
 
 function formatChildModeration ( comment ) {
