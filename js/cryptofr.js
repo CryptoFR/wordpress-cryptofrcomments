@@ -1215,21 +1215,60 @@ function buildCommentsChildren(dataSet, pID){
 }
 
 function formatChildModeration ( comment ) {
-  console.log('entro en formatChildModeration', comment.comments);
-    return '<table cellpadding="5" cellspacing="0" border="0">'+
-        '<tr>'+
-            '<td>Username:</td>'+
-            '<td>'+comment.comments.username+'</td>'+
-        '</tr>'+
-        '<tr>'+
-            '<td>Comment:</td>'+
-            '<td>'+comment.comments.content+'</td>'+
-        '</tr>'+
-        '<tr>'+
-            '<td>Extra info:</td>'+
-            '<td>And any further details here (images etc)...</td>'+
-        '</tr>'+
-    '</table>';
+  // console.log('entro en formatChildModeration', comment.comments);
+  let response=comment.comments[0];
+  //
+  //   return ('<table cellpadding="5" cellspacing="0" border="0">'+
+  //       '<tr>'+
+  //           '<td>Username:</td>'+
+  //           '<td>'+response.username+'</td>'+
+  //       '</tr>'+
+  //       '<tr>'+
+  //           '<td>Comment:</td>'+
+  //           '<td>'+response.content+'</td>'+
+  //       '</tr>'+
+  //       '<tr>'+
+  //           '<td>Extra info:</td>'+
+  //           '<td>And any further details here (images etc)...</td>'+
+  //       '</tr>'+
+  //   '</table>');
+
+  let userDataComment=document.createElement("div");
+  userDataComment.setAttribute("class","section-child-moderation");
+  //image user
+  let userImg=document.createElement("img");
+  userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
+  userImg.setAttribute("class","user-picture");
+  userImg.setAttribute("alt","This is an user perfil picture");
+  userDataComment.appendChild(userImg);
+  //username
+  let userName=document.createElement("label");
+  let textUser=document.createTextNode(response.username);
+  userName.setAttribute("class","name-user-m");
+  userName.appendChild(textUser);
+  userDataComment.appendChild(userName);
+  //Create the comment of the user
+  let commentUser=document.createElement("p");
+  let texComment=document.createTextNode(response.content);
+  commentUser.appendChild(texComment);
+  commentUser.setAttribute("class","comment-user");
+  userDataComment.appendChild(commentUser);
+  //Create the buttons
+  let button1=document.createElement("button");
+  //button1.setAttribute("src","https://www.svgrepo.com/show/114127/big-garbage-bin.svg");
+  button1.setAttribute("class","buttonx-child-moderation");
+  button1.setAttribute("onclick","clickButtonView(this)");
+  userDataComment.appendChild(button1);
+  let button2=document.createElement("button");
+  button2.setAttribute("onclick","clickButtonView(this)");
+  button2.setAttribute("class","buttony-child-moderation");
+  userDataComment.appendChild(button2);
+  let button3=document.createElement("button");
+  button3.setAttribute("onclick","clickButtonView(this)");
+  button3.setAttribute("class","buttonz-child-moderation");
+  userDataComment.appendChild(button3);
+
+    return userDataComment;
 }
 
 function setDataTableModeration(table, dataSet) {
@@ -1378,18 +1417,19 @@ function windowSpam(){
         console.log(cont);
         let userDataComment=document.createElement("div");
         userDataComment.setAttribute("class","container-spam");
+        let userDataCommentBox=document.createElement("div");
         //Create the picture of user
         let userImg=document.createElement("img");
         userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
         userImg.setAttribute("class","user-picture");
         userImg.setAttribute("alt","This is an user perfil picture");
-        userDataComment.appendChild(userImg);
+        userDataCommentBox.appendChild(userImg);
         //Create the name of user
         let userName=document.createElement("label");
         let textUser=document.createTextNode(dataAux[0].comments[k].username);
         userName.setAttribute("class","name-user-m");
         userName.appendChild(textUser);
-        userDataComment.appendChild(userName);
+        userDataCommentBox.appendChild(userName);
         //Create IP and email of the user
         let ipUser=document.createElement("label");
         let ipText=document.createTextNode("IP xxx xxx xx xx -thecreatorofplate@yahoo.com");
@@ -1399,14 +1439,9 @@ function windowSpam(){
         ipUser.setAttribute("class","ip-user-label");
         ipUser.appendChild(ipText);
         ipUser.appendChild(button0);
-        userDataComment.appendChild(ipUser);
+        userDataCommentBox.appendChild(ipUser);
 
-        //Create the comment of the user
-        let commentUser=document.createElement("p");
-        let texComment=document.createTextNode(dataAux[0].comments[k].content);
-        commentUser.appendChild(texComment);
-        commentUser.setAttribute("class","comment-user-spam");
-        userDataComment.appendChild(commentUser);
+        userDataComment.appendChild(userDataCommentBox);
         //Create the buttons
         let button1=document.createElement("button");
         button1.setAttribute("class","button-spam1");
@@ -1415,6 +1450,13 @@ function windowSpam(){
         let button2=document.createElement("button");
         button2.setAttribute("class","button-spam2");
        	userDataComment.appendChild(button2);
+
+        //Create the comment of the user
+        let commentUser=document.createElement("p");
+        let texComment=document.createTextNode(dataAux[0].comments[k].content);
+        commentUser.appendChild(texComment);
+        commentUser.setAttribute("class","comment-user-spam");
+        userDataComment.appendChild(commentUser);
         cont.appendChild(userDataComment);
       }
 }

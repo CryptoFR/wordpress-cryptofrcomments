@@ -8,7 +8,7 @@
               <input type="checkbox">
               <span class="slider round"></span>
             </label>
-            <label class="label-switch-rules" for="defaultCheck1">
+            <label class="label-switch-forum" for="defaultCheck1">
               Accept all comments except spam
             </label>
           </div> <!-- form-check -->
@@ -17,7 +17,7 @@
               <input type="checkbox">
               <span class="slider round"></span>
             </label>
-            <label class="label-switch-rules" for="defaultCheck1">
+            <label class="label-switch-forum" for="defaultCheck1">
               Moderate all guest comments
             </label>
           </div>  <!--form-check switch-margin -->
@@ -26,7 +26,7 @@
               <input type="checkbox">
               <span class="slider round"></span>
             </label>
-            <label class="label-switch-rules" for="defaultCheck1">
+            <label class="label-switch-forum" for="defaultCheck1">
               Use keywords control
             </label>
           </div> <!--form-check switch-margin -->
@@ -90,7 +90,7 @@
             <option value="">*</option>
         </select>
       </div> <!--class col-sm-10 -->
-    </div> <!-- column-2 -->
+ </div> <!-- column-2 -->
        <div class="column-2">
          <div class="exp-rules1">
             <p class="exp-rules2"> When activated, all comments will be

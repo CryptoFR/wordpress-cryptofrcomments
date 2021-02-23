@@ -7,7 +7,7 @@
              <input type="checkbox">
              <span class="slider round"></span>
            </label>
-           <label class="label-switch-rules" for="defaultCheck1">
+           <label class="label-switch-forum" for="defaultCheck1">
              Automatically delete all comments marked as spam
            </label>
          </div> <!-- form-check -->
@@ -16,7 +16,7 @@
              <input type="checkbox">
              <span class="slider round"></span>
            </label>
-           <label class="label-switch-rules" for="defaultCheck1">
+           <label class="label-switch-forum" for="defaultCheck1">
              Delete all comments that come from a blocked IP
            </label>
          </div>  <!--form-check switch-margin -->
@@ -25,7 +25,7 @@
              <input type="checkbox">
              <span class="slider round"></span>
            </label>
-           <label class="label-switch-rules" for="defaultCheck1">
+           <label class="label-switch-forum" for="defaultCheck1">
              Eliminate spam automatically when they have more than:
            </label>
          </div> <!--form-check switch-margin -->
