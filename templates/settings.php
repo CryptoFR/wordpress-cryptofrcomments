@@ -4,7 +4,7 @@
        <div>
             <div class="container-panel">
 
-                <div class="tab_content" style="display:block">
+                <div style="display:block">
                     <!--All content about tab forum is here se-->
                     <br>
                     <div class="row-moderation">
@@ -21,16 +21,22 @@
                           </div>
 
                           <div>
+                            <div class="gridsetting"> <!-- section with user image -->
                             <div class="settings-top">
                             <label class="label-setting">Default avatar for guests</label>
+
                               <input type="file" id="labelsetting">
+                              <div  class="column is-9" >
+                                      <button type="button" class="btn btn-sync">
+                                          Upload file
+                                      </button>
+                              </div>
+
                             </div>
 
-                            <div  class="column is-9" >
-                                    <button type="button" class="btn btn-sync">
-                                        Upload file
-                                    </button>
-                                </div>
+                            <div class="usersetting"></div>
+
+                          </div>
                                 <div class="sync-key2">
 
                                 </div>

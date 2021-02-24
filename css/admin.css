@@ -1659,33 +1659,62 @@ table.dataTable tbody tr {
     background: linear-gradient(to bottom, #434a81 0%, #434a81 100%);
 }
 
-
 /* Settings  */
 
 .settings-top {
-    margin-top: 8%;
+  margin-top: 8%;
 }
 
 .label-setting {
-    display: inline-block;
-    max-width: 100%;
-    margin-bottom: 5px;
-    font-weight: 400;
-    font-size: medium;
-    color: #545454;
-    margin-right: 40%;
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: 400;
+  font-size: medium;
+  color: #545454;
+  margin-right: 40%;
 }
 
 #labelsetting {
-    padding: 8px 10px 8px 8px;
-    cursor: pointer;
-    border-radius: 5%;
-    background-color: #80808014;
-    border: transparent;
+  padding: 2% 10% 2% 4%;
+  cursor: pointer;
+  border-radius: 5%;
+  background-color: #80808014;
+  border: transparent;
+  width: 90%;
 }
 
 .setting-select {
-    display: block;
-    border: transparent;
-    width: 16em;
+  display: block;
+  border: transparent;
+  width: 16em;
+}
+
+.usersetting{
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='grey' class='bi bi-person-circle' viewBox='0 0 16 16'%3E%3Cpath d='M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z'/%3E%3Cpath fill-rule='evenodd' d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z'/%3E%3C/svg%3E");
+  height: 100px;
+  background-repeat-x: no-repeat;
+  margin-top: 15%;
+}
+
+.gridsetting{
+  display: grid;
+  grid-template-columns: 70% 30%;
+}
+
+table.dataTable.display tbody tr:hover {
+    background-color: transparent !important;
+}
+
+table.dataTable.display tbody td {
+    border-top: transparent !important;
+}
+
+
+#table_moderation tbody{
+  display: grid;
+}
+
+table.dataTable.no-footer {
+    border-bottom: transparent !important;
 }

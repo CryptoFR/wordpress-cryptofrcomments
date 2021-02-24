@@ -1039,18 +1039,13 @@ function paginationModal(pagination1){
 function pageButton(currentPage){
   var wrapper = document.getElementById('wrapper');
   wrapper.innerHTML=''
-  //for (var page=1; page <= pages+1; page ++){
     wrapper.innerHTML+= `<button value=${currentPage} class='pagination-button' >${currentPage}</button>`;
     wrapper.innerHTML+= `<button value=${currentPage+1} id='buttonnext' class='pagination-button' >${currentPage+1}</button>`;
 
-  //}
   let buttonnext = document.getElementById('buttonnext');
   buttonnext.addEventListener('click', function(){
     console.log('entro aqui en el boton')
     pagination.currentPage=$(this).val();
-    // var dataModal= paginationModal();
-    // console.log(dataModal);
-    // buildModal(dataModal.pageList);
     console.log(pagination.currentPage);
     console.log(pagination.pageList);
   });
@@ -1215,7 +1210,6 @@ function buildCommentsChildren(dataSet, pID){
 }
 
 function formatChildModeration ( comment ) {
-  // console.log('entro en formatChildModeration', comment.comments);
   let response=comment.comments[0];
   //
   //   return ('<table cellpadding="5" cellspacing="0" border="0">'+
@@ -1412,7 +1406,6 @@ function windowSpam(){
         }
       ];
  for(let k=0;k<2;k++){
-        console.log('rellenando');
         let cont=document.getElementById("inside-spam-comment");
         console.log(cont);
         let userDataComment=document.createElement("div");
