@@ -91,7 +91,7 @@
         </select>
       </div> <!--class col-sm-10 -->
  </div> <!-- column-2 -->
-       <div class="column-2">
+       <div class="column-3">
          <div class="exp-rules1">
             <p class="exp-rules2"> When activated, all comments will be
               accepted automatically except those that
