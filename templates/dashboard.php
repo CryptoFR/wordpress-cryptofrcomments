@@ -1,97 +1,6 @@
-
 <?php
-
-global $wpdb;
-
-// -- UPDATE CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
-if (isset($_POST['cid'])) {
-  if (ctype_digit($_POST['cid'])){
-    $sqlCommand = "UPDATE cryptofrcomments SET cid=%s";
-    $wpdb->query($wpdb->prepare($sqlCommand, $_POST['cid'] ));
-  }
-}
-
-// -- INSERT OPTIONAL CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
-if (isset($_POST['optionalCid'])) {
-  if (ctype_digit($_POST['optionalCid'])){
-    $sqlCommand ="INSERT INTO `cryptofrcomments_cids` (cid) VALUES (%s);";
-    $wpdb->query($wpdb->prepare($sqlCommand, $_POST['optionalCid'] ));
-  }
-}
-
-// -- DELETE OPTIONAL CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
-if (isset($_POST['selectedCid'])) {
-  if (ctype_digit($_POST['selectedCid'])){
-    $sqlCommand ="DELETE FROM `cryptofrcomments_cids` WHERE cid=%s";
-    $wpdb->query($wpdb->prepare($sqlCommand, $_POST['selectedCid'] ));
-  }
-}
-
-
-
-
-
-// WP_POST DEFAULT NAME
-$table_name = $wpdb->prefix . 'posts';
-
-
-
-// -- GET CONFIG OF CRYPTOFRCOMMENTS WP PLUGIN
-$sqlCommand = "SELECT * from cryptofrcomments ORDER BY ID DESC LIMIT 1";
-$wpdb->query($sqlCommand);
-$config=$wpdb->last_result[0];
-
-
-
-// -- GET PENDING TO POST ARTICLES
-$sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Pending'";
-$wpdb->query($sqlCommand);
-$markedArticles=json_encode($wpdb->last_result);
-
-
-
-// -- GET PUBLISHED ARTICLES
-$sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Published'";
-$wpdb->query($sqlCommand);
-
-$publishedArticles=json_encode($wpdb->last_result);
-
-
-// -- GET OLD ARTICLES
-$sqlCommand="SELECT * FROM ".$table_name." WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' ORDER BY post_date ASC";
-$wpdb->query($sqlCommand);
-
-$oldArticlesArray=$wpdb->last_result;
-
-$oldArticles=json_encode($wpdb->last_result);
-
-
-// -- GET CONFLICTED ARTICLES
-$sqlCommand="SELECT * FROM ".$table_name." WHERE `cryptofrcomments`='Conflicted' AND post_type='post' AND post_status='publish' ORDER BY post_date ASC";
-$wpdb->query($sqlCommand);
-
-
-$conflictedArticles=json_encode($wpdb->last_result);
-
-
-// -- GET COMMENTS
-$table_name = $wpdb->prefix . 'comments';
-
-$sqlCommand="SELECT * FROM ".$table_name;
-$wpdb->query($sqlCommand);
-
-$wpComments=json_encode($wpdb->last_result);
-
-
-// -- GET COMMENTS
-$table_name = 'cryptofrcomments_cids';
-$sqlCommand="SELECT cid FROM ".$table_name;
-$wpdb->query($sqlCommand);
-$optionalCidsArray=$wpdb->last_result;
-$optionalCids=json_encode($wpdb->last_result);
- 
-
-?>
+include (PLUGIN_PATH."/includes/queries.php");
+ ?>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -103,7 +12,7 @@ $optionalCids=json_encode($wpdb->last_result);
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins:300,400,400i,500,600,700&display=swap">
 
- 
+
 <div class="dashboard-header-icon">
     <img src="<?php echo constant("NODEBB_URL"); ?>/plugins/nodebb-plugin-blog-comments-cryptofr/icons/cryptofr-comments.png" alt="CryptoFR" class="dashboard_title">
     <span class="dashboard-version">V1.0</span>
@@ -130,36 +39,36 @@ $optionalCids=json_encode($wpdb->last_result);
 </ul>
 
 <div class="tab-content">
-<div id="cryptofr-login" class="tab-pane fade ">
-  <?php
-  include (PLUGIN_PATH."/templates/login.php");
-   ?>
-</div>
-<div id="cryptofr-moderation" class="tab-pane fade ">
-  <?php
-  include (PLUGIN_PATH."/templates/moderation.php");
-   ?>
-</div>
-<div id="cryptofr-comments" class="tab-pane fade">
-  <?php
-  include (PLUGIN_PATH."/templates/comments.php");
-   ?>
-</div>
-<div id="cryptofr-publish" class="tab-pane fade">
-  <?php
-  include (PLUGIN_PATH."/templates/pending.php");
-   ?>
-</div>
-<div id="cryptofr-spam" class="tab-pane fade">
-  <?php
-  include (PLUGIN_PATH."/templates/spam.php");
-   ?>
-</div>
-<div id="cryptofr-user" class="tab-pane fade">
-  <?php
-  include (PLUGIN_PATH."/templates/settings.php");
-   ?>
-</div>
+  <div id="cryptofr-login" class="tab-pane fade ">
+  	<?php
+		include (PLUGIN_PATH."/templates/login.php");
+  	 ?>
+  </div>
+  <div id="cryptofr-moderation" class="tab-pane fade ">
+  	<?php
+		include (PLUGIN_PATH."/templates/moderation.php");
+  	 ?>
+  </div>
+  <div id="cryptofr-comments" class="tab-pane fade">
+  	<?php
+		include (PLUGIN_PATH."/templates/comments.php");
+  	 ?>
+  </div>
+  <div id="cryptofr-publish" class="tab-pane fade">
+    <?php
+    include (PLUGIN_PATH."/templates/pending.php");
+     ?>
+  </div>
+  <div id="cryptofr-spam" class="tab-pane fade">
+    <?php
+    include (PLUGIN_PATH."/templates/spam.php");
+     ?>
+  </div>
+  <div id="cryptofr-user" class="tab-pane fade">
+    <?php
+    include (PLUGIN_PATH."/templates/settings.php");
+     ?>
+  </div>
 </div>
 
 

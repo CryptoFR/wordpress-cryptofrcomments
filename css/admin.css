@@ -1418,6 +1418,19 @@ tr.shown td.details-control {
     grid-template-columns: 90% 3% 3%;
 }
 
+.each-post2 {
+    background: rgb(243, 243, 242);
+    width: 95%;
+    height: 10%;
+    margin-bottom: 1px;
+    padding-top: 2%;
+    padding-bottom: 1%;
+    border-radius: 2px;
+    align-items: center;
+    display: grid;
+    grid-template-columns: 6% 80% 4%;
+  }
+
 .post-name {
     font-family: 'Poppins', sans-serif;
     color: rgb(64, 72, 125);

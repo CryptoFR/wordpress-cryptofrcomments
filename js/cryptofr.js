@@ -697,7 +697,6 @@ document.addEventListener('visibilitychange', function () {
   newFetchGet(nodeBBURL + '/comments/bycid/' + cid, localStorage.token)
     .then(res => res.json())
     .then(function (res) {
-      // console.log(res);
       // Now im logged in
       if (data.error && !res.error) {
         location.reload();
@@ -856,7 +855,6 @@ $(document).on('click', '.conflicted-article-button', function (event) {
 
 // EXPORT COMMENTS
 $(document).on('click', '#export-comments', async function (event) {
-  // console.log(JSON.stringify(wpComments));
   let [paginatedComments, count] = paginateExportedComments(wpComments);
 
   console.log('paginatedComments', paginatedComments);
@@ -967,32 +965,32 @@ if ('token' in localStorage && localStorage.status === '200') {
 
 function activarTab(unTab) {
   try {
-    //Los elementos div de todas las pestañas están todos juntos en una
-    //única celda de la segunda fila de la tabla de estructura de pestañas.
-    //Hemos de buscar la seleccionada, ponerle display block y al resto
-    //ponerle display none.
+    //The div elements of all the tabs are all together
+    //in a single cell in the second row of the tab structure table.
+    //We have to find the selected one, put display block
+    //and the rest put display none.
     var id = unTab.id;
     if (id) {
       var tr = unTab.parentNode || unTab.parentElement;
       var tbody = tr.parentNode || tr.parentElement;
       var table = tbody.parentNode || tbody.parentElement;
-      //Pestañas en varias filas
+      //tabs in multiple rows
       if (table.getAttribute('data-filas') != null) {
         var filas = tbody.getElementsByTagName('tr');
         var filaDiv = filas[filas.length - 1];
         tbody.insertBefore(tr, filaDiv);
       }
-      //Para compatibilizar con la versión anterior, si la tabla no tiene los
-      //atributos data-min y data-max le ponemos los valores que tenían antes del
-      //cambio de versión.
+      //To make it compatible with the previous version, if the table does not
+      //have the data-min and data-max attributes,
+      //we put the values they had before the version change.
       var desde = table.getAttribute('data-min');
       if (desde == null) desde = 0;
       var hasta = table.getAttribute('data-max');
       if (hasta == null) hasta = MAXTABS;
       var idTab = id.split('tabck-');
       var numTab = parseInt(idTab[1]);
-      //Las "tabdiv" son los bloques interiores mientras que los "tabck"
-      //son las pestañas.
+      // "tabdiv" are the inner blocks while the "tabck"
+      // are the tabs.
       var esteTabDiv = document.getElementById('tabdiv-' + numTab);
       for (var i = desde; i <= hasta; i++) {
         var tabdiv = document.getElementById('tabdiv-' + i);
@@ -1015,6 +1013,10 @@ function activarTab(unTab) {
   } catch (e) {}
 }
 
+//--- MODAL IN COMMENTS DATATABLE-------
+
+//variable used for pagination of the modal in
+//comments datatable
 var pagination = {
   'querySet': new Array(),
   'pageList': new Array(),
@@ -1022,7 +1024,11 @@ var pagination = {
   'numberPerPage':10,
   'numberOfPage':0,
 }
+//variable used as current page of the modal in
+//comments datatable
+var pagemodal=1;
 
+//Pagination of the Modal in Comments Datatable
 function paginationModal(pagination1){
   console.log(pagination1)
     var begin= ((pagination1.currentPage -1)*pagination1.numberPerPage);
@@ -1036,6 +1042,8 @@ function paginationModal(pagination1){
     }
 }
 
+//function used for pagination of the modal in
+//comments datatable
 function pageButton(currentPage){
   var wrapper = document.getElementById('wrapper');
   wrapper.innerHTML=''
@@ -1095,18 +1103,15 @@ function buildModal(data){
     cont.appendChild(separator);
  }
 }
-
-var liroypagina=1;
-
+//button > in modal - comments dataTable
 function nextPage() {
-if(liroypagina< pagination.numberOfPage)
-  return liroypagina++;
-
+if(pagemodal< pagination.numberOfPage)
+  return pagemodal++;
 }
-
+//button < in modal - comments dataTable
 function previousPage() {
-if(liroypagina>1)
-  return liroypagina--;
+if(pagemodal>1)
+  return pagemodal--;
 }
 
 function manageDataArticle(dataSet){
@@ -1160,11 +1165,10 @@ response = manageDataArticle(dataSet);
 
        $('.pagination-button').on('click', function(){
          $('#ModalCommentContent').empty()
-         console.log('soy la pagina 1')
          var pagination = {
            'querySet': data.posts[0],
            'pageList': new Array(),
-           'currentPage':liroypagina,
+           'currentPage':pagemodal,
            'numberPerPage':10,
            'numberOfPage':0,
          }
@@ -1175,14 +1179,12 @@ response = manageDataArticle(dataSet);
          buildModal(dataModal.pageList);
        });
 
-
-
        $('.buttonsnextprev').on('click', function(){
           $('#ModalCommentContent').empty()
           var pagination = {
             'querySet': data.posts[0],
             'pageList': new Array(),
-            'currentPage':liroypagina,
+            'currentPage':pagemodal,
             'numberPerPage':10,
             'numberOfPage':0,
           }
@@ -1209,24 +1211,11 @@ function buildCommentsChildren(dataSet, pID){
   return children;
 }
 
+//--- END OF DataTable COMMENTS AND MODAL -------
+
 function formatChildModeration ( comment ) {
   let response=comment.comments[0];
-  //
-  //   return ('<table cellpadding="5" cellspacing="0" border="0">'+
-  //       '<tr>'+
-  //           '<td>Username:</td>'+
-  //           '<td>'+response.username+'</td>'+
-  //       '</tr>'+
-  //       '<tr>'+
-  //           '<td>Comment:</td>'+
-  //           '<td>'+response.content+'</td>'+
-  //       '</tr>'+
-  //       '<tr>'+
-  //           '<td>Extra info:</td>'+
-  //           '<td>And any further details here (images etc)...</td>'+
-  //       '</tr>'+
-  //   '</table>');
-
+  //Create child of row in dataTable Moderation
   let userDataComment=document.createElement("div");
   userDataComment.setAttribute("class","section-child-moderation");
   //image user
@@ -1248,15 +1237,17 @@ function formatChildModeration ( comment ) {
   commentUser.setAttribute("class","comment-user");
   userDataComment.appendChild(commentUser);
   //Create the buttons
+  //button red x
   let button1=document.createElement("button");
-  //button1.setAttribute("src","https://www.svgrepo.com/show/114127/big-garbage-bin.svg");
   button1.setAttribute("class","buttonx-child-moderation");
   button1.setAttribute("onclick","clickButtonView(this)");
   userDataComment.appendChild(button1);
+  //button green check
   let button2=document.createElement("button");
   button2.setAttribute("onclick","clickButtonView(this)");
   button2.setAttribute("class","buttony-child-moderation");
   userDataComment.appendChild(button2);
+  //button orange ! warning
   let button3=document.createElement("button");
   button3.setAttribute("onclick","clickButtonView(this)");
   button3.setAttribute("class","buttonz-child-moderation");
@@ -1273,6 +1264,7 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
   let response=[];
   response.push(dataSet.topic);
 
+  //dataAux is the data used while the real data is ready
   let dataAux= [
     {
       "title": "manage bitcoin",
@@ -1340,6 +1332,7 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
         ]
     });
 
+    //on click in arrow of row
     $('#table_moderation tbody').on('click', 'td.details-control', function () {
       var tr = $(this).closest('tr');
       var row = tables.row( tr );
@@ -1354,12 +1347,13 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
           row.child( formatChildModeration(row.data()) ).show();
           tr.addClass('shown');
       }
-  } );
+    });
 
     return tables;
 }
 
 window.addEventListener("load",windowSpam);
+//Menu  Spam tab Comments
 function windowSpam(){
  let dataAux= [
         {
@@ -1405,7 +1399,8 @@ function windowSpam(){
           ]
         }
       ];
- for(let k=0;k<2;k++){
+      //This for will fill the spam window.
+      for(let k=0;k<2;k++){
         let cont=document.getElementById("inside-spam-comment");
         console.log(cont);
         let userDataComment=document.createElement("div");
@@ -1452,7 +1447,7 @@ function windowSpam(){
         userDataComment.appendChild(commentUser);
         cont.appendChild(userDataComment);
       }
-}
+    }
 
 var dataAux= [
       {
@@ -1500,13 +1495,13 @@ var dataAux= [
     ];
 
 window.addEventListener("load", fillPostPending);
-
+// Menu Synchronization tab Pending  Syncs
 function fillPostPending(){
 
   let posts = dataAux.length;
 
     //This for will fill the post window.
- for(let k=0;k<posts;k++){
+    for(let k=0;k<posts;k++){
 
     let cont=document.getElementById("posts-container");
    // console.log(cont);
@@ -1537,7 +1532,8 @@ function fillPostPending(){
   }
 }
 
-//This function is a onclick function, is excuted when we click on a post name  fill the Post-windows
+//This function is a onclick function, is excuted when we click on a post name
+// fill the Post-windows
 function buildCommentsSync(arr){
     //Here just we have the name of the post 'arr', with the following loop, we are gonna get the complete object associated with the post
     let postNameShowed=arr.innerHTML;
@@ -1547,7 +1543,6 @@ function buildCommentsSync(arr){
         var postCommentShowed = dataAux[i].comments
       }
     }
-    //console.log(postCommentShowed)
     //For clean the comments
     let clean=document.getElementById("comments-posts-container");
     while(clean.firstChild){
@@ -1558,29 +1553,34 @@ function buildCommentsSync(arr){
         //Create the container for the comment
         let cont=document.getElementById("comments-posts-container");
         let userDataComment=document.createElement("div");
-        userDataComment.setAttribute("class","each-post");
+        userDataComment.setAttribute("class","each-post2");
         //Create the picture of user
         let userImg=document.createElement("img");
         userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
         userImg.setAttribute("class","user-picture");
         userImg.setAttribute("alt","This is an user perfil picture");
         userDataComment.appendChild(userImg);
+
+        let divusercomment=document.createElement("div");
         //Create the name of user
         let userName=document.createElement("label");
         let textUser=document.createTextNode(postCommentShowed[j].username);
         userName.setAttribute("class","name-user-m");
         userName.appendChild(textUser);
-        userDataComment.appendChild(userName);
+        divusercomment.appendChild(userName);
+
 
         //Create the comment of the user
         let commentUser=document.createElement("p");
         let texComment=document.createTextNode(postCommentShowed[j].content);
         commentUser.appendChild(texComment);
         commentUser.setAttribute("class","comment-user-spam");
-        userDataComment.appendChild(commentUser);
+        divusercomment.appendChild(commentUser);
+
+        userDataComment.appendChild(divusercomment);
         //Create the button
         let button1=document.createElement("button");
-        button1.setAttribute("class","button-sync3");
+        button1.setAttribute("class","button-sync1");
         userDataComment.appendChild(button1);
         cont.appendChild(userDataComment);
     }
