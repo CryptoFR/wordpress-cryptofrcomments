@@ -9,7 +9,7 @@
 		<select name="selectedCid" id="selectedCid">
 			<?php
 				foreach ($optionalCidsArray as $cid) {
-					echo "<option value=".$cid->cid.">".$cid->cid."</option>";
+          echo "<option value=".$cid->cid.">".$cid->cid."</option>";
 				}
 			?>
 		</select>

@@ -40,11 +40,31 @@
                                 <div class="sync-key2">
 
                                 </div>
-                                <div class="settings-top">
-                                <label class="label-setting">Default post category for the forum </label>
-                                  <select class="setting-select">
-                                    <option value="value1">Discussion Générale</option>
+                                <form id="config-form" action="?page=cryptofr_comments_plugin" method="POST" >
+                                  <label class="label-setting" for="cid">Default post category for the forum</label>
+                                  <select class="optionalCid" id="cid">
+                                    <?php
+                                    echo "<option value=".$config->cid.">".$config->cid."</option>";
+                                    foreach ($optionalCidsArray as $cid) {
+                                      echo "<option value=".$cid->cid.">".$cid->cid."</option>";
+                                    }
+                                    ?>
                                   </select>
+                                  <button class="btn btn-setting">Send</button>
+                                </form>
+
+                                <div class="settings-top">
+                                  <form id="config-form-optional-cids" action="?page=cryptofr_comments_plugin" method="POST" >
+                                    <label class="label-setting" for="cid">Delete optional category</label>
+                                    <select class="optionalCid" id="selectedCid">
+                                      <?php
+                                				foreach ($optionalCidsArray as $cid) {
+                                          echo "<option value=".$cid->cid.">".$cid->cid."</option>";
+                                				}
+                                			?>
+                                		</select>
+                                		<button type="button" class="btn btn-setting">Delete</button>
+                                	</form>
                                 </div>
                           </div>
                         </div>
@@ -52,6 +72,7 @@
                         <p></p>
                     </div>
                   </div>
+
                 </div>
             </div>
         </div>
