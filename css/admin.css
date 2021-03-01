@@ -1054,6 +1054,7 @@
     
     a.censored {
         color: #424B81;
+        margin-left: 2%;
     }
     
     .label-switch-forum {
@@ -1154,9 +1155,9 @@
     }
     
     .button_plus {
-        display: inline;
+        display: flex;
         margin-left: 8px;
-    }
+    } 
     
     @media (max-width: 1024px) {
         .button_plus {
