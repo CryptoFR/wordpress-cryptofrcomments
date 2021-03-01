@@ -32,7 +32,7 @@
 
        </div> <!--forum-tab -->
        <div class="col-sm-10" id="spam_settings_days">
-         <select id="category-comments" class="category-comments">
+         <select id="category-comments" class="category-comments1">
              <option value="">15 days</option>
          </select>
        </div> <!--class col-sm-10 -->

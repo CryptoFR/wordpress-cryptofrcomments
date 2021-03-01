@@ -667,6 +667,22 @@
         padding-bottom: 4px;
     }
     
+    select.category-comments1 {
+        background-color: #F1F1F1;
+        border-color: transparent;
+        font-size: 16px;
+        color: #545454;
+        padding-right: 165px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+    }
+    
+    @media only screen and (max-width: 600px) {
+        select.category-comments1 {
+            margin-left: -35%;
+        }
+    }
+    
     input.search-comment {
         background-color: #F1F1F1;
         border-color: transparent;
@@ -1157,7 +1173,7 @@
     .button_plus {
         display: flex;
         margin-left: 8px;
-    } 
+    }
     
     @media (max-width: 1024px) {
         .button_plus {
@@ -1215,12 +1231,24 @@
         float: left;
     }
     
+    @media only screen and (max-width: 600px) {
+        .user-picture {
+            margin-left: 5px;
+        }
+    }
+    
     .name-user-m {
         font-family: sans-serif;
         color: rgb(124, 121, 160);
         color: rgb(64, 73, 125);
         font-weight: 500;
         font-size: 16px;
+    }
+    
+    @media only screen and (max-width: 600px) {
+        .name-user-m {
+            margin-left: -5px;
+        }
     }
     
     .comment-user {
@@ -1373,6 +1401,21 @@
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='rgb(111,196,146)' class='bi bi-check-circle-fill' viewBox='0 0 16 16'%3E%3Cpath d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z'/%3E%3C/svg%3E");
     }
     
+    @media only screen and (max-width: 600px) {
+        .button-spam1 {
+            padding: 10px;
+            border: #FC4850;
+            background-color: #FC4850;
+            border-radius: 11px;
+            margin-left: -20px;
+            margin-top: 25px;
+        }
+        .button-spam2 {
+            margin-left: -12px !important;
+            margin-top: 25px;
+        }
+    }
+    
     @media (max-width: 1024px) {
         .button-sync4 {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-arrow-repeat' viewBox='0 0 16 16'%3E%3Cpath d='M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z'/%3E%3Cpath fill-rule='evenodd' d='M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z'/%3E%3C/svg%3E");
@@ -1423,6 +1466,14 @@
         font-family: sans-serif;
         color: rgb(229, 229, 228);
         margin-left: 15px;
+    }
+    
+    @media only screen and (max-width: 600px) {
+        .ip-user-label {
+            font-size: 12px !important;
+            color: rgb(93, 91, 90)!important;
+            margin-left: 5px !important;
+        }
     }
     
     .comment-user-spam {
@@ -1752,6 +1803,12 @@
         width: 90%;
     }
     
+    @media only screen and (max-width: 600px) {
+        #labelsetting {
+            padding: 0% 0% 0% 0%;
+        }
+    }
+    
     .setting-select {
         display: block;
         border: transparent;
@@ -1763,6 +1820,12 @@
         height: 100px;
         background-repeat-x: no-repeat;
         margin-top: 15%;
+    }
+    
+    @media only screen and (max-width: 600px) {
+        .usersetting {
+            margin-left: -5px;
+        }
     }
     
     .gridsetting {
