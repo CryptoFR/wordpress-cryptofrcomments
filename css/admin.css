@@ -1825,6 +1825,7 @@
     @media only screen and (max-width: 600px) {
         .usersetting {
             margin-left: -5px;
+            background-size: 100% 100%;
         }
     }
     
@@ -1837,6 +1838,12 @@
         color: #fff;
         background-color: #424B81;
         border-color: #424B81;
+    }
+    
+    @media only screen and (max-width: 600px) {
+        .btn-setting {
+            margin-top: 8px;
+        }
     }
     
     .optionalCid {
