@@ -26,6 +26,21 @@ if (isset($_POST['selectedCid'])) {
   }
 }
 
+// -- INSERT FLAG ALLOW GUEST ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
+if (isset($_POST['allow_guest'])) {
+  if (ctype_digit($_POST['allow_guest'])){
+    $sqlCommand ="INSERT INTO `cryptofrcomments` (allow_guest) VALUES (%s);";
+    $wpdb->query($wpdb->prepare($sqlCommand, $_POST['allow_guest'] ));
+  }
+}
+
+// -- INSERT DEFAULT AVATAR ROUTE ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
+if (isset($_POST['labelsetting'])) {
+  if (ctype_digit($_POST['labelsetting'])){
+    $sqlCommand ="INSERT INTO `cryptofrcomments` (default_avatar) VALUES (%s);";
+    $wpdb->query($wpdb->prepare($sqlCommand, $_POST['labelsetting'] ));
+  }
+}
 
 // WP_POST DEFAULT NAME
 $table_name = $wpdb->prefix . 'posts';

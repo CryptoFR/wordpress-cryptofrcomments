@@ -10,28 +10,30 @@
                     <div class="row-moderation">
                         <div class="column-2 ">
                           <div>
+                            <form id="allow-guest" action="?page=cryptofr_comments_plugin" method="POST" >
                               <label class="switch">
-                                  <input type="checkbox">
+                                  <input id="allow_guest" type="checkbox" value="0">
                                   <span class="slider round">
                                   </span>
                               </label>
                               <label  class="label-switch-forum" for="defaultCheck1">
                                 Allow Guest Comments
                               </label>
+                            </form>
                           </div>
 
                           <div>
                             <div class="gridsetting"> <!-- section with user image -->
-                            <div class="settings-top">
-                            <label class="label-setting">Default avatar for guests</label>
 
+                            <div class="settings-top">
+                            <form id="default-avatar-settings" action="?page=cryptofr_comments_plugin" method="POST" >
+                            <label class="label-setting">Default avatar for guests</label>
                               <input type="file" id="labelsetting">
                               <div  class="column is-9" >
                                       <button type="button" class="btn btn-sync">
                                           Upload file
                                       </button>
                               </div>
-
                             </div>
 
                             <div class="usersetting"></div>
@@ -64,6 +66,13 @@
                                 			?>
                                 		</select>
                                 		<button type="button" class="btn btn-setting">Delete</button>
+                                	</form>
+                                </div>
+                                <div class="settings-top">
+                                  <form id="config-form-optional-cids-delete" action="?page=cryptofr_comments_plugin" method="POST">
+                                		<label class="label-setting" for="optionalCid">Optional CategoryID</label>
+                                		<input class="insertcategory" id="optionalCid" name="optionalCid" value="0">
+                                		<button class="btn btn-setting">Insert</button>
                                 	</form>
                                 </div>
                           </div>
