@@ -1794,7 +1794,7 @@
         margin-right: 40%;
     }
 
-    #labelsetting {
+    .default_avatar {
         padding: 2% 10% 2% 4%;
         cursor: pointer;
         border-radius: 5%;

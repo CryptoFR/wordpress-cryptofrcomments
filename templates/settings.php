@@ -28,11 +28,9 @@
                             <div class="settings-top">
                             <form id="default-avatar-settings" action="?page=cryptofr_comments_plugin" method="POST" >
                             <label class="label-setting">Default avatar for guests</label>
-                              <input type="file" id="labelsetting">
+                              <input type="file" class="default_avatar" name="default_avatar">
                               <div  class="column is-9" >
-                                      <button type="button" class="btn btn-sync">
-                                          Upload file
-                                      </button>
+                                <input type='submit' class="btn btn-sync" name="submit" value='Upload file'>
                               </div>
                             </div>
 

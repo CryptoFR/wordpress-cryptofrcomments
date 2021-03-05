@@ -148,7 +148,7 @@ class cryptofrcomments{
 			`ID` int(11) NOT NULL AUTO_INCREMENT,
 			`cid` int (11) NOT NULL,
 			`allow_guest` char(1) NOT NULL,
-			`default_avatar` VARCHAR(55) NOT NULL DEFAULT '',
+			`default_avatar` VARCHAR(300) NOT NULL DEFAULT '',
 			`attached` VARCHAR(55) NOT NULL DEFAULT 'Pending',
 			PRIMARY KEY (`ID`)
 		);";
