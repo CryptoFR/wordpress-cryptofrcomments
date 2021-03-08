@@ -764,6 +764,16 @@
         margin-top: 1em;
     }
 
+    .btn-sc_settings{
+      position: absolute;
+      top: 84%;
+      left: 13.6%;
+      color: #fff;
+      background-color: #424B81;
+      border-color: #424B81;
+      margin-top: 1em;
+    }
+
     @media only screen and (max-width: 600px) {
         .btn-sync {
             color: #fff;

@@ -1,3 +1,8 @@
+<?php
+// define variables and set to empty values
+$allow_guest = 1;
+?>
+
 <div class="container-back">
     <div class="container-medium" >
 
@@ -12,13 +17,16 @@
                           <div>
                             <form id="allow-guest" action="?page=cryptofr_comments_plugin" method="POST" >
                               <label class="switch">
-                                  <input id="allow_guest" type="checkbox" value="0">
+                                  <input id="allow_guest" name="allow_guest" type="checkbox" value="1">
                                   <span class="slider round">
                                   </span>
                               </label>
                               <label  class="label-switch-forum" for="defaultCheck1">
                                 Allow Guest Comments
                               </label>
+                              <div  class="column is-9">
+                              <input type='submit' class="btn btn-sc_settings" name="sc_settings" value='Save changes'>
+                            </div>
                             </form>
                           </div>
 
@@ -26,20 +34,19 @@
                             <div class="gridsetting"> <!-- section with user image -->
 
                             <div class="settings-top">
-                            <form id="default-avatar-settings" action="?page=cryptofr_comments_plugin" method="POST" >
+                            <form id="default-avatar-settings" action="?page=cryptofr_comments_plugin" method="POST" enctype="multipart/form-data">
                             <label class="label-setting">Default avatar for guests</label>
                               <input type="file" class="default_avatar" name="default_avatar">
                               <div  class="column is-9" >
                                 <input type='submit' class="btn btn-sync" name="submit" value='Upload file'>
                               </div>
+                            </form>
                             </div>
 
                             <div class="usersetting"></div>
 
                           </div>
-                                <div class="sync-key2">
-
-                                </div>
+                                <div class="sync-key2"></div>
                                 <form id="config-form" action="?page=cryptofr_comments_plugin" method="POST" >
                                   <label class="label-setting" for="cid">Default post category for the forum</label>
                                   <select class="optionalCid" id="cid">
@@ -84,12 +91,11 @@
             </div>
         </div>
 
-     <!--  </div> -->
+     <!--  </div>-->
 
-    <div  class="column is-9">
-        <button type="button" class="btn btn-sync">
-            Save changes
-        </button>
+      <div  class="column is-9">
+      <input type='submit' class="btn btn-sync" name="sc_settings" value='Save changes'>
     </div>
+
   </div>
 </div>

@@ -27,10 +27,15 @@ if (isset($_POST['selectedCid'])) {
 }
 
 // -- INSERT FLAG ALLOW GUEST ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
-if (isset($_POST['allow_guest'])) {
-  if (ctype_digit($_POST['allow_guest'])){ //update
+if (isset($_POST["sc_settings"])) {
+  //echo "imprime " . $_POST["allow_guest"]. ".";
+  if (isset($_POST['allow_guest'])){ //true
     $sqlCommand ="UPDATE cryptofrcomments SET allow_guest=%s";
     $wpdb->query($wpdb->prepare($sqlCommand, $_POST['allow_guest'] ));
+  }
+  else {
+    $sqlCommand ="UPDATE cryptofrcomments SET allow_guest=0";
+    $wpdb->query($wpdb->prepare($sqlCommand));
   }
 }
 
@@ -38,21 +43,22 @@ if (isset($_POST['allow_guest'])) {
 
 // Check if image file is a actual image or fake image
 if(isset($_POST["submit"])) {
+  if(isset($_FILES['default_avatar'])){
 
-  $target_dir = get_site_url()."/wp-content/uploads/";
-  $target_file = $target_dir . basename($_FILES['default_avatar']['name']);
-  echo "File is an image - " . $target_file . ".";
-  $uploadOk = 1;
-  $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-  $check = getimagesize($_FILES["default_avatar"]["tmp_name"]);
-  
-    if($check !== false) {
-      echo "File is an image - " . $check["mime"] . ".";
-      $uploadOk = 1;
-    } else {
-      echo "File is not an image.";
-      $uploadOk = 0;
-    }
+    $target_dir = get_site_url()."/wp-content/uploads/";
+    $target_file = $target_dir . basename($_FILES['default_avatar']['name']);
+    //echo "File is an image - " . $target_file . ".";
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    $check = getimagesize($_FILES["default_avatar"]["tmp_name"]);
+
+      if($check !== false) {
+        echo "File is an image - " . $check["mime"] . ".";
+        $uploadOk = 1;
+      } else {
+        echo "File is not an image.";
+        $uploadOk = 0;
+      }
 
     // Check file size
     // if ($_FILES["fileToUpload"]["size"] > 500000) {
@@ -60,7 +66,7 @@ if(isset($_POST["submit"])) {
     //   $uploadOk = 0;
     // }
 
-// Allow certain file formats
+    // Allow certain file formats
     if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
     && $imageFileType != "gif" ) {
       echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
@@ -72,9 +78,13 @@ if(isset($_POST["submit"])) {
       echo "Sorry, your file was not uploaded.";
     // if everything is ok, try to upload file
     } else {
-      $sqlCommand ="UPDATE cryptofrcomments SET default_avatar=%s";
-      $wpdb->query($wpdb->prepare($sqlCommand, $_POST['default_avatar'] ));
+      $sqlCommand ="UPDATE `cryptofrcomments` SET default_avatar=%s";
+      $wpdb->query($wpdb->prepare($sqlCommand, $target_file ));
     }
+  }
+  else {
+    echo "File is empty ";
+  }
 }
 //  END UPDATE DEFAULT AVATAR
 
