@@ -49,7 +49,7 @@ $allow_guest = 1;
                                 <div class="sync-key2"></div>
                                 <form id="config-form" action="?page=cryptofr_comments_plugin" method="POST" >
                                   <label class="label-setting" for="cid">Default post category for the forum</label>
-                                  <select class="optionalCid" id="cid">
+                                  <select class="optionalCid"name="cid">
                                     <?php
                                     echo "<option value=".$config->cid.">".$config->cid."</option>";
                                     foreach ($optionalCidsArray as $cid) {
@@ -57,20 +57,22 @@ $allow_guest = 1;
                                     }
                                     ?>
                                   </select>
-                                  <button class="btn btn-setting">Send</button>
+                                  	<input type='submit' class="btn btn-setting" name="defaultCid" value='Send'>
                                 </form>
+
+
 
                                 <div class="settings-top">
                                   <form id="config-form-optional-cids" action="?page=cryptofr_comments_plugin" method="POST" >
                                     <label class="label-setting" for="cid">Delete optional category</label>
-                                    <select class="optionalCid" id="selectedCid">
+                                    <select class="optionalCid" name="selectedCid">
                                       <?php
                                 				foreach ($optionalCidsArray as $cid) {
                                           echo "<option value=".$cid->cid.">".$cid->cid."</option>";
                                 				}
                                 			?>
                                 		</select>
-                                		<button type="button" class="btn btn-setting">Delete</button>
+                                		<input type='submit' class="btn btn-setting" name="deleteCid" value='Delete'>
                                 	</form>
                                 </div>
                                 <div class="settings-top">

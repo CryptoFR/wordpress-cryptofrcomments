@@ -2,8 +2,8 @@
 
 global $wpdb;
 
-// -- UPDATE CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
-if (isset($_POST['cid'])) {
+// -- UPDATE CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP (DEFAULT POST CATEGORY)
+if (isset($_POST['defaultCid'])) {
   if (ctype_digit($_POST['cid'])){
     $sqlCommand = "UPDATE cryptofrcomments SET cid=%s";
     $wpdb->query($wpdb->prepare($sqlCommand, $_POST['cid'] ));
@@ -19,8 +19,8 @@ if (isset($_POST['optionalCid'])) {
 }
 
 // -- DELETE OPTIONAL CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
-if (isset($_POST['selectedCid'])) {
-  if (ctype_digit($_POST['selectedCid'])){
+if (isset($_POST['deleteCid'])) {
+  if (isset($_POST['selectedCid'])){
     $sqlCommand ="DELETE FROM `cryptofrcomments_cids` WHERE cid=%s";
     $wpdb->query($wpdb->prepare($sqlCommand, $_POST['selectedCid'] ));
   }

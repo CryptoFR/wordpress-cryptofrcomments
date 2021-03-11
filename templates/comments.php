@@ -9,7 +9,12 @@
       <div class="column is-9">
         <div class="comments-margin">
         <select id="category-comments" class="category-comments">
-            <option value="">Category</option>
+          <option>Category</option>
+          <?php
+            foreach ($optionalCidsArray as $cid) {
+              echo "<option value=".$cid->cid.">".$cid->cid."</option>";
+            }
+          ?>
         </select>
         <!-- <input type="text" class="search-comment" placeholder='Search'> -->
       </div>
