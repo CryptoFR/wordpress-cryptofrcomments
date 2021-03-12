@@ -468,7 +468,7 @@ function structureWpComments() {
 
 function setDataTableToEachArticle(articles) {
   // Set a datatable to each articles
-  console.log(articles);
+  //let article_data= articles;
   for (const article of articles) {
     let table = document.createElement('table');
     $(table)
@@ -489,6 +489,7 @@ function setDataTableToEachArticle(articles) {
     let select = document.createElement('select');
     $(select).attr('id', 'select-' + article[1].topic.tid);
     for (let optCid of optionalCidsCopy) {
+      console.log(optionalCidsCopy);
       var option = document.createElement('option');
       option.value = optCid.cid;
       option.text = optCid.cid;
@@ -509,10 +510,10 @@ function setDataTableToEachArticle(articles) {
     div.append(button);
     div.append(table);
     if (document.querySelector('.comments-tables')) document.querySelector('.comments-tables').append(div);
+    }
 
-    setDataTableArticle( document.querySelector('#articles') ,article[1]);
-    setDataTableModeration(document.querySelector('#table_moderation') ,article[1]);
-  }
+
+
 }
 
 function paginateExportedComments(wpComments) {
@@ -554,6 +555,7 @@ function hideTabsOnDashboard() {
 function groupCommentsByArticle() {
   copyArticles = Object.assign({}, articles);
   for (const l of data.posts) {
+    //console.log(data.posts);
     if (!articles.hasOwnProperty(l.tid)) {
       articles[l.tid] = {
         topic: { tid: l.tid, title: l.title, cid: l.cid },
@@ -653,7 +655,9 @@ function attachOldArticleButton() {
 }
 
 function getCommentsByOptionalCid() {
-  for (let optcid of optionalCids) {
+  let article;
+  for (let optcid of optionalCidsCopy) {
+    console.log(optcid.cid);
     newFetchGet(nodeBBURL + '/comments/bycid/' + optcid.cid, localStorage.token)
       .then(res => {
         status = res.status;
@@ -663,7 +667,7 @@ function getCommentsByOptionalCid() {
       .then(function (res) {
         data = res;
 
-        //console.log('data cid', data);
+        console.log('data cid', data);
 
         if (status == '403') {
           // NOT AUTHORIZED
@@ -682,16 +686,22 @@ function getCommentsByOptionalCid() {
           copyArticles[l.tid].posts.push(l);
         }
         copyArticles = Object.entries(copyArticles);
-
+        article=copyArticles;
         // siteTable = setDataTable(document.querySelector('#grid'), data.posts);
 
         // Set a datatable to each article
-        console.log(copyArticles);
+        //console.log(copyArticles);
 
-        setDataTableToEachArticle(copyArticles);
+        //setDataTableToEachArticle(copyArticles);
+
       });
   }
+  setDataTableModeration(document.querySelector('#table_moderation') , articles);
+  setDataTableArticle( document.querySelector('#articles') ,articles);
 }
+
+//--When a category id is selectedCid
+//doucment.getElementById("category-comments").
 
 // ----- EVENTS
 
@@ -894,8 +904,9 @@ var status = null;
 var articles = {};
 wpComments = structureWpComments();
 let optionalCidsCopy = optionalCids.map(x => x);
-optionalCidsCopy.push({ cid: cid });
 
+optionalCidsCopy.push({ cid: cid });
+console.log(optionalCidsCopy);
 // 'token' in localStorage && localStorage.status === '200';
 
 // console.log('oldArticles', oldArticles);
@@ -1033,12 +1044,12 @@ var pagemodal=1;
 
 //Pagination of the Modal in Comments Datatable
 function paginationModal(pagination1){
-  console.log(pagination1)
+  //console.log(pagination1)
     var begin= ((pagination1.currentPage -1)*pagination1.numberPerPage);
     var end= begin + pagination1.numberPerPage;
     pagination.pageList= (pagination1.querySet).slice(begin, end);
     pagination.numberOfPage= Math.ceil((pagination1.querySet).length/(pagination1.numberPerPage));
-    console.log(pagination1.pageList);
+
     return{
       'pageList':pagination.pageList,
       'numberOfPage':pagination.numberOfPage
@@ -1055,10 +1066,7 @@ function pageButton(currentPage){
 
   let buttonnext = document.getElementById('buttonnext');
   buttonnext.addEventListener('click', function(){
-    console.log('entro aqui en el boton')
     pagination.currentPage=$(this).val();
-    console.log(pagination.currentPage);
-    console.log(pagination.pageList);
   });
 
 }
@@ -1117,27 +1125,12 @@ if(pagemodal>1)
   return pagemodal--;
 }
 
-//function used to handle the data that reaches the Comments datatable
-function manageDataArticle(dataSet){
-  let count =(dataSet.posts).length;
-  (dataSet.topic).count_comments= count;
-  let posts = [];
-  posts.push(dataSet.posts);
-  (dataSet.topic).posts=posts;
-
-  let response=[];
-  response.push(dataSet.topic);
-  return response;
-}
-
 //Tab menu Comments datatable
 function setDataTableArticle(table, dataSet) {
 table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
 
 let response = [];
-response = manageDataArticle(dataSet);
-console.log("setDataTableArticle",response);
-  if (dataSet)
+response = manageDataModeration(dataSet);
     var tables =  $(table).DataTable({
       data: response,
         columns: [
@@ -1221,7 +1214,10 @@ function buildCommentsChildren(dataSet, pID){
 //--- END OF DataTable COMMENTS AND MODAL -------
 
 function formatChildModeration ( comment ) {
-  let response=comment.comments[0];
+  console.log(comment);
+    console.log(comment.posts[0][0].username);
+  let response=comment.posts[0][0];
+
   //Create child of row in dataTable Moderation
   let userDataComment=document.createElement("div");
   userDataComment.setAttribute("class","section-child-moderation");
@@ -1263,70 +1259,27 @@ function formatChildModeration ( comment ) {
     return userDataComment;
 }
 
+//function used to handle the data that reaches the Comments datatable
+function manageDataModeration(dataSet){
+
+let response=[];
+  for(let i=0;i<dataSet.length;i++){
+    let count =(dataSet[i][1].posts).length;
+    (dataSet[i][1].topic).count_comments= count;
+    let posts = [];
+    posts.push(dataSet[i][1].posts);
+    (dataSet[i][1].topic).posts=posts;
+    response.push(dataSet[i][1].topic);
+  }
+  return response;
+}
+
 function setDataTableModeration(table, dataSet) {
 table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
-  let comments =(dataSet.posts).length;
-  (dataSet.topic).comments= comments;
+let response= manageDataModeration(dataSet);
 
-  let response=[];
-  response.push(dataSet.topic);
-console.log("entra en setDataTableModeration", response[0]);
-  //dataAux is the data used while the real data is ready
-  let dataAux= [
-    {
-      "title": "manage bitcoin",
-      "count": "116",
-      "comments": [
-        {
-          "content":"bla bla bla",
-          "username":"crytpoUser"
-        },
-        {
-          "content":"le soux jeux ",
-          "username":"Nicola"
-        }
-      ]
-    },
-    {
-      "title": "Blockchain bitcoin",
-      "count": "81",
-      "comments": [
-        {
-          "content":"preux je t aime",
-          "username":"cry ser"
-        },
-        {
-          "content":"le soux jeux ",
-          "username":"Nicola Ams"
-        }
-      ]
-    },
-    {
-      "title": "Etherium",
-      "count": "52",
-      "comments": [
-        {
-          "content":"1etia jex aime",
-          "username":"c1 ser"
-        },
-        {
-          "content":"2etia jex aime",
-          "username":"c2 ser"
-        },
-        {
-          "content":"3etia jex aime",
-          "username":"c3 ser"
-        },
-        {
-          "content":"le soux foi ",
-          "username":"Nicola Amsterdam"
-        }
-      ]
-    }
-  ];
-
-  if (dataSet)
-    var tables =  $(table).DataTable({
+  //if (dataSet)
+    let tables =  $(table).DataTable({
       data: response,
         columns: [
           {
@@ -1336,8 +1289,7 @@ console.log("entra en setDataTableModeration", response[0]);
                 "defaultContent": ''
             },
           { data: "title" }
-        ],
-        "bDestroy": true
+        ]
     });
 
     //on click in arrow of row
@@ -1356,7 +1308,6 @@ console.log("entra en setDataTableModeration", response[0]);
           tr.addClass('shown');
       }
     });
-
     return tables;
 }
 

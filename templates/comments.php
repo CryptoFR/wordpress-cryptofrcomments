@@ -11,9 +11,10 @@
         <select id="category-comments" class="category-comments">
           <option>Category</option>
           <?php
-            foreach ($optionalCidsArray as $cid) {
-              echo "<option value=".$cid->cid.">".$cid->cid."</option>";
-            }
+          echo "<option value=".$config->cid.">".$config->cid."</option>";
+          foreach ($optionalCidsArray as $cid) {
+            echo "<option value=".$cid->cid.">".$cid->cid."</option>";
+          }
           ?>
         </select>
         <!-- <input type="text" class="search-comment" placeholder='Search'> -->

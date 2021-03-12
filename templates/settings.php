@@ -49,7 +49,7 @@ $allow_guest = 1;
                                 <div class="sync-key2"></div>
                                 <form id="config-form" action="?page=cryptofr_comments_plugin" method="POST" >
                                   <label class="label-setting" for="cid">Default post category for the forum</label>
-                                  <select class="optionalCid"name="cid">
+                                  <select class="optionalCid" name="cid">
                                     <?php
                                     echo "<option value=".$config->cid.">".$config->cid."</option>";
                                     foreach ($optionalCidsArray as $cid) {
