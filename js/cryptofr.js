@@ -1269,24 +1269,18 @@ function selectCategoryId() {
 }
 
 //When the table is filter by category
-function selectedCid(cid){
-  let cleanCommentsWindow=document.getElementById("div_articles");
-  if(document.getElementById("articles_wrapper"))
-  cleanCommentsWindow.removeChild(document.getElementById("articles_wrapper"));
+const selectedCid = (cid) => {
+  
+  $('#articles').empty();
 
   let dataSet = articles;
   let response = [];
 
   for(let i=0;i<dataSet.length;i++){
-    if(dataSet[i][1].topic.cid == cid){
+    if(dataSet[i][1].topic.cid == cid)
       response=dataSet;
-   }
   }
 
-  let table = document.createElement('table');
-  $(table).addClass('table table-striped table-bordered').addClass('display').css('width', '100%');
-  $(table).attr("id", "articles");
-  cleanCommentsWindow.appendChild(table);
   setDataTableArticle(document.querySelector('#articles') , response);
 }
 
