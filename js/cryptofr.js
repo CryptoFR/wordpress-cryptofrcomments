@@ -489,7 +489,6 @@ function setDataTableToEachArticle(articles) {
     let select = document.createElement('select');
     $(select).attr('id', 'select-' + article[1].topic.tid);
     for (let optCid of optionalCidsCopy) {
-      console.log(optionalCidsCopy);
       var option = document.createElement('option');
       option.value = optCid.cid;
       option.text = optCid.cid;
@@ -554,6 +553,7 @@ function hideTabsOnDashboard() {
 
 function groupCommentsByArticle() {
   copyArticles = Object.assign({}, articles);
+
   for (const l of data.posts) {
     //console.log(data.posts);
     if (!articles.hasOwnProperty(l.tid)) {
@@ -565,6 +565,7 @@ function groupCommentsByArticle() {
     articles[l.tid].posts.push(l);
   }
 
+  console.log(articles);
   return Object.entries(articles);
 }
 
@@ -657,7 +658,6 @@ function attachOldArticleButton() {
 function getCommentsByOptionalCid() {
   let article;
   for (let optcid of optionalCidsCopy) {
-    console.log(optcid.cid);
     newFetchGet(nodeBBURL + '/comments/bycid/' + optcid.cid, localStorage.token)
       .then(res => {
         status = res.status;
@@ -666,9 +666,7 @@ function getCommentsByOptionalCid() {
       .then(res => res.json())
       .then(function (res) {
         data = res;
-
-        console.log('data cid', data);
-
+        //console.log('data cid', data);
         if (status == '403') {
           // NOT AUTHORIZED
           document.querySelector('.error-cryptofr-auth').style.display = 'block';
@@ -687,10 +685,11 @@ function getCommentsByOptionalCid() {
         }
         copyArticles = Object.entries(copyArticles);
         article=copyArticles;
+
         // siteTable = setDataTable(document.querySelector('#grid'), data.posts);
 
         // Set a datatable to each article
-        //console.log(copyArticles);
+        console.log(copyArticles);
 
         //setDataTableToEachArticle(copyArticles);
 
@@ -699,9 +698,6 @@ function getCommentsByOptionalCid() {
   setDataTableModeration(document.querySelector('#table_moderation') , articles);
   setDataTableArticle( document.querySelector('#articles') ,articles);
 }
-
-//--When a category id is selectedCid
-//doucment.getElementById("category-comments").
 
 // ----- EVENTS
 
@@ -906,7 +902,7 @@ wpComments = structureWpComments();
 let optionalCidsCopy = optionalCids.map(x => x);
 
 optionalCidsCopy.push({ cid: cid });
-console.log(optionalCidsCopy);
+
 // 'token' in localStorage && localStorage.status === '200';
 
 // console.log('oldArticles', oldArticles);
@@ -975,7 +971,6 @@ if ('token' in localStorage && localStorage.status === '200') {
   document.querySelector('#login-modal').classList.add('active');
   addSocialAuthListeners(document.querySelector('#login-modal'));
 }
-
 
 function activarTab(unTab) {
   try {
@@ -1131,6 +1126,7 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
 
 let response = [];
 response = manageDataModeration(dataSet);
+console.log()
     var tables =  $(table).DataTable({
       data: response,
         columns: [
@@ -1259,10 +1255,46 @@ function formatChildModeration ( comment ) {
     return userDataComment;
 }
 
+//--When a category id is selectedCid
+function selectCategoryId() {
+
+  let button=document.getElementsByClassName("category-button");
+  let cid= document.getElementById("categoryCommentss").value;
+
+    if (cid=="Category"){
+      let button=document.getElementsByClassName("category-button");
+      return false;
+    }
+    selectedCid(cid);
+}
+
+//When the table is filter by category
+function selectedCid(cid){
+  let cleanCommentsWindow=document.getElementById("div_articles");
+  if(document.getElementById("articles_wrapper"))
+  cleanCommentsWindow.removeChild(document.getElementById("articles_wrapper"));
+
+  let dataSet = articles;
+  let response = [];
+
+  for(let i=0;i<dataSet.length;i++){
+    if(dataSet[i][1].topic.cid == cid){
+      response=dataSet;
+   }
+  }
+
+  let table = document.createElement('table');
+  $(table).addClass('table table-striped table-bordered').addClass('display').css('width', '100%');
+  $(table).attr("id", "articles");
+  cleanCommentsWindow.appendChild(table);
+  setDataTableArticle(document.querySelector('#articles') , response);
+}
+
 //function used to handle the data that reaches the Comments datatable
 function manageDataModeration(dataSet){
 
 let response=[];
+//let dataSet=articles;
   for(let i=0;i<dataSet.length;i++){
     let count =(dataSet[i][1].posts).length;
     (dataSet[i][1].topic).count_comments= count;
@@ -1544,5 +1576,4 @@ function buildCommentsSync(arr){
         cont.appendChild(userDataComment);
     }
 }
-
 // console.log('optionalCids', optionalCids);

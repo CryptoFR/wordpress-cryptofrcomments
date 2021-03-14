@@ -8,19 +8,23 @@
       <div class="container-back" >
       <div class="column is-9">
         <div class="comments-margin">
-        <select id="category-comments" class="category-comments">
-          <option>Category</option>
-          <?php
-          echo "<option value=".$config->cid.">".$config->cid."</option>";
-          foreach ($optionalCidsArray as $cid) {
-            echo "<option value=".$cid->cid.">".$cid->cid."</option>";
-          }
-          ?>
-        </select>
+          <form>
+            <select id="categoryCommentss" class="category-comments">
+              <option>Category</option>
+              <?php
+              echo "<option value=".$config->cid.">".$config->cid."</option>";
+              foreach ($optionalCidsArray as $cid) {
+                echo "<option value=".$cid->cid.">".$cid->cid."</option>";
+              }
+              ?>
+            </select>
+            <button type="button" onclick="selectCategoryId()" class="btn btn-setting">Send</button>
+      </form>
+
         <!-- <input type="text" class="search-comment" placeholder='Search'> -->
       </div>
       </div>
-      <div class="column is-9">
+      <div id="div_articles" class="column is-9">
           <table id="articles" class="table table-striped table-bordered" width="100%"></table>
           <!--All these element are for Modal-->
           <div class="modal" tabindex="-1" role="dialog" id="ModalComments">
