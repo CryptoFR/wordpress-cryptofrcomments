@@ -125,19 +125,17 @@ class cryptofrcomments{
 	   	global $wpdb;
 
 	   	// Altering post table for cryptofrcomments attribute
-		$table_name = $wpdb->prefix . 'posts';
+		// $table_name = $wpdb->prefix . 'posts';
 
-		$check_column = (array) $wpdb->get_results(  "SELECT count(cryptofrcomments) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME = '{$table_name}' AND COLUMN_NAME = 'cryptofrcomments'"  )[0];
+		//$check_column = (array) $wpdb->get_results(  "SELECT count(cryptofrcomment) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME = '{$table_name}' AND COLUMN_NAME = 'cryptofrcomments'"  )[0];
 
-		$check_column = (int) array_shift($check_column);
-		if($check_column == 0) {
-			$wpdb->query(
-			"ALTER TABLE $table_name
-			ADD COLUMN `cryptofrcomments` VARCHAR(55) NOT NULL DEFAULT 'Disabled'
-			");
-		}
-
-
+		// $check_column = (int) array_shift($check_column);
+		// if($check_column == 0) {
+		// 	$wpdb->query(
+		// 	"ALTER TABLE $table_name
+		// 	ADD COLUMN `cryptofrcomments` VARCHAR(55) NOT NULL DEFAULT 'Disabled'
+		// 	");
+		// }
 
 
 		// Create "cryptofrcomments" table for saving config if not exists
@@ -180,9 +178,6 @@ class cryptofrcomments{
 		flush_rewrite_rules();
 	}
 
-
-
-
 	// -- DEACTIVATION OF THE WORDPRESS PLUGIN
 	function deactivate(){
 
@@ -191,16 +186,14 @@ class cryptofrcomments{
 
 }
 
-
 // Initialization of the plugin object
 if (class_exists('cryptofrcomments')){
 	$cryptofrcomments= new cryptofrcomments();
+	//echo "yes";
 }
 
-
-// Activation
+//activation
 register_activation_hook(__FILE__,array($cryptofrcomments,'activate'));
 
-
-// Deactivation
+//deactivation
 register_deactivation_hook(__FILE__,array($cryptofrcomments,'deactivate'));
