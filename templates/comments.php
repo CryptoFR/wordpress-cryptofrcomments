@@ -5,7 +5,7 @@
 </div> -->
 
 <div class="container-back">
-      <div class="container-back" >
+      <div class="container-comment" >
       <div class="column is-9">
         <div class="comments-margin">
           <form>

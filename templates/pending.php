@@ -38,7 +38,7 @@
                  </ul>
             </div><!--Here is the end of tab and forum pendingSyncs-->
            <div>
-                <div class="container-panel">
+                <div class="container-panel-syn">
 
                     <div class="tab_content" id="pendingSyncs">
 											<div class="form-check">
@@ -92,7 +92,7 @@
                                 </p>
 															</div>
 															<div  class="column is-9" >
-			                                <button type="button" class="btn btn-sync1">
+			                                <button type="button" class="btn btn-sync">
 			                                    Run Synchronization Wizard
 			                                </button>
 			                            </div>

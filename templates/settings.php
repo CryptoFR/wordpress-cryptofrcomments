@@ -43,7 +43,9 @@ $allow_guest = 1;
                             </form>
                             </div>
 
-                            <div class="usersetting"></div>
+                            <!-- <div class="usersetting"></div> -->
+                            <img class="avatar-moderator" src="<?php echo $img; ?>">
+
 
                           </div>
                                 <div class="sync-key2"></div>

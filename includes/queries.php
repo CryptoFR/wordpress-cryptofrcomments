@@ -7,13 +7,15 @@ if (isset($_POST['defaultCid'])) {
   if (ctype_digit($_POST['cid'])){
     $sqlCommand = "UPDATE cryptofrcomments SET cid=%s";
     $wpdb->query($wpdb->prepare($sqlCommand, $_POST['cid'] ));
+    $sqlCommand ="DELETE FROM cryptofrcomments_cids WHERE cid=%s";
+    $wpdb->query($wpdb->prepare($sqlCommand, $_POST['cid'] ));
   }
 }
 
 // -- INSERT OPTIONAL CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
 if (isset($_POST['optionalCid'])) {
   if (ctype_digit($_POST['optionalCid'])){
-    $sqlCommand ="INSERT INTO `cryptofrcomments_cids` (cid) VALUES (%s);";
+    $sqlCommand ="INSERT INTO cryptofrcomments_cids (cid) VALUES (%s);";
     $wpdb->query($wpdb->prepare($sqlCommand, $_POST['optionalCid'] ));
   }
 }
@@ -21,7 +23,7 @@ if (isset($_POST['optionalCid'])) {
 // -- DELETE OPTIONAL CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
 if (isset($_POST['deleteCid'])) {
   if (isset($_POST['selectedCid'])){
-    $sqlCommand ="DELETE FROM `cryptofrcomments_cids` WHERE cid=%s";
+    $sqlCommand ="DELETE FROM cryptofrcomments_cids WHERE cid=%s";
     $wpdb->query($wpdb->prepare($sqlCommand, $_POST['selectedCid'] ));
   }
 }
@@ -47,18 +49,18 @@ if(isset($_POST["submit"])) {
 
     $target_dir = get_site_url()."/wp-content/uploads/";
     $target_file = $target_dir . basename($_FILES['default_avatar']['name']);
-    //echo "File is an image - " . $target_file . ".";
+    $img_name = basename($_FILES['default_avatar']['name']);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
     $check = getimagesize($_FILES["default_avatar"]["tmp_name"]);
 
-      if($check !== false) {
-        echo "File is an image - " . $check["mime"] . ".";
-        $uploadOk = 1;
-      } else {
-        echo "File is not an image.";
-        $uploadOk = 0;
-      }
+    $uploadedfile = $_FILES['default_avatar'];
+    $upload_overrides = array( 'test_form' => false );
+
+    $movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
+    //expresiónConValorBooleano ? expresión1 : expresión2;
+    $check !== false ? $uploadOk = 1 : $uploadOk = 0;
+
 
     // Check file size
     // if ($_FILES["fileToUpload"]["size"] > 500000) {
@@ -78,8 +80,9 @@ if(isset($_POST["submit"])) {
       echo "Sorry, your file was not uploaded.";
     // if everything is ok, try to upload file
     } else {
-      $sqlCommand ="UPDATE `cryptofrcomments` SET default_avatar=%s";
-      $wpdb->query($wpdb->prepare($sqlCommand, $target_file ));
+      $sqlCommand ="UPDATE `cryptofrcomments` SET default_avatar=%s , avatar_name=%s ";
+      $wpdb->query($wpdb->prepare($sqlCommand, $target_file, $img_name ));
+
     }
   }
   else {
@@ -91,6 +94,11 @@ if(isset($_POST["submit"])) {
 // WP_POST DEFAULT NAME
 $table_name = $wpdb->prefix . 'posts';
 
+// -- GET DEFAULT AVATAR
+$sqlCommand = "SELECT avatar_name from cryptofrcomments";
+$wpdb->query($sqlCommand);
+$img_name=($wpdb->last_result);
+$img=get_site_url()."/wp-content/uploads/".$img_name[0]->avatar_name;
 
 // -- GET CONFIG OF CRYPTOFRCOMMENTS WP PLUGIN
 $sqlCommand = "SELECT * from cryptofrcomments ORDER BY ID DESC LIMIT 1";
@@ -105,14 +113,14 @@ $markedArticles=json_encode($wpdb->last_result);
 
 
 // -- GET PUBLISHED ARTICLES
-$sqlCommand = "SELECT * from ".$table_name." WHERE cryptofrcomments = 'Published'";
+$sqlCommand = "SELECT * from ".$table_name." WHERE 'cryptofrcomments' = 'Published'";
 $wpdb->query($sqlCommand);
 
 $publishedArticles=json_encode($wpdb->last_result);
 
 
 // -- GET OLD ARTICLES
-$sqlCommand="SELECT * FROM ".$table_name." WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' ORDER BY post_date ASC";
+$sqlCommand= "SELECT * FROM ".$table_name." WHERE `cryptofrcomments`='Disabled' AND post_type='post' AND post_status='publish' ORDER BY post_date ASC";
 $wpdb->query($sqlCommand);
 
 $oldArticlesArray=$wpdb->last_result;
