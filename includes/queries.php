@@ -36,8 +36,9 @@ if (isset($_POST["sc_settings"])) {
     $wpdb->query($wpdb->prepare($sqlCommand, $_POST['allow_guest'] ));
   }
   else {
-    $sqlCommand ="UPDATE cryptofrcomments SET allow_guest=0";
-    $wpdb->query($wpdb->prepare($sqlCommand));
+    $allow= 0;
+    $sqlCommand ="UPDATE cryptofrcomments SET allow_guest=%s";
+    $wpdb->query($wpdb->prepare($sqlCommand, $allow));
   }
 }
 

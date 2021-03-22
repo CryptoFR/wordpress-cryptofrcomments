@@ -25,31 +25,38 @@ $allow_guest = 1;
                                 Allow Guest Comments
                               </label>
                               <div  class="column is-9">
-                              <input type='submit' class="btn btn-sc_settings" name="sc_settings" value='Save changes'>
+                            <!-- <input type='submit' class="btn btn-sc_settings" name="sc_settings" value='Save changes'> -->
                             </div>
                             </form>
                           </div>
 
                           <div>
-                            <div class="gridsetting"> <!-- section with user image -->
+                            <!-- <div class="gridsetting"> <!-- section with user image --> 
 
-                            <div class="settings-top">
+                            <!-- <div class="settings-top"> -->
                             <form id="default-avatar-settings" action="?page=cryptofr_comments_plugin" method="POST" enctype="multipart/form-data">
-                            <label class="label-setting">Default avatar for guests</label>
-                              <input type="file" class="default_avatar" name="default_avatar">
-                              <div  class="column is-9" >
-                                <input type='submit' class="btn btn-sync" name="submit" value='Upload file'>
-                              </div>
-                            </form>
-                            </div>
+                            <div class= "grid-settings" >
+                              <div>
+                                <label class="label-setting">Default avatar for guests</label>
+                                <input type="file" class="default_avatar" name="default_avatar">
+                                <div  class="column is-9" >
+                                  <input type='submit' class="btn btn-sync" name="submit" value='Upload file'>
+                                </div>
 
-                            <!-- <div class="usersetting"></div> -->
+                              </div>
                             <img class="avatar-moderator" src="<?php echo $img; ?>">
 
 
+                            <!-- </form> -->
+                            <!-- </div> -->
+
+                            <!-- <div class="usersetting"></div> -->
+
                           </div>
-                                <div class="sync-key2"></div>
-                                <form id="config-form" action="?page=cryptofr_comments_plugin" method="POST" >
+
+                        <!-- </div> -->
+                                <!-- <div class="sync-key2"></div> -->
+                                <!-- <form id="config-form" action="?page=cryptofr_comments_plugin" method="POST" > -->
                                   <label class="label-setting" for="cid">Default post category for the forum</label>
                                   <select class="optionalCid" name="cid">
                                     <?php
@@ -60,12 +67,12 @@ $allow_guest = 1;
                                     ?>
                                   </select>
                                   	<input type='submit' class="btn btn-setting" name="defaultCid" value='Send'>
-                                </form>
+                                <!-- </form> -->
 
 
 
                                 <div class="settings-top">
-                                  <form id="config-form-optional-cids" action="?page=cryptofr_comments_plugin" method="POST" >
+                                  <!-- <form id="config-form-optional-cids" action="?page=cryptofr_comments_plugin" method="POST" > -->
                                     <label class="label-setting" for="cid">Delete optional category</label>
                                     <select class="optionalCid" name="selectedCid">
                                       <?php
@@ -75,14 +82,14 @@ $allow_guest = 1;
                                 			?>
                                 		</select>
                                 		<input type='submit' class="btn btn-setting" name="deleteCid" value='Delete'>
-                                	</form>
+                                	<!-- </form> -->
                                 </div>
                                 <div class="settings-top">
-                                  <form id="config-form-optional-cids-delete" action="?page=cryptofr_comments_plugin" method="POST">
+                                  <!-- <form id="config-form-optional-cids-delete" action="?page=cryptofr_comments_plugin" method="POST"> -->
                                 		<label class="label-setting" for="optionalCid">Optional CategoryID</label>
                                 		<input class="insertcategory" id="optionalCid" name="optionalCid" value="0">
                                 		<button class="btn btn-setting">Insert</button>
-                                	</form>
+                                	<!-- </form> -->
                                 </div>
                           </div>
                         </div>
@@ -98,8 +105,10 @@ $allow_guest = 1;
      <!--  </div>-->
 
       <div  class="column is-9">
-      <input type='submit' class="btn btn-sync" name="sc_settings" value='Save changes'>
-    </div>
 
+    <input type='submit' class="btn btn-sync" name="sc_settings" value='Save changes'>
+    </div>
+  <!-- End of the form -->
+</form>
   </div>
 </div>

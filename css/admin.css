@@ -1808,7 +1808,7 @@
         font-weight: 400;
         font-size: medium;
         color: #545454;
-        margin-right: 40%;
+        margin-right: 36%;
     }
 
     .default_avatar {
@@ -1818,6 +1818,7 @@
         background-color: #80808014;
         border: transparent;
         width: 90%;
+        margin-top: 4%;
     }
 
     @media only screen and (max-width: 600px) {
@@ -1842,6 +1843,7 @@
         width: 70%;
         height: 70%;
         border-radius: 50%;
+
     }
 
 
@@ -1852,9 +1854,15 @@
         }
     }
 
-    .gridsetting {
+    /* .gridsetting {
         display: grid;
         grid-template-columns: 70% 30%;
+    } */
+    .grid-settings{
+      display: grid;
+      grid-template-columns: 60% 40%;
+      grid-template-rows:12em;
+      margin-top: 5%;
     }
 
     .btn-setting {
