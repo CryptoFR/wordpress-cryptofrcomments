@@ -971,6 +971,7 @@
         .column-2 {
             float: left;
             width: 100%;
+            margin-top: -5px;
         }
         .column-3 {
             float: none;
@@ -1271,6 +1272,14 @@
         margin-left: 40px;
         color: rgb(93, 91, 90);
         margin-right: 10%;
+    }
+    
+    @media only screen and (max-width: 769px) {
+        .comment-user {
+            margin-left: 0px !important;
+            margin-right: 0px !important;
+            text-align: justify;
+        }
     }
     
     .buttonTrash {
@@ -1590,8 +1599,9 @@
     
     @media only screen and (max-width: 769px) {
         .button-sync2 {
-            margin-left: -35px;
+            margin-left: -20px;
             margin-right: -5px;
+            width: 10%;
         }
     }
     
@@ -1735,17 +1745,20 @@
         }
         .buttonx-child-moderation {
             position: relative;
-            left: 70% !important;
-            margin-left: 10% !important;
+            margin-top: 15% !important;
+            left: 25% !important;
+            margin-left: none !important;
         }
         .buttony-child-moderation {
             position: relative;
-            left: 75% !important;
+            margin-top: 15% !important;
+            left: 30% !important;
             margin-left: 1% !important;
         }
         .buttonz-child-moderation {
             position: relative;
-            left: 80% !important;
+            margin-top: 15% !important;
+            left: 35% !important;
             margin-left: 1% !important;
         }
     }
