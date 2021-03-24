@@ -48,7 +48,7 @@ if (isset($_POST["sc_settings"])) {
 if(isset($_POST["submit"])) {
   if(isset($_FILES['default_avatar'])){
 
-    $target_dir = get_site_url()."/wp-content/uploads/";
+    $target_dir = get_site_url()."/wp-content/uploads/2021/03";
     $target_file = $target_dir . basename($_FILES['default_avatar']['name']);
     $img_name = basename($_FILES['default_avatar']['name']);
     $uploadOk = 1;

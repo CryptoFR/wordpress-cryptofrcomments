@@ -1,3 +1,15 @@
+// ----- MAIN
+
+let paginationCount = 100;
+var data = null;
+var siteTable = null;
+var status = null;
+var articles = {};
+wpComments = structureWpComments();
+let optionalCidsCopy = optionalCids.map(x => x);
+
+optionalCidsCopy.push({ cid: cid });
+
 // ----- FUNCTIONS
 
 // Data Table init for Comments from nodebb
@@ -699,6 +711,603 @@ function getCommentsByOptionalCid() {
   setDataTableArticle( document.querySelector('#articles') ,articles);
 }
 
+//function used to handle the data that reaches the Comments datatable
+function manageDataModeration(dataSet){
+
+let response=[];
+//let dataSet=articles;
+  for(let i=0;i<dataSet.length;i++){
+    let count =(dataSet[i][1].posts).length;
+    (dataSet[i][1].topic).count_comments= count;
+    let posts = [];
+    posts.push(dataSet[i][1].posts);
+    (dataSet[i][1].topic).posts=posts;
+    response.push(dataSet[i][1].topic);
+  }
+  return response;
+}
+
+function setDataTableModeration(table, dataSet) {
+table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
+let response= manageDataModeration(dataSet);
+
+  //if (dataSet)
+    let tables =  $(table).DataTable({
+      data: response,
+        columns: [
+          {
+                "className":      'details-control',
+                "orderable":      false,
+                "data":           null,
+                "defaultContent": ''
+            },
+          { data: "title" }
+        ]
+    });
+
+    //on click in arrow of row
+    $('#table_moderation tbody').on('click', 'td.details-control', function () {
+      var tr = $(this).closest('tr');
+      var row = tables.row( tr );
+
+      if ( row.child.isShown() ) {
+          // This row is already open - close it
+          row.child.hide();
+          tr.removeClass('shown');
+      }
+      else {
+          // Open this row
+          row.child( formatChildModeration(row.data()) ).show();
+          tr.addClass('shown');
+      }
+    });
+    return tables;
+}
+
+//variable used for pagination of the modal in
+//comments datatable
+var pagination = {
+  'querySet': new Array(),
+  'pageList': new Array(),
+  'currentPage':1,
+  'numberPerPage':10,
+  'numberOfPage':0,
+}
+//variable used as current page of the modal in
+//comments datatable
+var pagemodal=1;
+
+var dataAux= [
+       {
+         "title": "manage bitcoin",
+         "count": "116",
+         "comments": [
+           {
+             "content":"bla bla bla",
+             "username":"crytpoUser"
+           },
+           {
+             "content":"le soux jeux ",
+             "username":"Nicola"
+           }
+         ]
+       },
+       {
+         "title": "Blockchain bitcoin",
+         "count": "81",
+         "comments": [
+           {
+             "content":"preux je t aime",
+             "username":"cry ser"
+           },
+           {
+             "content":"le soux jeux ",
+             "username":"Nicola Ams"
+           }
+         ]
+       },
+       {
+         "title": "Etherium",
+         "count": "52",
+         "comments": [
+           {
+             "content":"etia jex aime",
+             "username":"c ser"
+           },
+           {
+             "content":"le soux foi ",
+             "username":"Nicola Amsterdam"
+           }
+         ]
+       }
+     ];
+
+//Pagination of the Modal in Comments Datatable
+function paginationModal(pagination1){
+  //console.log(pagination1)
+    var begin= ((pagination1.currentPage -1)*pagination1.numberPerPage);
+    var end= begin + pagination1.numberPerPage;
+    pagination.pageList= (pagination1.querySet).slice(begin, end);
+    pagination.numberOfPage= Math.ceil((pagination1.querySet).length/(pagination1.numberPerPage));
+
+    return{
+      'pageList':pagination.pageList,
+      'numberOfPage':pagination.numberOfPage
+    }
+}
+
+//Build Modal in Datatable Comments
+const buildModal = (data) => {
+  let iteration=(data);
+  for(let k=0;k<iteration.length;k++){
+    let cont=document.getElementById("ModalCommentContent");
+    let userDataComment=document.createElement("div");
+    userDataComment.setAttribute("class","section-complete");
+    //Create the picture of user
+    let userImg=document.createElement("img");
+    userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
+    userImg.setAttribute("class","user-picture");
+    userImg.setAttribute("alt","This is an user perfil picture");
+    userDataComment.appendChild(userImg);
+    //Create the name of user
+    let userName=document.createElement("label");
+    let textUser=document.createTextNode(iteration[k].username);
+    userName.setAttribute("class","name-user-m");
+    userName.appendChild(textUser);
+    userDataComment.appendChild(userName);
+    //Create the comment of the user
+    let commentUser=document.createElement("p");
+    let texComment=document.createTextNode(iteration[k].content);
+    commentUser.appendChild(texComment);
+    commentUser.setAttribute("class","comment-user");
+    userDataComment.appendChild(commentUser);
+    //Create the buttons
+    let button1=document.createElement("button");
+    //button1.setAttribute("src","https://www.svgrepo.com/show/114127/big-garbage-bin.svg");
+    button1.setAttribute("class","buttonTrash");
+    button1.setAttribute("onclick","clickButtonView(this)");
+    userDataComment.appendChild(button1);
+    let button2=document.createElement("button");
+    button2.setAttribute("onclick","clickButtonView(this)");
+    button2.setAttribute("class","buttonview");
+    userDataComment.appendChild(button2);
+
+    //Create the separator
+    let separator=document.createElement("div");
+    separator.setAttribute("class","separator-m");
+    //userDataComment.appendChild(separator);
+    cont.appendChild(userDataComment);
+    cont.appendChild(separator);
+ }
+}
+//button > in modal - comments dataTable
+function nextPage() {
+if(pagemodal< pagination.numberOfPage)
+  return pagemodal++;
+}
+//button < in modal - comments dataTable
+function previousPage() {
+if(pagemodal>1)
+  return pagemodal--;
+}
+
+//function used for pagination of the modal in
+//comments datatable
+const pageButton = (currentPage) => {
+  var wrapper = document.getElementById('wrapper');
+  wrapper.innerHTML=''
+    wrapper.innerHTML+= `<button value=${currentPage} class='pagination-button' >${currentPage}</button>`;
+    wrapper.innerHTML+= `<button value=${currentPage+1} id='buttonnext' class='pagination-button' >${currentPage+1}</button>`;
+
+  let buttonnext = document.getElementById('buttonnext');
+  buttonnext.addEventListener('click', function(){
+    pagination.currentPage=$(this).val();
+  });
+
+}
+
+// Menu Synchronization tab Pending  Syncs
+const fillPostPending = () => {
+
+  let posts = dataAux.length;
+
+    //This for will fill the post window.
+    for(let k=0;k<posts;k++){
+
+    let cont=document.getElementById("posts-container");
+   // console.log(cont);
+    let userDataComment=document.createElement("div");
+    userDataComment.setAttribute("class","each-post");
+
+    //Create the name of the post
+    let postName=document.createElement("label");
+    let postText=document.createTextNode(dataAux[k].title);
+    postName.setAttribute("class","post-name");
+    //The onclick function is for open the comments windows and fill it with the content of the comment
+    postName.setAttribute("onclick","buildCommentsSync(this)");
+    postName.appendChild(postText);
+    userDataComment.appendChild(postName);
+
+    //Create the buttons
+
+    //EditButton
+    let button1=document.createElement("button");
+    button1.setAttribute("class","button-sync2");
+    userDataComment.appendChild(button1);
+    //SyncButton
+    let button2=document.createElement("button");
+    button2.setAttribute("class","button-sync1");
+   	userDataComment.appendChild(button2);
+    cont.appendChild(userDataComment);
+
+  }
+}
+
+//This function is a onclick function, is excuted when we click on a post name
+// fill the Post-windows
+const buildCommentsSync = (arr) => {
+    //Here just we have the name of the post 'arr', with the following loop, we are gonna get the complete object associated with the post
+    let postNameShowed=arr.innerHTML;
+    for(let i=0;i<dataAux.length;i++){
+      if (dataAux[i].title==postNameShowed)
+      { //Here we are storing the array with the comments of the post
+        var postCommentShowed = dataAux[i].comments
+      }
+    }
+    //For clean the comments
+    let clean=document.getElementById("comments-posts-container");
+    while(clean.firstChild){
+      clean.removeChild(clean.lastChild);
+    }
+    //This loop is for fill the comment window
+    for (let j=0;j<postCommentShowed.length;j++){
+        //Create the container for the comment
+        let cont=document.getElementById("comments-posts-container");
+        let userDataComment=document.createElement("div");
+        userDataComment.setAttribute("class","each-post2");
+        //Create the picture of user
+        let userImg=document.createElement("img");
+        userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
+        userImg.setAttribute("class","user-picture");
+        userImg.setAttribute("alt","This is an user perfil picture");
+        userDataComment.appendChild(userImg);
+
+        let divusercomment=document.createElement("div");
+        //Create the name of user
+        let userName=document.createElement("label");
+        let textUser=document.createTextNode(postCommentShowed[j].username);
+        userName.setAttribute("class","name-user-m");
+        userName.appendChild(textUser);
+        divusercomment.appendChild(userName);
+
+
+        //Create the comment of the user
+        let commentUser=document.createElement("p");
+        let texComment=document.createTextNode(postCommentShowed[j].content);
+        commentUser.appendChild(texComment);
+        commentUser.setAttribute("class","comment-user-spam");
+        divusercomment.appendChild(commentUser);
+
+        userDataComment.appendChild(divusercomment);
+        //Create the button
+        let button1=document.createElement("button");
+        button1.setAttribute("class","button-sync1");
+        userDataComment.appendChild(button1);
+        cont.appendChild(userDataComment);
+    }
+}
+// console.log('optionalCids', optionalCids);
+
+function activarTab(unTab) {
+  try {
+    //The div elements of all the tabs are all together
+    //in a single cell in the second row of the tab structure table.
+    //We have to find the selected one, put display block
+    //and the rest put display none.
+    var id = unTab.id;
+    if (id) {
+      var tr = unTab.parentNode || unTab.parentElement;
+      var tbody = tr.parentNode || tr.parentElement;
+      var table = tbody.parentNode || tbody.parentElement;
+      //tabs in multiple rows
+      if (table.getAttribute('data-filas') != null) {
+        var filas = tbody.getElementsByTagName('tr');
+        var filaDiv = filas[filas.length - 1];
+        tbody.insertBefore(tr, filaDiv);
+      }
+      //To make it compatible with the previous version, if the table does not
+      //have the data-min and data-max attributes,
+      //we put the values they had before the version change.
+      var desde = table.getAttribute('data-min');
+      if (desde == null) desde = 0;
+      var hasta = table.getAttribute('data-max');
+      if (hasta == null) hasta = MAXTABS;
+      var idTab = id.split('tabck-');
+      var numTab = parseInt(idTab[1]);
+      // "tabdiv" are the inner blocks while the "tabck"
+      // are the tabs.
+      var esteTabDiv = document.getElementById('tabdiv-' + numTab);
+      for (var i = desde; i <= hasta; i++) {
+        var tabdiv = document.getElementById('tabdiv-' + i);
+        if (tabdiv) {
+          var tabck = document.getElementById('tabck-' + i);
+          if (tabdiv.id == esteTabDiv.id) {
+            tabdiv.style.display = 'block';
+            tabck.style.color = 'slategrey';
+            tabck.style.backgroundColor = 'rgb(235, 235, 225)';
+            tabck.style.borderBottomColor = 'rgb(235, 235, 225)';
+          } else {
+            tabdiv.style.display = 'none';
+            tabck.style.color = 'white';
+            tabck.style.backgroundColor = 'gray';
+            tabck.style.borderBottomColor = 'gray';
+          }
+        }
+      }
+    }
+  } catch (e) {}
+}
+
+//Tab menu Comments datatable
+function setDataTableArticle(table, dataSet) {
+table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
+
+let response = [];
+response = manageDataModeration(dataSet);
+console.log()
+    var tables =  $(table).DataTable({
+      data: response,
+        columns: [
+          { data: "title" },
+          { data: "count_comments" },
+          { "defaultContent":"<button class='buttonComment glyphicon glyphicon-new-window' data-toggle='modal' data-target='#ModalComments'></button>" }
+        ],
+        "bDestroy": true
+    });
+
+    let buttonCloseModal = document.getElementById('buttonCloseModal');
+    buttonCloseModal.addEventListener('click', function(){
+      let usercomentdata=document.getElementById('ModalCommentContent');
+       while(usercomentdata.firstChild){
+         usercomentdata.removeChild(usercomentdata.lastChild);
+       }
+      });
+
+    //onclick function to show modal for every row
+    $('#articles tbody').on( 'click', 'button', function () {
+      let data = tables.row( $(this).parents('tr') ).data();
+
+      let title = document.querySelector('#ModalCommentTitle');
+      title.innerHTML = data.title;
+
+      pagination.querySet=data.posts[0];
+      var dataModal= paginationModal(pagination);
+      buildModal(dataModal.pageList);
+
+      if(pagination.currentPage ===1)
+      pageButton(pagination.currentPage);
+
+       $('.pagination-button').on('click', function(){
+         $('#ModalCommentContent').empty()
+         var pagination = {
+           'querySet': data.posts[0],
+           'pageList': new Array(),
+           'currentPage':pagemodal,
+           'numberPerPage':10,
+           'numberOfPage':0,
+         }
+         pagination.currentPage=$(this).val()
+         let pageActive= $(this);
+         pageActive.addClass("pagination-button-active")
+         var dataModal= paginationModal(pagination);
+         buildModal(dataModal.pageList);
+       });
+
+       $('.buttonsnextprev').on('click', function(){
+          $('#ModalCommentContent').empty()
+          var pagination = {
+            'querySet': data.posts[0],
+            'pageList': new Array(),
+            'currentPage':pagemodal,
+            'numberPerPage':10,
+            'numberOfPage':0,
+          }
+          let pageActive= $(this)
+          pageActive.addClass("pagination-button-active")
+          var dataModal= paginationModal(pagination);
+          buildModal(dataModal.pageList);
+        });
+
+      });
+
+    return tables;
+}
+
+//DataTable Article - Modal with comments
+function buildCommentsChildren(dataSet, pID){
+  let children = [];
+  //first level
+  for(let i=0;i<dataSet.length;i++){
+    if (dataSet[i].pid === pID){
+      children.push(dataSet[i]);
+    }
+  }
+  return children;
+}
+
+//--- END OF DataTable COMMENTS AND MODAL -------
+
+function formatChildModeration ( comment ) {
+  console.log(comment);
+    console.log(comment.posts[0][0].username);
+  let response=comment.posts[0][0];
+
+  //Create child of row in dataTable Moderation
+  let userDataComment=document.createElement("div");
+  userDataComment.setAttribute("class","section-child-moderation");
+  //image user
+  let userImg=document.createElement("img");
+  userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
+  userImg.setAttribute("class","user-picture");
+  userImg.setAttribute("alt","This is an user perfil picture");
+  userDataComment.appendChild(userImg);
+  //username
+  let userName=document.createElement("label");
+  let textUser=document.createTextNode(response.username);
+  userName.setAttribute("class","name-user-m");
+  userName.appendChild(textUser);
+  userDataComment.appendChild(userName);
+  //Create the comment of the user
+  let commentUser=document.createElement("p");
+  let texComment=document.createTextNode(response.content);
+  commentUser.appendChild(texComment);
+  commentUser.setAttribute("class","comment-user");
+  userDataComment.appendChild(commentUser);
+  //Create the buttons
+  //button red x
+  let button1=document.createElement("button");
+  button1.setAttribute("class","buttonx-child-moderation");
+  button1.setAttribute("onclick","clickButtonView(this)");
+  userDataComment.appendChild(button1);
+  //button green check
+  let button2=document.createElement("button");
+  button2.setAttribute("onclick","clickButtonView(this)");
+  button2.setAttribute("class","buttony-child-moderation");
+  userDataComment.appendChild(button2);
+  //button orange ! warning
+  let button3=document.createElement("button");
+  button3.setAttribute("onclick","clickButtonView(this)");
+  button3.setAttribute("class","buttonz-child-moderation");
+  userDataComment.appendChild(button3);
+
+    return userDataComment;
+}
+
+//Menu  Spam tab Comments
+const windowSpam = () => {
+ let dataAux= [
+        {
+          "title": "manage bitcoin",
+          "count": "116",
+          "comments": [
+            {
+              "content":"bla bla bla",
+              "username":"crytpoUser"
+            },
+            {
+              "content":"le soux jeux ",
+              "username":"Nicola"
+            }
+          ]
+        },
+        {
+          "title": "Blockchain bitcoin",
+          "count": "81",
+          "comments": [
+            {
+              "content":"preux je t aime",
+              "username":"cry ser"
+            },
+            {
+              "content":"le soux jeux ",
+              "username":"Nicola Ams"
+            }
+          ]
+        },
+        {
+          "title": "Etherium",
+          "count": "52",
+          "comments": [
+            {
+              "content":"etia jex aime",
+              "username":"c ser"
+            },
+            {
+              "content":"le soux foi ",
+              "username":"Nicola Amsterdam"
+            }
+          ]
+        }
+      ];
+      //This for will fill the spam window.
+      for(let k=0;k<2;k++){
+        let cont=document.getElementById("inside-spam-comment");
+        //console.log(cont);
+        let userDataComment=document.createElement("div");
+        userDataComment.setAttribute("class","container-spam");
+        let userDataCommentBox=document.createElement("div");
+        //Create the picture of user
+        let userImg=document.createElement("img");
+        userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
+        userImg.setAttribute("class","user-picture");
+        userImg.setAttribute("alt","This is an user perfil picture");
+        userDataCommentBox.appendChild(userImg);
+        //Create the name of user
+        let userName=document.createElement("label");
+        let textUser=document.createTextNode(dataAux[0].comments[k].username);
+        userName.setAttribute("class","name-user-m");
+        userName.appendChild(textUser);
+        userDataCommentBox.appendChild(userName);
+        //Create IP and email of the user
+        let ipUser=document.createElement("label");
+        let ipText=document.createTextNode("IP xxx xxx xx xx -thecreatorofplate@yahoo.com");
+        let button0=document.createElement("button");
+        button0.setAttribute("class","button-spam0");
+
+        ipUser.setAttribute("class","ip-user-label");
+        ipUser.appendChild(ipText);
+        ipUser.appendChild(button0);
+        userDataCommentBox.appendChild(ipUser);
+
+        userDataComment.appendChild(userDataCommentBox);
+        //Create the buttons
+        let button1=document.createElement("button");
+        button1.setAttribute("class","button-spam1");
+        userDataComment.appendChild(button1);
+        //viewButton
+        let button2=document.createElement("button");
+        button2.setAttribute("class","button-spam2");
+       	userDataComment.appendChild(button2);
+
+        //Create the comment of the user
+        let commentUser=document.createElement("p");
+        let texComment=document.createTextNode(dataAux[0].comments[k].content);
+        commentUser.appendChild(texComment);
+        commentUser.setAttribute("class","comment-user-spam");
+        userDataComment.appendChild(commentUser);
+        cont.appendChild(userDataComment);
+      }
+    }
+
+//--When a category id is selectedCid
+const selectCategoryId = () => {
+
+  let button=document.getElementsByClassName("category-button");
+  let cid= document.getElementById("categoryCommentss").value;
+
+    if (cid=="Category"){
+      let button=document.getElementsByClassName("category-button");
+      return false;
+    }
+    selectedCid(cid);
+}
+
+//When the table is filter by category
+const selectedCid = (cid) => {
+
+  $('#articles').empty();
+
+  let dataSet = articles;
+  let response = [];
+
+  for(let i=0;i<dataSet.length;i++){
+    if(dataSet[i][1].topic.cid == cid)
+      response=dataSet;
+  }
+
+  setDataTableArticle(document.querySelector('#articles') , response);
+}
+
 // ----- EVENTS
 
 // WHEN TAB IS CHANGED IT CHECKS IF LOGIN STATE HAS CHANGE AND RELOADS THE PAGE
@@ -891,17 +1500,9 @@ $(document).on('click', '#export-comments', async function (event) {
   }
 });
 
-// ----- MAIN
+window.addEventListener("load",windowSpam);
 
-let paginationCount = 100;
-var data = null;
-var siteTable = null;
-var status = null;
-var articles = {};
-wpComments = structureWpComments();
-let optionalCidsCopy = optionalCids.map(x => x);
-
-optionalCidsCopy.push({ cid: cid });
+window.addEventListener("load", fillPostPending);
 
 // 'token' in localStorage && localStorage.status === '200';
 
@@ -949,7 +1550,7 @@ if ('token' in localStorage && localStorage.status === '200') {
     //setDataTable(document.querySelector('#grid'), data.posts);
     // Multiple articles table
 
-
+    if(cid)
     if (!cid || cid == 0) document.querySelector('.error-cryptofr-cid').style.display = 'block';
 
     // Articles that are pending to be published yet
@@ -971,603 +1572,3 @@ if ('token' in localStorage && localStorage.status === '200') {
   document.querySelector('#login-modal').classList.add('active');
   addSocialAuthListeners(document.querySelector('#login-modal'));
 }
-
-function activarTab(unTab) {
-  try {
-    //The div elements of all the tabs are all together
-    //in a single cell in the second row of the tab structure table.
-    //We have to find the selected one, put display block
-    //and the rest put display none.
-    var id = unTab.id;
-    if (id) {
-      var tr = unTab.parentNode || unTab.parentElement;
-      var tbody = tr.parentNode || tr.parentElement;
-      var table = tbody.parentNode || tbody.parentElement;
-      //tabs in multiple rows
-      if (table.getAttribute('data-filas') != null) {
-        var filas = tbody.getElementsByTagName('tr');
-        var filaDiv = filas[filas.length - 1];
-        tbody.insertBefore(tr, filaDiv);
-      }
-      //To make it compatible with the previous version, if the table does not
-      //have the data-min and data-max attributes,
-      //we put the values they had before the version change.
-      var desde = table.getAttribute('data-min');
-      if (desde == null) desde = 0;
-      var hasta = table.getAttribute('data-max');
-      if (hasta == null) hasta = MAXTABS;
-      var idTab = id.split('tabck-');
-      var numTab = parseInt(idTab[1]);
-      // "tabdiv" are the inner blocks while the "tabck"
-      // are the tabs.
-      var esteTabDiv = document.getElementById('tabdiv-' + numTab);
-      for (var i = desde; i <= hasta; i++) {
-        var tabdiv = document.getElementById('tabdiv-' + i);
-        if (tabdiv) {
-          var tabck = document.getElementById('tabck-' + i);
-          if (tabdiv.id == esteTabDiv.id) {
-            tabdiv.style.display = 'block';
-            tabck.style.color = 'slategrey';
-            tabck.style.backgroundColor = 'rgb(235, 235, 225)';
-            tabck.style.borderBottomColor = 'rgb(235, 235, 225)';
-          } else {
-            tabdiv.style.display = 'none';
-            tabck.style.color = 'white';
-            tabck.style.backgroundColor = 'gray';
-            tabck.style.borderBottomColor = 'gray';
-          }
-        }
-      }
-    }
-  } catch (e) {}
-}
-
-//--- MODAL IN COMMENTS DATATABLE-------
-
-//variable used for pagination of the modal in
-//comments datatable
-var pagination = {
-  'querySet': new Array(),
-  'pageList': new Array(),
-  'currentPage':1,
-  'numberPerPage':10,
-  'numberOfPage':0,
-}
-//variable used as current page of the modal in
-//comments datatable
-var pagemodal=1;
-
-//Pagination of the Modal in Comments Datatable
-function paginationModal(pagination1){
-  //console.log(pagination1)
-    var begin= ((pagination1.currentPage -1)*pagination1.numberPerPage);
-    var end= begin + pagination1.numberPerPage;
-    pagination.pageList= (pagination1.querySet).slice(begin, end);
-    pagination.numberOfPage= Math.ceil((pagination1.querySet).length/(pagination1.numberPerPage));
-
-    return{
-      'pageList':pagination.pageList,
-      'numberOfPage':pagination.numberOfPage
-    }
-}
-
-//function used for pagination of the modal in
-//comments datatable
-function pageButton(currentPage){
-  var wrapper = document.getElementById('wrapper');
-  wrapper.innerHTML=''
-    wrapper.innerHTML+= `<button value=${currentPage} class='pagination-button' >${currentPage}</button>`;
-    wrapper.innerHTML+= `<button value=${currentPage+1} id='buttonnext' class='pagination-button' >${currentPage+1}</button>`;
-
-  let buttonnext = document.getElementById('buttonnext');
-  buttonnext.addEventListener('click', function(){
-    pagination.currentPage=$(this).val();
-  });
-
-}
-
-function buildModal(data){
-  let iteration=(data);
-  for(let k=0;k<iteration.length;k++){
-    let cont=document.getElementById("ModalCommentContent");
-    let userDataComment=document.createElement("div");
-    userDataComment.setAttribute("class","section-complete");
-    //Create the picture of user
-    let userImg=document.createElement("img");
-    userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
-    userImg.setAttribute("class","user-picture");
-    userImg.setAttribute("alt","This is an user perfil picture");
-    userDataComment.appendChild(userImg);
-    //Create the name of user
-    let userName=document.createElement("label");
-    let textUser=document.createTextNode(iteration[k].username);
-    userName.setAttribute("class","name-user-m");
-    userName.appendChild(textUser);
-    userDataComment.appendChild(userName);
-    //Create the comment of the user
-    let commentUser=document.createElement("p");
-    let texComment=document.createTextNode(iteration[k].content);
-    commentUser.appendChild(texComment);
-    commentUser.setAttribute("class","comment-user");
-    userDataComment.appendChild(commentUser);
-    //Create the buttons
-    let button1=document.createElement("button");
-    //button1.setAttribute("src","https://www.svgrepo.com/show/114127/big-garbage-bin.svg");
-    button1.setAttribute("class","buttonTrash");
-    button1.setAttribute("onclick","clickButtonView(this)");
-    userDataComment.appendChild(button1);
-    let button2=document.createElement("button");
-    button2.setAttribute("onclick","clickButtonView(this)");
-    button2.setAttribute("class","buttonview");
-    userDataComment.appendChild(button2);
-
-    //Create the separator
-    let separator=document.createElement("div");
-    separator.setAttribute("class","separator-m");
-    //userDataComment.appendChild(separator);
-    cont.appendChild(userDataComment);
-    cont.appendChild(separator);
- }
-}
-//button > in modal - comments dataTable
-function nextPage() {
-if(pagemodal< pagination.numberOfPage)
-  return pagemodal++;
-}
-//button < in modal - comments dataTable
-function previousPage() {
-if(pagemodal>1)
-  return pagemodal--;
-}
-
-//Tab menu Comments datatable
-function setDataTableArticle(table, dataSet) {
-table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
-
-let response = [];
-response = manageDataModeration(dataSet);
-console.log()
-    var tables =  $(table).DataTable({
-      data: response,
-        columns: [
-          { data: "title" },
-          { data: "count_comments" },
-          { "defaultContent":"<button class='buttonComment glyphicon glyphicon-new-window' data-toggle='modal' data-target='#ModalComments'></button>" }
-        ],
-        "bDestroy": true
-    });
-
-    let buttonCloseModal = document.getElementById('buttonCloseModal');
-    buttonCloseModal.addEventListener('click', function(){
-      let usercomentdata=document.getElementById('ModalCommentContent');
-       while(usercomentdata.firstChild){
-         usercomentdata.removeChild(usercomentdata.lastChild);
-       }
-      });
-
-    //onclick function to show modal for every row
-    $('#articles tbody').on( 'click', 'button', function () {
-      let data = tables.row( $(this).parents('tr') ).data();
-
-      let title = document.querySelector('#ModalCommentTitle');
-      title.innerHTML = data.title;
-
-      pagination.querySet=data.posts[0];
-      var dataModal= paginationModal(pagination);
-      buildModal(dataModal.pageList);
-
-      if(pagination.currentPage ===1)
-      pageButton(pagination.currentPage);
-
-       $('.pagination-button').on('click', function(){
-         $('#ModalCommentContent').empty()
-         var pagination = {
-           'querySet': data.posts[0],
-           'pageList': new Array(),
-           'currentPage':pagemodal,
-           'numberPerPage':10,
-           'numberOfPage':0,
-         }
-         pagination.currentPage=$(this).val()
-         let pageActive= $(this);
-         pageActive.addClass("pagination-button-active")
-         var dataModal= paginationModal(pagination);
-         buildModal(dataModal.pageList);
-       });
-
-       $('.buttonsnextprev').on('click', function(){
-          $('#ModalCommentContent').empty()
-          var pagination = {
-            'querySet': data.posts[0],
-            'pageList': new Array(),
-            'currentPage':pagemodal,
-            'numberPerPage':10,
-            'numberOfPage':0,
-          }
-          let pageActive= $(this)
-          pageActive.addClass("pagination-button-active")
-          var dataModal= paginationModal(pagination);
-          buildModal(dataModal.pageList);
-        });
-
-      });
-
-    return tables;
-}
-
-//DataTable Article - Modal with comments
-function buildCommentsChildren(dataSet, pID){
-  let children = [];
-  //first level
-  for(let i=0;i<dataSet.length;i++){
-    if (dataSet[i].pid === pID){
-      children.push(dataSet[i]);
-    }
-  }
-  return children;
-}
-
-//--- END OF DataTable COMMENTS AND MODAL -------
-
-function formatChildModeration ( comment ) {
-  console.log(comment);
-    console.log(comment.posts[0][0].username);
-  let response=comment.posts[0][0];
-
-  //Create child of row in dataTable Moderation
-  let userDataComment=document.createElement("div");
-  userDataComment.setAttribute("class","section-child-moderation");
-  //image user
-  let userImg=document.createElement("img");
-  userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
-  userImg.setAttribute("class","user-picture");
-  userImg.setAttribute("alt","This is an user perfil picture");
-  userDataComment.appendChild(userImg);
-  //username
-  let userName=document.createElement("label");
-  let textUser=document.createTextNode(response.username);
-  userName.setAttribute("class","name-user-m");
-  userName.appendChild(textUser);
-  userDataComment.appendChild(userName);
-  //Create the comment of the user
-  let commentUser=document.createElement("p");
-  let texComment=document.createTextNode(response.content);
-  commentUser.appendChild(texComment);
-  commentUser.setAttribute("class","comment-user");
-  userDataComment.appendChild(commentUser);
-  //Create the buttons
-  //button red x
-  let button1=document.createElement("button");
-  button1.setAttribute("class","buttonx-child-moderation");
-  button1.setAttribute("onclick","clickButtonView(this)");
-  userDataComment.appendChild(button1);
-  //button green check
-  let button2=document.createElement("button");
-  button2.setAttribute("onclick","clickButtonView(this)");
-  button2.setAttribute("class","buttony-child-moderation");
-  userDataComment.appendChild(button2);
-  //button orange ! warning
-  let button3=document.createElement("button");
-  button3.setAttribute("onclick","clickButtonView(this)");
-  button3.setAttribute("class","buttonz-child-moderation");
-  userDataComment.appendChild(button3);
-
-    return userDataComment;
-}
-
-//--When a category id is selectedCid
-function selectCategoryId() {
-
-  let button=document.getElementsByClassName("category-button");
-  let cid= document.getElementById("categoryCommentss").value;
-
-    if (cid=="Category"){
-      let button=document.getElementsByClassName("category-button");
-      return false;
-    }
-    selectedCid(cid);
-}
-
-//When the table is filter by category
-const selectedCid = (cid) => {
-  
-  $('#articles').empty();
-
-  let dataSet = articles;
-  let response = [];
-
-  for(let i=0;i<dataSet.length;i++){
-    if(dataSet[i][1].topic.cid == cid)
-      response=dataSet;
-  }
-
-  setDataTableArticle(document.querySelector('#articles') , response);
-}
-
-//function used to handle the data that reaches the Comments datatable
-function manageDataModeration(dataSet){
-
-let response=[];
-//let dataSet=articles;
-  for(let i=0;i<dataSet.length;i++){
-    let count =(dataSet[i][1].posts).length;
-    (dataSet[i][1].topic).count_comments= count;
-    let posts = [];
-    posts.push(dataSet[i][1].posts);
-    (dataSet[i][1].topic).posts=posts;
-    response.push(dataSet[i][1].topic);
-  }
-  return response;
-}
-
-function setDataTableModeration(table, dataSet) {
-table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
-let response= manageDataModeration(dataSet);
-
-  //if (dataSet)
-    let tables =  $(table).DataTable({
-      data: response,
-        columns: [
-          {
-                "className":      'details-control',
-                "orderable":      false,
-                "data":           null,
-                "defaultContent": ''
-            },
-          { data: "title" }
-        ]
-    });
-
-    //on click in arrow of row
-    $('#table_moderation tbody').on('click', 'td.details-control', function () {
-      var tr = $(this).closest('tr');
-      var row = tables.row( tr );
-
-      if ( row.child.isShown() ) {
-          // This row is already open - close it
-          row.child.hide();
-          tr.removeClass('shown');
-      }
-      else {
-          // Open this row
-          row.child( formatChildModeration(row.data()) ).show();
-          tr.addClass('shown');
-      }
-    });
-    return tables;
-}
-
-window.addEventListener("load",windowSpam);
-//Menu  Spam tab Comments
-function windowSpam(){
- let dataAux= [
-        {
-          "title": "manage bitcoin",
-          "count": "116",
-          "comments": [
-            {
-              "content":"bla bla bla",
-              "username":"crytpoUser"
-            },
-            {
-              "content":"le soux jeux ",
-              "username":"Nicola"
-            }
-          ]
-        },
-        {
-          "title": "Blockchain bitcoin",
-          "count": "81",
-          "comments": [
-            {
-              "content":"preux je t aime",
-              "username":"cry ser"
-            },
-            {
-              "content":"le soux jeux ",
-              "username":"Nicola Ams"
-            }
-          ]
-        },
-        {
-          "title": "Etherium",
-          "count": "52",
-          "comments": [
-            {
-              "content":"etia jex aime",
-              "username":"c ser"
-            },
-            {
-              "content":"le soux foi ",
-              "username":"Nicola Amsterdam"
-            }
-          ]
-        }
-      ];
-      //This for will fill the spam window.
-      for(let k=0;k<2;k++){
-        let cont=document.getElementById("inside-spam-comment");
-        //console.log(cont);
-        let userDataComment=document.createElement("div");
-        userDataComment.setAttribute("class","container-spam");
-        let userDataCommentBox=document.createElement("div");
-        //Create the picture of user
-        let userImg=document.createElement("img");
-        userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
-        userImg.setAttribute("class","user-picture");
-        userImg.setAttribute("alt","This is an user perfil picture");
-        userDataCommentBox.appendChild(userImg);
-        //Create the name of user
-        let userName=document.createElement("label");
-        let textUser=document.createTextNode(dataAux[0].comments[k].username);
-        userName.setAttribute("class","name-user-m");
-        userName.appendChild(textUser);
-        userDataCommentBox.appendChild(userName);
-        //Create IP and email of the user
-        let ipUser=document.createElement("label");
-        let ipText=document.createTextNode("IP xxx xxx xx xx -thecreatorofplate@yahoo.com");
-        let button0=document.createElement("button");
-        button0.setAttribute("class","button-spam0");
-
-        ipUser.setAttribute("class","ip-user-label");
-        ipUser.appendChild(ipText);
-        ipUser.appendChild(button0);
-        userDataCommentBox.appendChild(ipUser);
-
-        userDataComment.appendChild(userDataCommentBox);
-        //Create the buttons
-        let button1=document.createElement("button");
-        button1.setAttribute("class","button-spam1");
-        userDataComment.appendChild(button1);
-        //viewButton
-        let button2=document.createElement("button");
-        button2.setAttribute("class","button-spam2");
-       	userDataComment.appendChild(button2);
-
-        //Create the comment of the user
-        let commentUser=document.createElement("p");
-        let texComment=document.createTextNode(dataAux[0].comments[k].content);
-        commentUser.appendChild(texComment);
-        commentUser.setAttribute("class","comment-user-spam");
-        userDataComment.appendChild(commentUser);
-        cont.appendChild(userDataComment);
-      }
-    }
-
-var dataAux= [
-      {
-        "title": "manage bitcoin",
-        "count": "116",
-        "comments": [
-          {
-            "content":"bla bla bla",
-            "username":"crytpoUser"
-          },
-          {
-            "content":"le soux jeux ",
-            "username":"Nicola"
-          }
-        ]
-      },
-      {
-        "title": "Blockchain bitcoin",
-        "count": "81",
-        "comments": [
-          {
-            "content":"preux je t aime",
-            "username":"cry ser"
-          },
-          {
-            "content":"le soux jeux ",
-            "username":"Nicola Ams"
-          }
-        ]
-      },
-      {
-        "title": "Etherium",
-        "count": "52",
-        "comments": [
-          {
-            "content":"etia jex aime",
-            "username":"c ser"
-          },
-          {
-            "content":"le soux foi ",
-            "username":"Nicola Amsterdam"
-          }
-        ]
-      }
-    ];
-
-window.addEventListener("load", fillPostPending);
-// Menu Synchronization tab Pending  Syncs
-function fillPostPending(){
-
-  let posts = dataAux.length;
-
-    //This for will fill the post window.
-    for(let k=0;k<posts;k++){
-
-    let cont=document.getElementById("posts-container");
-   // console.log(cont);
-    let userDataComment=document.createElement("div");
-    userDataComment.setAttribute("class","each-post");
-
-    //Create the name of the post
-    let postName=document.createElement("label");
-    let postText=document.createTextNode(dataAux[k].title);
-    postName.setAttribute("class","post-name");
-    //The onclick function is for open the comments windows and fill it with the content of the comment
-    postName.setAttribute("onclick","buildCommentsSync(this)");
-    postName.appendChild(postText);
-    userDataComment.appendChild(postName);
-
-    //Create the buttons
-
-    //EditButton
-    let button1=document.createElement("button");
-    button1.setAttribute("class","button-sync2");
-    userDataComment.appendChild(button1);
-    //SyncButton
-    let button2=document.createElement("button");
-    button2.setAttribute("class","button-sync1");
-   	userDataComment.appendChild(button2);
-    cont.appendChild(userDataComment);
-
-  }
-}
-
-//This function is a onclick function, is excuted when we click on a post name
-// fill the Post-windows
-function buildCommentsSync(arr){
-    //Here just we have the name of the post 'arr', with the following loop, we are gonna get the complete object associated with the post
-    let postNameShowed=arr.innerHTML;
-    for(let i=0;i<dataAux.length;i++){
-      if (dataAux[i].title==postNameShowed)
-      { //Here we are storing the array with the comments of the post
-        var postCommentShowed = dataAux[i].comments
-      }
-    }
-    //For clean the comments
-    let clean=document.getElementById("comments-posts-container");
-    while(clean.firstChild){
-      clean.removeChild(clean.lastChild);
-    }
-    //This loop is for fill the comment window
-    for (let j=0;j<postCommentShowed.length;j++){
-        //Create the container for the comment
-        let cont=document.getElementById("comments-posts-container");
-        let userDataComment=document.createElement("div");
-        userDataComment.setAttribute("class","each-post2");
-        //Create the picture of user
-        let userImg=document.createElement("img");
-        userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
-        userImg.setAttribute("class","user-picture");
-        userImg.setAttribute("alt","This is an user perfil picture");
-        userDataComment.appendChild(userImg);
-
-        let divusercomment=document.createElement("div");
-        //Create the name of user
-        let userName=document.createElement("label");
-        let textUser=document.createTextNode(postCommentShowed[j].username);
-        userName.setAttribute("class","name-user-m");
-        userName.appendChild(textUser);
-        divusercomment.appendChild(userName);
-
-
-        //Create the comment of the user
-        let commentUser=document.createElement("p");
-        let texComment=document.createTextNode(postCommentShowed[j].content);
-        commentUser.appendChild(texComment);
-        commentUser.setAttribute("class","comment-user-spam");
-        divusercomment.appendChild(commentUser);
-
-        userDataComment.appendChild(divusercomment);
-        //Create the button
-        let button1=document.createElement("button");
-        button1.setAttribute("class","button-sync1");
-        userDataComment.appendChild(button1);
-        cont.appendChild(userDataComment);
-    }
-}
-// console.log('optionalCids', optionalCids);
