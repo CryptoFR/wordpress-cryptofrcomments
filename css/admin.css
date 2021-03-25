@@ -1505,7 +1505,7 @@
         margin-left: 15px;
     }
     
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 769px) {
         .ip-user-label {
             font-size: 12px !important;
             color: rgb(93, 91, 90)!important;
@@ -1521,6 +1521,7 @@
     @media only screen and (max-width: 769px) {
         .comment-user-spam {
             margin-left: 10px;
+            margin-top: 20px;
             text-align: justify;
         }
     }
@@ -1911,11 +1912,13 @@
     
     @media only screen and (max-width: 769px) {
         .avatar-moderator {
-            margin-left: 25px;
+            margin-left: 10px;
+            width: 100%;
+            height: 70%;
         }
     }
     
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 769px) {
         .usersetting {
             margin-left: -5px;
             background-size: 100% 100%;
@@ -1933,13 +1936,19 @@
         margin-top: 5%;
     }
     
+    @media only screen and (max-width: 769px) {
+        .grid-settings {
+            grid-template-columns: 63% 37%;
+        }
+    }
+    
     .btn-setting {
         color: #fff;
         background-color: #424B81;
         border-color: #424B81;
     }
     
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 769px) {
         .btn-setting {
             margin-top: 8px;
         }
