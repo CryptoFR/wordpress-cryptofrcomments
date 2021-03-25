@@ -92,7 +92,7 @@
                                 </p>
 															</div>
 															<div  class="column is-9" >
-			                                <button type="button" class="btn btn-sync1">
+			                                <button type="button" class="btn btn-sync">
 			                                    Run Synchronization Wizard
 			                                </button>
 			                            </div>

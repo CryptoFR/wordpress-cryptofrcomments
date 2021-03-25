@@ -100,6 +100,7 @@
       if (evt.className === 'buttonTrash'){
         evt.className = "buttonTrashRed";
         parent.children[4].className= "buttonviewGray";
+
       }
       else if (evt.className === 'buttonTrashRed'){
         evt.className = "buttonTrash";

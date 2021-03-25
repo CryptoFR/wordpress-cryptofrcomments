@@ -5,6 +5,7 @@ var data = null;
 var siteTable = null;
 var status = null;
 var articles = {};
+var copyArticle = {};
 wpComments = structureWpComments();
 let optionalCidsCopy = optionalCids.map(x => x);
 
@@ -702,7 +703,6 @@ function getCommentsByOptionalCid() {
 
         // Set a datatable to each article
         console.log(copyArticles);
-
         //setDataTableToEachArticle(copyArticles);
 
       });
@@ -853,6 +853,7 @@ const buildModal = (data) => {
     let userName=document.createElement("label");
     let textUser=document.createTextNode(iteration[k].username);
     userName.setAttribute("class","name-user-m");
+    userName.setAttribute("id",iteration[k].pid);
     userName.appendChild(textUser);
     userDataComment.appendChild(userName);
     //Create the comment of the user
@@ -1184,53 +1185,12 @@ function formatChildModeration ( comment ) {
 }
 
 //Menu  Spam tab Comments
-const windowSpam = () => {
- let dataAux= [
-        {
-          "title": "manage bitcoin",
-          "count": "116",
-          "comments": [
-            {
-              "content":"bla bla bla",
-              "username":"crytpoUser"
-            },
-            {
-              "content":"le soux jeux ",
-              "username":"Nicola"
-            }
-          ]
-        },
-        {
-          "title": "Blockchain bitcoin",
-          "count": "81",
-          "comments": [
-            {
-              "content":"preux je t aime",
-              "username":"cry ser"
-            },
-            {
-              "content":"le soux jeux ",
-              "username":"Nicola Ams"
-            }
-          ]
-        },
-        {
-          "title": "Etherium",
-          "count": "52",
-          "comments": [
-            {
-              "content":"etia jex aime",
-              "username":"c ser"
-            },
-            {
-              "content":"le soux foi ",
-              "username":"Nicola Amsterdam"
-            }
-          ]
-        }
-      ];
+const windowSpam = (data) => {
+  if(data.length> 0){
+      let response=data[0][1].posts;
+        console.log(response);
       //This for will fill the spam window.
-      for(let k=0;k<2;k++){
+      for(let k=0;response.length;k++){
         let cont=document.getElementById("inside-spam-comment");
         //console.log(cont);
         let userDataComment=document.createElement("div");
@@ -1244,7 +1204,8 @@ const windowSpam = () => {
         userDataCommentBox.appendChild(userImg);
         //Create the name of user
         let userName=document.createElement("label");
-        let textUser=document.createTextNode(dataAux[0].comments[k].username);
+        let textUser=document.createTextNode(response[k].username);
+        userName.setAttribute("id",response[k].pid);
         userName.setAttribute("class","name-user-m");
         userName.appendChild(textUser);
         userDataCommentBox.appendChild(userName);
@@ -1271,13 +1232,14 @@ const windowSpam = () => {
 
         //Create the comment of the user
         let commentUser=document.createElement("p");
-        let texComment=document.createTextNode(dataAux[0].comments[k].content);
+        let texComment=document.createTextNode(response[k].content);
         commentUser.appendChild(texComment);
         commentUser.setAttribute("class","comment-user-spam");
         userDataComment.appendChild(commentUser);
         cont.appendChild(userDataComment);
       }
     }
+}
 
 //--When a category id is selectedCid
 const selectCategoryId = () => {
@@ -1385,6 +1347,31 @@ $(document).on('click', '.comments-tables .moderate', function () {
     newFetch(nodeBBURL + '/comments/delete/' + pid, {}, localStorage.token).then(function () {
       location.reload();
     });
+  }
+});
+
+// WHEN CLICK ON DELETE BUTTON, DELETE COMMENT FROM WINDOW SPAM
+$(document).on('click', '.container-spam .button-spam1', function (e) {
+  if (window.confirm('Do you really want to Delete this comment?')) {
+    var parent = event.target.parentElement;
+    var child = parent.getElementsByClassName('name-user-m')[0].id;
+
+    newFetch(nodeBBURL + '/comments/delete/' + child, {}, localStorage.token).then(function () {
+     //windowSpam(articles);
+     location.reload();
+   });
+  }
+});
+
+// WHEN CLICK ON DELETE BUTTON, DELETE COMMENT FROM COMMETS-MODAL
+$(document).on('click', '.section-complete .buttonTrashRed', function (e) {
+  if (window.confirm('Do you really want to Delete this comment?')) {
+    var parent = event.target.parentElement;
+    var child = parent.getElementsByClassName('name-user-m')[0].id;
+    newFetch(nodeBBURL + '/comments/delete/' + child, {}, localStorage.token).then(function () {
+     //windowSpam(articles);
+    location.reload();
+   });
   }
 });
 
@@ -1500,7 +1487,7 @@ $(document).on('click', '#export-comments', async function (event) {
   }
 });
 
-window.addEventListener("load",windowSpam);
+//window.addEventListener("load",windowSpam);
 
 window.addEventListener("load", fillPostPending);
 
@@ -1544,6 +1531,7 @@ if ('token' in localStorage && localStorage.status === '200') {
 
     articles = groupCommentsByArticle();
     console.log('group by article', articles);
+    windowSpam(articles);
 
     // ALL COMMENTS table
     siteTable = setDataTableToEachArticle(articles);
