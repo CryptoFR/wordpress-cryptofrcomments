@@ -13,9 +13,9 @@ $allow_guest = 1;
                     <!--All content about tab forum is here se-->
                     <br>
                     <div class="row-moderation">
+                    <form id="allow-guest" action="?page=cryptofr_comments_plugin" method="POST" enctype="multipart/form-data" >
                         <div class="column-2 ">
                           <div>
-                            <form id="allow-guest" action="?page=cryptofr_comments_plugin" method="POST" >
                               <label class="switch">
                                   <input id="allow_guest" name="allow_guest" type="checkbox" value="1">
                                   <span class="slider round">
@@ -27,12 +27,11 @@ $allow_guest = 1;
                               <div  class="column is-9">
                             <!-- <input type='submit' class="btn btn-sc_settings" name="sc_settings" value='Save changes'> -->
                             </div>
-                            </form>
+                            <!-- </form> -->
                           </div>
 
                           <div>
-                            <!-- <div class="gridsetting"> <!-- section with user image --> 
-
+                            <!-- <div class="gridsetting"> <!-- section with user image -->
                             <!-- <div class="settings-top"> -->
                             <form id="default-avatar-settings" action="?page=cryptofr_comments_plugin" method="POST" enctype="multipart/form-data">
                             <div class= "grid-settings" >
@@ -44,17 +43,15 @@ $allow_guest = 1;
                                 </div>
 
                               </div>
-                            <img class="avatar-moderator" src="<?php echo $img; ?>">
+                              <div class="avatar-moderator">
+                                <img class="avatar" src="<?php echo $img; ?>">
+                              </div>
 
-
-                            <!-- </form> -->
                             <!-- </div> -->
-
                             <!-- <div class="usersetting"></div> -->
-
                           </div>
-
-                        <!-- </div> -->
+                          </form>
+                         </div>
                                 <!-- <div class="sync-key2"></div> -->
                                 <!-- <form id="config-form" action="?page=cryptofr_comments_plugin" method="POST" > -->
                                   <label class="label-setting" for="cid">Default post category for the forum</label>

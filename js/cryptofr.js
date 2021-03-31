@@ -707,7 +707,7 @@ function getCommentsByOptionalCid() {
 
       });
   }
-  setDataTableModeration(document.querySelector('#table_moderation') , articles);
+  //setDataTableModeration(document.querySelector('#table_moderation') , articles);
   setDataTableArticle( document.querySelector('#articles') ,articles);
 }
 
@@ -729,9 +729,9 @@ let response=[];
 
 function setDataTableModeration(table, dataSet) {
 table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
-let response= manageDataModeration(dataSet);
 
-  //if (dataSet)
+let response= manageDataModeration(dataSet);
+  if (dataSet){
     let tables =  $(table).DataTable({
       data: response,
         columns: [
@@ -762,6 +762,7 @@ let response= manageDataModeration(dataSet);
       }
     });
     return tables;
+  }
 }
 
 //variable used for pagination of the modal in
@@ -1055,7 +1056,7 @@ table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
 
 let response = [];
 response = manageDataModeration(dataSet);
-console.log()
+
     var tables =  $(table).DataTable({
       data: response,
         columns: [
@@ -1187,10 +1188,11 @@ function formatChildModeration ( comment ) {
 //Menu  Spam tab Comments
 const windowSpam = (data) => {
   if(data.length> 0){
+      //HARD CODE.
       let response=data[0][1].posts;
-        console.log(response);
+
       //This for will fill the spam window.
-      for(let k=0;response.length;k++){
+      for(let k=0;data.length;k++){
         let cont=document.getElementById("inside-spam-comment");
         //console.log(cont);
         let userDataComment=document.createElement("div");
@@ -1218,7 +1220,7 @@ const windowSpam = (data) => {
         ipUser.setAttribute("class","ip-user-label");
         ipUser.appendChild(ipText);
         ipUser.appendChild(button0);
-        userDataCommentBox.appendChild(ipUser);
+        //userDataCommentBox.appendChild(ipUser);
 
         userDataComment.appendChild(userDataCommentBox);
         //Create the buttons
@@ -1360,6 +1362,14 @@ $(document).on('click', '.container-spam .button-spam1', function (e) {
      //windowSpam(articles);
      location.reload();
    });
+  }
+});
+
+// WHEN CLICK ON CHECK BUTTON, DELETE COMMENT FROM WINDOW SPAM
+$(document).on('click', '.container-spam .button-spam2', function (e) {
+  if (window.confirm('Do you really want to aprove this comment?')) {
+    var parent = event.target.parentElement;
+    var child = parent.getElementsByClassName('name-user-m')[0].id;
   }
 });
 
@@ -1531,7 +1541,9 @@ if ('token' in localStorage && localStorage.status === '200') {
 
     articles = groupCommentsByArticle();
     console.log('group by article', articles);
+    setDataTableModeration(document.querySelector('#table_moderation'), articles);
     windowSpam(articles);
+
 
     // ALL COMMENTS table
     siteTable = setDataTableToEachArticle(articles);

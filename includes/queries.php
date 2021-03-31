@@ -99,7 +99,7 @@ $table_name = $wpdb->prefix . 'posts';
 $sqlCommand = "SELECT avatar_name from cryptofrcomments";
 $wpdb->query($sqlCommand);
 $img_name=($wpdb->last_result);
-$img=get_site_url()."/wp-content/uploads/".$img_name[0]->avatar_name;
+$img=get_site_url()."/wp-content/uploads/2021/03/".$img_name[0]->avatar_name;
 
 // -- GET CONFIG OF CRYPTOFRCOMMENTS WP PLUGIN
 $sqlCommand = "SELECT * from cryptofrcomments ORDER BY ID DESC LIMIT 1";
