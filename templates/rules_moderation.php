@@ -4,28 +4,22 @@
     <div class="column-2">
         <div id="forum-tab" class="column is-9">
           <div class="form-check">
-            <label class="switch">
-              <input type="checkbox">
-              <span class="slider round"></span>
-            </label>
+            <input id="accept_comments" name="accept_comments" type="checkbox" value="1" />
+            <label for="accept_comments" id="round">Toggle</label>
             <label class="label-switch-forum" for="defaultCheck1">
               Accept all comments except spam
             </label>
           </div> <!-- form-check -->
           <div class="form-check switch-margin">
-            <label class="switch">
-              <input type="checkbox">
-              <span class="slider round"></span>
-            </label>
+            <input id="moderate_guest" name="moderate_guest" type="checkbox" value="1" />
+            <label for="moderate_guest" id="round">Toggle</label>
             <label class="label-switch-forum" for="defaultCheck1">
               Moderate all guest comments
             </label>
           </div>  <!--form-check switch-margin -->
           <div class="form-check switch-margin">
-            <label class="switch">
-              <input type="checkbox">
-              <span class="slider round"></span>
-            </label>
+            <input id="use_keywords" name="use_keywords" type="checkbox" value="1" />
+            <label for="use_keywords" id="round">Toggle</label>
             <label class="label-switch-forum" for="defaultCheck1">
               Use keywords control
             </label>

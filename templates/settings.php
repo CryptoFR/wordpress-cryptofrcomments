@@ -16,11 +16,10 @@ $allow_guest = 1;
                     <form id="allow-guest" action="?page=cryptofr_comments_plugin" method="POST" enctype="multipart/form-data" >
                         <div class="column-2 ">
                           <div>
-                              <label class="switch">
-                                  <input id="allow_guest" name="allow_guest" type="checkbox" value="1">
-                                  <span class="slider round">
-                                  </span>
-                              </label>
+
+                        <input id="allow_guest" name="allow_guest" type="checkbox" value="1" />
+                        <label for="allow_guest" id="round">Toggle</label>
+
                               <label  class="label-switch-forum" for="defaultCheck1">
                                 Allow Guest Comments
                               </label>

@@ -1140,48 +1140,49 @@ function buildCommentsChildren(dataSet, pID){
 //--- END OF DataTable COMMENTS AND MODAL -------
 
 function formatChildModeration ( comment ) {
-  console.log(comment);
-    console.log(comment.posts[0][0].username);
-  let response=comment.posts[0][0];
+    //console.log(comment.posts[0][0].username);
+  let response=comment.posts[0];
+  let userDataComment;
 
-  //Create child of row in dataTable Moderation
-  let userDataComment=document.createElement("div");
-  userDataComment.setAttribute("class","section-child-moderation");
-  //image user
-  let userImg=document.createElement("img");
-  userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
-  userImg.setAttribute("class","user-picture");
-  userImg.setAttribute("alt","This is an user perfil picture");
-  userDataComment.appendChild(userImg);
-  //username
-  let userName=document.createElement("label");
-  let textUser=document.createTextNode(response.username);
-  userName.setAttribute("class","name-user-m");
-  userName.appendChild(textUser);
-  userDataComment.appendChild(userName);
-  //Create the comment of the user
-  let commentUser=document.createElement("p");
-  let texComment=document.createTextNode(response.content);
-  commentUser.appendChild(texComment);
-  commentUser.setAttribute("class","comment-user");
-  userDataComment.appendChild(commentUser);
-  //Create the buttons
-  //button red x
-  let button1=document.createElement("button");
-  button1.setAttribute("class","buttonx-child-moderation");
-  button1.setAttribute("onclick","clickButtonView(this)");
-  userDataComment.appendChild(button1);
-  //button green check
-  let button2=document.createElement("button");
-  button2.setAttribute("onclick","clickButtonView(this)");
-  button2.setAttribute("class","buttony-child-moderation");
-  userDataComment.appendChild(button2);
-  //button orange ! warning
-  let button3=document.createElement("button");
-  button3.setAttribute("onclick","clickButtonView(this)");
-  button3.setAttribute("class","buttonz-child-moderation");
-  userDataComment.appendChild(button3);
-
+  for(let i=0;i<response.length;i++){
+    //Create child of row in dataTable Moderation
+    userDataComment=document.createElement("div");
+    userDataComment.setAttribute("class","section-child-moderation");
+    //image user
+    let userImg=document.createElement("img");
+    userImg.setAttribute("src","https://i.blogs.es/2d5264/facebook-image/450_1000.jpg");
+    userImg.setAttribute("class","user-picture");
+    userImg.setAttribute("alt","This is an user perfil picture");
+    userDataComment.appendChild(userImg);
+    //username
+    let userName=document.createElement("label");
+    let textUser=document.createTextNode(response[i].username);
+    userName.setAttribute("class","name-user-m");
+    userName.appendChild(textUser);
+    userDataComment.appendChild(userName);
+    //Create the comment of the user
+    let commentUser=document.createElement("p");
+    let texComment=document.createTextNode(response[i].content);
+    commentUser.appendChild(texComment);
+    commentUser.setAttribute("class","comment-user");
+    userDataComment.appendChild(commentUser);
+    //Create the buttons
+    //button red x
+    let button1=document.createElement("button");
+    button1.setAttribute("class","buttonx-child-moderation");
+    button1.setAttribute("onclick","clickButtonView(this)");
+    userDataComment.appendChild(button1);
+    //button green check
+    let button2=document.createElement("button");
+    button2.setAttribute("onclick","clickButtonView(this)");
+    button2.setAttribute("class","buttony-child-moderation");
+    userDataComment.appendChild(button2);
+    //button orange ! warning
+    let button3=document.createElement("button");
+    button3.setAttribute("onclick","clickButtonView(this)");
+    button3.setAttribute("class","buttonz-child-moderation");
+    userDataComment.appendChild(button3);
+}
     return userDataComment;
 }
 
@@ -1373,7 +1374,7 @@ $(document).on('click', '.container-spam .button-spam2', function (e) {
   }
 });
 
-// WHEN CLICK ON DELETE BUTTON, DELETE COMMENT FROM COMMETS-MODAL
+// WHEN CLICK ON DELETE BUTTON, DELETE COMMENT FROM COMMENTS-MODAL
 $(document).on('click', '.section-complete .buttonTrashRed', function (e) {
   if (window.confirm('Do you really want to Delete this comment?')) {
     var parent = event.target.parentElement;
