@@ -1157,6 +1157,7 @@ function formatChildModeration ( comment ) {
     //username
     let userName=document.createElement("label");
     let textUser=document.createTextNode(response[i].username);
+    userName.setAttribute("id",response[i].pid);
     userName.setAttribute("class","name-user-m");
     userName.appendChild(textUser);
     userDataComment.appendChild(userName);
@@ -1180,7 +1181,7 @@ function formatChildModeration ( comment ) {
     //button orange ! warning
     let button3=document.createElement("button");
     button3.setAttribute("onclick","clickButtonView(this)");
-    button3.setAttribute("class","buttonz-child-moderation");
+    //button3.setAttribute("class","buttonz-child-moderation");
     userDataComment.appendChild(button3);
 }
     return userDataComment;
@@ -1366,11 +1367,32 @@ $(document).on('click', '.container-spam .button-spam1', function (e) {
   }
 });
 
-// WHEN CLICK ON CHECK BUTTON, DELETE COMMENT FROM WINDOW SPAM
+// WHEN CLICK ON CHECK BUTTON, APROVE COMMENT FROM WINDOW SPAM
 $(document).on('click', '.container-spam .button-spam2', function (e) {
   if (window.confirm('Do you really want to aprove this comment?')) {
     var parent = event.target.parentElement;
     var child = parent.getElementsByClassName('name-user-m')[0].id;
+  }
+});
+
+// WHEN CLICK ON CHECK BUTTON, APROVE COMMENT FROM WINDOW MODERATION
+$(document).on('click', '.section-child-moderation .buttony-child-moderation', function (e) {
+  if (window.confirm('Do you really want to aprove this comment?')) {
+    var parent = event.target.parentElement;
+    var child = parent.getElementsByClassName('name-user-m')[0].id;
+  }
+});
+
+// WHEN CLICK ON DELETE BUTTON, DELETE COMMENT FROM WINDOW MODERATION
+$(document).on('click', '.section-child-moderation .buttonx-child-moderation', function (e) {
+  if (window.confirm('Do you really want to Delete this comment?')) {
+    var parent = event.target.parentElement;
+    var child = parent.getElementsByClassName('name-user-m')[0].id;
+
+    newFetch(nodeBBURL + '/comments/delete/' + child, {}, localStorage.token).then(function () {
+     //windowSpam(articles);
+     location.reload();
+   });
   }
 });
 

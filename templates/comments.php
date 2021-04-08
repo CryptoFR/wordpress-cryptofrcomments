@@ -9,7 +9,7 @@
       <div class="column is-9">
         <div class="comments-margin">
           <form>
-            <select id="categoryCommentss" class="category-comments">
+            <select id="categoryCommentss" class="category-comments" onchange="selectCategoryId()">
               <option>Category</option>
               <?php
               echo "<option value=".$config->cid.">".$config->cid."</option>";
@@ -18,7 +18,7 @@
               }
               ?>
             </select>
-            <button type="button" onclick="selectCategoryId()" class="btn btn-setting">Send</button>
+            <!-- <button type="button" onclick="selectCategoryId()" class="btn btn-setting">Send</button> -->
       </form>
 
         <!-- <input type="text" class="search-comment" placeholder='Search'> -->
