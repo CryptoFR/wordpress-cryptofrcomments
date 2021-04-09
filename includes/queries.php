@@ -92,6 +92,28 @@ if(isset($_POST["submit"])) {
 }
 //  END UPDATE DEFAULT AVATAR
 
+//-- SAVE CHANGES IN RULES-MODERATION
+if (isset($_POST["sc_rules"])) {
+  //echo "imprime " . $_POST["allow_guest"]. ".";
+  if (isset($_POST['accept_comments'])){ //true
+    echo "entro en accept comments ";
+    // $sqlCommand ="UPDATE cryptofrcomments SET allow_guest=%s";
+    // $wpdb->query($wpdb->prepare($sqlCommand, $_POST['allow_guest'] ));
+  }
+  if(isset($_POST['moderate_guest'])){
+    echo " entro en moderate_guest ";
+    // $allow= 0;
+    // $sqlCommand ="UPDATE cryptofrcomments SET allow_guest=%s";
+    // $wpdb->query($wpdb->prepare($sqlCommand, $allow));
+  }
+  if(isset($_POST['use_keywords'])){
+    echo " entro en use_keywords ";
+    // $allow= 0;
+    // $sqlCommand ="UPDATE cryptofrcomments SET allow_guest=%s";
+    // $wpdb->query($wpdb->prepare($sqlCommand, $allow));
+  }
+}
+
 // WP_POST DEFAULT NAME
 $table_name = $wpdb->prefix . 'posts';
 

@@ -1,4 +1,4 @@
-
+<form id="rules" action="?page=cryptofr_comments_plugin" method="POST">
  <div class="container-panel-rules">
   <div class="row-moderation">
     <div class="column-2">
@@ -46,10 +46,10 @@
             </div> <!--rules-margin -->
              <div class="form-check">
                <div class="radio">
-                 <label class="labelradio"><input class="radio-case" type="radio" name="radioCase" checked>Case sensitive</label>
+                 <label class="labelradio"><input class="radio-case" type="radio" name="sensitive" checked>Case sensitive</label>
                </div> <!-- radio -->
                <div class="radio">
-                 <label class="labelradio" ><input  class="radio-case" type="radio" name="radioCase">Case insesitive</label>
+                 <label class="labelradio" ><input  class="radio-case" type="radio" name="insensitive">Case insesitive</label>
                  <spam class="recommended">(recommended)</spam>
                </div> <!-- radio -->
 
@@ -62,15 +62,15 @@
             <label class="label2"> Word rendering </label>
           </div> <!-- rules-margin -->
           <div class="radio">
-            <label class="labelradio"><input class="radio-case" type="radio" name="radioWord" checked>First letter retained</label>
+            <label class="labelradio"><input class="radio-case" type="radio" name="first_letter" checked>First letter retained</label>
             <spam class="recommended">(dog=> d**)</spam>
           </div> <!-- radio -->
           <div class="radio">
-            <label class="labelradio" ><input  class="radio-case" type="radio" name="radioWord">All letters removed</label>
+            <label class="labelradio" ><input  class="radio-case" type="radio" name="all_letters">All letters removed</label>
             <spam class="recommended">(dog=> ***)</spam>
           </div>  <!-- radio -->
           <div class="radio">
-            <label class="labelradio" ><input  class="radio-case" type="radio" name="radioWord">First/Last letter contained</label>
+            <label class="labelradio" ><input  class="radio-case" type="radio" name="first_last">First/Last letter contained</label>
             <spam class="recommended">(dog => d*g)</spam>
           </div>  <!-- radio -->
         </div> <!-- col-sm-12 -->
@@ -112,3 +112,7 @@
 
   </div> <!-- row-moderation -->
  </div> <!-- container-panel-rules -->
+ <div  class="column is-9">
+   <input type='submit' class="btn btn-sync" name="sc_rules" value='Save changes'>
+ </div>
+</form>

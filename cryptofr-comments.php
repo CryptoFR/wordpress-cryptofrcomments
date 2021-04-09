@@ -147,7 +147,13 @@ class cryptofrcomments{
 			`cid` int (11) NOT NULL,
 			`allow_guest` char(1) NOT NULL,
 			`default_avatar` VARCHAR(300) NOT NULL DEFAULT '',
+			`avatar_name` VARCHAR(100) NOT NULL DEFAULT '',
 			`attached` VARCHAR(55) NOT NULL DEFAULT 'Pending',
+			`accept_comments` BOOLEAN NOT NULL,
+			`moderate_comments` BOOLEAN NOT NULL,
+			`use_keywords` BOOLEAN NOT NULL,
+			`case_sensitive` BOOLEAN NOT NULL,
+			`words_rendering` BOOLEAN NOT NULL,
 			PRIMARY KEY (`ID`)
 		);";
 		$wpdb->query($sqlCommand);

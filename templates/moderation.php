@@ -68,8 +68,5 @@
         </div>
       </div>
 
-        <div  class="column is-9">
-          <button type="button" class="btn btn-sync">Save changes</button>
-        </div>
   </div> <!-- container-medium -->
 </div> <!-- container-back -->
