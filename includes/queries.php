@@ -112,6 +112,30 @@ if (isset($_POST["sc_rules"])) {
     // $sqlCommand ="UPDATE cryptofrcomments SET allow_guest=%s";
     // $wpdb->query($wpdb->prepare($sqlCommand, $allow));
   }
+
+  $case_sensitive = $_POST['case_sensitive'];
+  if($case_sensitive == "sensitive"){
+    echo " entro sensitive";
+    //code
+  }
+  else{
+  echo " entro insensitive";
+  //code
+  }
+
+  $word_rendering= $_POST['word_rendering'];
+  if($word_rendering== "first_letter"){
+    echo " entro first_letter";
+    //code
+  }
+  elseif($word_rendering=="all_letters"){
+    echo " entro all_letters";
+    //code
+  }
+  elseif ($word_rendering=="first_last") {
+    echo " entro first_last";
+    //code
+  }
 }
 
 // WP_POST DEFAULT NAME

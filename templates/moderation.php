@@ -25,21 +25,23 @@
 
       let label_tag=document.createElement("label");
       let texto=document.createTextNode(document.getElementById("text_censored").value);
+      
+        if(texto.length != 0){
+          label_tag.appendChild(texto);
+          label_tag.setAttribute("class","tag_censored");
 
-      label_tag.appendChild(texto);
-      label_tag.setAttribute("class","tag_censored");
+          let cont=document.getElementById("tags");
 
-      let cont=document.getElementById("tags");
-
-      let close_tag=document.createElement("button");
-      close_tag.setAttribute("class","tag_close");
-      label_tag.appendChild(close_tag);
-      cont.appendChild(label_tag);
-      let input_censored= document.getElementById("text_censored");
-      input_censored.value='';
-      $(document).on('click', '.tag_censored', function (event) {
-        event.currentTarget.style.display = "none";
-      });
+          let close_tag=document.createElement("button");
+          close_tag.setAttribute("class","tag_close");
+          label_tag.appendChild(close_tag);
+          cont.appendChild(label_tag);
+          let input_censored= document.getElementById("text_censored");
+          input_censored.value='';
+          $(document).on('click', '.tag_censored', function (event) {
+            event.currentTarget.style.display = "none";
+          });
+      }
     }
   </script>
 </head>

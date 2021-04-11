@@ -46,10 +46,12 @@
             </div> <!--rules-margin -->
              <div class="form-check">
                <div class="radio">
-                 <label class="labelradio"><input class="radio-case" type="radio" name="sensitive" checked>Case sensitive</label>
+                 <label class="labelradio">
+                   <input class="radio-case" type="radio" name="case_sensitive" value="sensitive" checked>Case sensitive</label>
                </div> <!-- radio -->
                <div class="radio">
-                 <label class="labelradio" ><input  class="radio-case" type="radio" name="insensitive">Case insesitive</label>
+                 <label class="labelradio" >
+                   <input  class="radio-case" type="radio" name="case_sensitive" value="insesitive">Case insesitive</label>
                  <spam class="recommended">(recommended)</spam>
                </div> <!-- radio -->
 
@@ -62,15 +64,18 @@
             <label class="label2"> Word rendering </label>
           </div> <!-- rules-margin -->
           <div class="radio">
-            <label class="labelradio"><input class="radio-case" type="radio" name="first_letter" checked>First letter retained</label>
+            <label class="labelradio">
+              <input class="radio-case" type="radio" name="word_rendering" value="first_letter" checked>First letter retained</label>
             <spam class="recommended">(dog=> d**)</spam>
           </div> <!-- radio -->
           <div class="radio">
-            <label class="labelradio" ><input  class="radio-case" type="radio" name="all_letters">All letters removed</label>
+            <label class="labelradio" >
+              <input  class="radio-case" type="radio" name="word_rendering" value="all_letters">All letters removed</label>
             <spam class="recommended">(dog=> ***)</spam>
           </div>  <!-- radio -->
           <div class="radio">
-            <label class="labelradio" ><input  class="radio-case" type="radio" name="first_last">First/Last letter contained</label>
+            <label class="labelradio" >
+              <input  class="radio-case" type="radio" name="word_rendering" value="first_last">First/Last letter contained</label>
             <spam class="recommended">(dog => d*g)</spam>
           </div>  <!-- radio -->
         </div> <!-- col-sm-12 -->
