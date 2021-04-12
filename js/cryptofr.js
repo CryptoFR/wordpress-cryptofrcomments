@@ -1181,8 +1181,8 @@ function formatChildModeration ( comment ) {
     //button orange ! warning
     let button3=document.createElement("button");
     button3.setAttribute("onclick","clickButtonView(this)");
-    //button3.setAttribute("class","buttonz-child-moderation");
-    userDataComment.appendChild(button3);
+    button3.setAttribute("class","buttonz-child-moderation");
+    //userDataComment.appendChild(button3);
 }
     return userDataComment;
 }
@@ -1194,7 +1194,7 @@ const windowSpam = (data) => {
       let response=data[0][1].posts;
 
       //This for will fill the spam window.
-      for(let k=0;data.length;k++){
+      for(let k=0; k < data.length;k++){
         let cont=document.getElementById("inside-spam-comment");
         //console.log(cont);
         let userDataComment=document.createElement("div");
