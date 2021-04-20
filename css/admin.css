@@ -311,6 +311,7 @@
                 text-align: center;
                 border-bottom: 1px solid rgb(70, 72, 139) !important;
                 height: 100%;
+                margin-top: -20px;
             }
             .tab-content {
                 display: inline !important;
@@ -755,6 +756,7 @@
             background-color: #424B81;
             border-color: #424B81;
             margin-top: 1em;
+            margin-bottom: 1em;
         }
         
         .btn-sync1 {
@@ -1295,15 +1297,16 @@
             margin-left: 40px;
             color: rgb(93, 91, 90);
             margin-right: 10%;
-            height: 100px;
-            overflow: scroll;
+            overflow: hidden;
         }
         
         @media only screen and (max-width: 769px) {
             .comment-user {
                 margin-left: 0px !important;
                 margin-right: 0px !important;
+                height: 100px;
                 text-align: justify;
+                overflow: scroll;
             }
         }
         
@@ -1447,7 +1450,7 @@
             background-position-y: center;
             border-radius: 11px;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-trash' viewBox='0 0 16 16'%3E%3Cpath d='M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z'/%3E%3Cpath fill-rule='evenodd' d='M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z'/%3E%3C/svg%3E");
-            margin-left: 17px;
+            margin-top: 3px;
         }
         
         .button-spam2 {
@@ -1458,22 +1461,17 @@
             background-position-x: center;
             background-position-y: center;
             border-radius: 11px;
-            margin-right: 20px;
             margin-left: 5px;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='rgb(111,196,146)' class='bi bi-check-circle-fill' viewBox='0 0 16 16'%3E%3Cpath d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z'/%3E%3C/svg%3E");
         }
         
         @media only screen and (max-width: 769px) {
             .button-spam1 {
-                padding: 10px;
-                border: #FC4850;
-                background-color: #FC4850;
-                border-radius: 11px;
-                margin-left: -25px;
+                margin-left: -15px;
                 margin-top: 25px;
             }
             .button-spam2 {
-                margin-left: -17px !important;
+                margin-left: -50px !important;
                 margin-top: 25px;
             }
         }
@@ -1545,8 +1543,9 @@
         
         @media only screen and (max-width: 769px) {
             .comment-user-spam {
-                margin-left: 25px;
+                margin-left: 2px;
                 text-align: justify;
+                overflow: scroll;
             }
         }
         
@@ -1618,13 +1617,14 @@
             background-repeat: no-repeat;
             background-position-x: center;
             background-position-y: center;
-            border-radius: 11px;
-            margin-left: 20px;
+            border-radius: 9px;
+            margin-left: 9px;
         }
         
         @media only screen and (max-width: 769px) {
             .button-sync1 {
-                margin-left: -5px;
+                margin-left: -35px;
+                width: 10%;
             }
         }
         
@@ -1637,12 +1637,12 @@
             background-position-x: center;
             background-position-y: center;
             border-radius: 11px;
-            margin-left: 5px;
+            margin-left: 9px;
         }
         
         @media only screen and (max-width: 769px) {
             .button-sync2 {
-                margin-left: -20px;
+                margin-left: -15px;
                 margin-right: -5px;
                 width: 10%;
             }
@@ -1676,6 +1676,13 @@
             background-position-y: center;
             border-radius: 11px;
             float: left;
+        }
+        
+        @media only screen and (max-width: 769px) {
+            .button-sync4 {
+                left: 75px;
+                top: -1px;
+            }
         }
         
         .button-sync5 {
@@ -1781,7 +1788,7 @@
             background: white;
         }
         
-        @media only screen and (max-width: 600px) {
+        @media only screen and (max-width: 769px) {
             .section-child-moderation {
                 width: 100%;
                 font-family: sans-serif;
@@ -1795,14 +1802,13 @@
             .buttonx-child-moderation {
                 position: relative;
                 margin-top: 15% !important;
-                left: 25% !important;
-                margin-left: none !important;
+                left: 70% !important;
+                top: -2.3em !important;
             }
             .buttony-child-moderation {
                 position: relative;
                 margin-top: 15% !important;
-                left: 30% !important;
-                margin-left: 1% !important;
+                left: 25% !important;
             }
             .buttonz-child-moderation {
                 position: relative;
@@ -1821,7 +1827,7 @@
         .buttonx-child-moderation {
             position: relative;
             left: 157%;
-            top: -2.3em;
+            top: -2.20em;
             padding: 10px;
             border: transparent;
             background-color: white;
@@ -1834,7 +1840,7 @@
         
         .buttony-child-moderation {
             position: relative;
-            left: 156%;
+            left: 145%;
             top: -2.3em;
             padding: 10px;
             border-color: transparent;
