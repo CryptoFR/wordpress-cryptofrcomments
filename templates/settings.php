@@ -2,7 +2,8 @@
 // define variables and set to empty values
 $allow_guest = 1;
 ?>
-
+<div class="arrow-left5"></div>
+<div class="space5"></div>
 <div class="container-back">
     <div class="container-medium" >
 

@@ -1963,7 +1963,7 @@
             }
         }
         
-        @media only screen and (max-width: 600px) {
+        @media only screen and (max-width: 769px) {
             .usersetting {
                 margin-left: -5px;
                 background-size: 100% 100%;
@@ -2074,10 +2074,77 @@
             width: 13px;
         }
         
-        // centering
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+        }
+        
+        @media only screen and (min-width: 1024px) {
+            .arrow-left1 {
+                width: 0;
+                height: 0;
+                border-top: 10px solid transparent;
+                border-bottom: 10px solid transparent;
+                border-right: 10px solid rgb(252, 252, 252);
+                margin-left: -66px;
+                margin-top: -86px;
+                position: relative;
+            }
+            .arrow-left2 {
+                width: 0;
+                height: 0;
+                border-top: 10px solid transparent;
+                border-bottom: 10px solid transparent;
+                border-right: 10px solid rgb(252, 252, 252);
+                margin-left: -26px;
+                margin-top: 38px;
+                position: relative;
+            }
+            .arrow-left3 {
+                width: 0;
+                height: 0;
+                border-top: 10px solid transparent;
+                border-bottom: 10px solid transparent;
+                border-right: 10px solid rgb(252, 252, 252);
+                margin-left: -26px;
+                margin-top: 78px;
+                position: relative;
+            }
+            .arrow-left4 {
+                width: 0;
+                height: 0;
+                border-top: 10px solid transparent;
+                border-bottom: 10px solid transparent;
+                border-right: 10px solid rgb(252, 252, 252);
+                margin-left: -67px;
+                margin-top: 38px;
+                position: relative;
+            }
+            .arrow-left5 {
+                width: 0;
+                height: 0;
+                border-top: 10px solid transparent;
+                border-bottom: 10px solid transparent;
+                border-right: 10px solid rgb(252, 252, 252);
+                margin-left: -26px;
+                margin-top: 160px;
+                position: relative;
+            }
+            .space1 {
+                margin-top: 86px
+            }
+            .space2 {
+                margin-top: -38px
+            }
+            .space3 {
+                margin-top: -78px
+            }
+            .space4 {
+                margin-top: -38px
+            }
+            .space5 {
+                margin-top: -160px
+            }
         }

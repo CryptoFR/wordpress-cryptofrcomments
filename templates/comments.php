@@ -1,3 +1,5 @@
+<div class="arrow-left2"></div>
+<div class="space2"></div>
 <!-- <div class="article-table-container allcomments">
     <h2>All Comments</h2>
   <table id="grid" class="table table-striped table-bordered dt-responsive nowrap">
