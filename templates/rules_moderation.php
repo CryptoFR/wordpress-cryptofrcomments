@@ -1,5 +1,5 @@
-<div class="arrow-left1"></div>
-<div class="space1"></div>
+<!-- <div class="arrow-left1"></div>
+<div class="space1"></div> -->
 <form id="rules" action="?page=cryptofr_comments_plugin" method="POST">
  <div class="container-panel-rules">
   <div class="row-moderation">

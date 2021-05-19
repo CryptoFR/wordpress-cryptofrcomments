@@ -57,12 +57,13 @@
 
 
 <div class="container-back">
+  <!-- <div class="arrow-left1"></div> -->
     <div class="container-medium" >
 
 			<div  id="tabsModeration" class="column is-9">
         <ul class="nav nav-tabs">
           <li class="active"><a data-toggle="tab" href="#comments">Comments</a></li>
-          <li><a data-toggle="tab" href="#rules">Rules</a></li>
+          <!-- <li><a data-toggle="tab" href="#rules">Rules</a></li> -->
         </ul>
       </div>
       <div class="tab-content" id="tab_content_moderation">
@@ -72,11 +73,11 @@
            ?>
         </div>
 
-        <div id="rules" class="tab-pane fade ">
+        <!-- <div id="rules" class="tab-pane fade ">
           <?php
-          include (PLUGIN_PATH."/templates/rules_moderation.php");
+        //  include (PLUGIN_PATH."/templates/rules_moderation.php");
            ?>
-        </div>
+        </div> -->
       </div>
 
   </div> <!-- container-medium -->

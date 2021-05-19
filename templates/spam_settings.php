@@ -1,6 +1,6 @@
-<div class="arrow-left4"></div>
-<div class="space4"></div>
-<div class="container-panel-rules">
+<!-- <div class="arrow-left4"></div>
+<div class="space4"></div> -->
+<div class="container-panel">
  <div class="row-moderation">
    <div class="column-2">
        <div id="forum-tab" class="column is-9">

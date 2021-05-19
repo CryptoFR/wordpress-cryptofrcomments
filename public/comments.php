@@ -13,10 +13,10 @@
 
 <?php
 if ( post_password_required() )
-    return;  
+    return;
 ?>
 
-<a id="nodebb-comments"></a> 
+<a id="nodebb-comments"></a>
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -30,7 +30,7 @@ if ( post_password_required() )
 
 <script type="text/javascript">
     console.log('cargado')
-    var nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>', 
+    var nodeBBURL = '<?php echo constant("NODEBB_URL"); ?>',
     wordpressURL = '<?php echo get_site_url(); ?>',
     // articleID = '1',
     articleID = '<?php echo the_ID(); ?>',
@@ -40,16 +40,14 @@ if ( post_password_required() )
     categoryID = -1; // If -1, will use category in NodeBB ACP.  Put in a category number to force that category.
 
 
-    (function() { 
+    (function() {
         var nbb = document.createElement('script'); nbb.async = true;
         nbb.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/main.js';
         // var nbb2 = document.createElement('script'); nbb2.type = 'module'; nbb2.async = true;
         // nbb2.src = nodeBBURL + '/plugins/nodebb-plugin-blog-comments-cryptofr/lib/build.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(nbb);
         // (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(nbb2);
-    })();  
+    })();
 
 </script>
-<noscript>Please enable JavaScript to view comments</noscript> 
-
- 
+<noscript>Please enable JavaScript to view comments</noscript>

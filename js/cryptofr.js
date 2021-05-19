@@ -731,31 +731,27 @@ function setDataTableModeration(table, dataSet) {
     if (dataSet) {
         let tables = $(table).DataTable({
             data: response,
-            columns: [{
-                    "className": 'details-control',
-                    "orderable": false,
-                    "data": null,
-                    "defaultContent": ''
-                },
-                { data: "title" }
-            ]
+            columns: [{ data: "title" },
+            { "defaultContent": "<button class='buttonComment glyphicon glyphicon-new-window' data-toggle='modal' data-target='#ModalModeration'></button>" }
+          ],
+          "bDestroy": true
         });
 
-        //on click in arrow of row
-        $('#table_moderation tbody').on('click', 'td.details-control', function() {
-            var tr = $(this).closest('tr');
-            var row = tables.row(tr);
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            } else {
-                // Open this row
-                row.child(formatChildModeration(row.data())).show();
-                tr.addClass('shown');
-            }
-        });
+        // //on click in arrow of row
+        // $('#table_moderation tbody').on('click', 'td.details-control', function() {
+        //     var tr = $(this).closest('tr');
+        //     var row = tables.row(tr);
+        //
+        //     if (row.child.isShown()) {
+        //         // This row is already open - close it
+        //         row.child.hide();
+        //         tr.removeClass('shown');
+        //     } else {
+        //         // Open this row
+        //         row.child(formatChildModeration(row.data())).show();
+        //         tr.addClass('shown');
+        //     }
+        // });
         return tables;
     }
 }
@@ -814,14 +810,33 @@ var dataAux = [{
     }
 ];
 
+function countChar (comment) {
+  countLength= comment.length;
+  return countLength;
+}
+
+function cutComment (comment) {
+  shortComment= ''; longComment= '';
+  for (let i = 0; i < comment.length; i++) {
+    // check if character has been seen before
+    if (i <1000) {
+      // increase its count by 1
+      shortComment = shortComment + comment[i];
+    } else {
+      // add it to the object with a count of 1
+      longComment = longComment + comment[i];
+    }
+  }
+  let result = [shortComment , longComment];
+  return result;
+}
+
 //Pagination of the Modal in Comments Datatable
 function paginationModal(pagination1) {
-    //console.log(pagination1)
     var begin = ((pagination1.currentPage - 1) * pagination1.numberPerPage);
     var end = begin + pagination1.numberPerPage;
     pagination.pageList = (pagination1.querySet).slice(begin, end);
     pagination.numberOfPage = Math.ceil((pagination1.querySet).length / (pagination1.numberPerPage));
-
     return {
         'pageList': pagination.pageList,
         'numberOfPage': pagination.numberOfPage
@@ -855,16 +870,32 @@ const buildModal = (data) => {
             commentUser.setAttribute("class", "comment-user");
             userDataComment.appendChild(commentUser);
             //Create the buttons
-            let button1 = document.createElement("button");
-            //button1.setAttribute("src","https://www.svgrepo.com/show/114127/big-garbage-bin.svg");
-            button1.setAttribute("class", "buttonTrash");
-            button1.setAttribute("onclick", "clickButtonView(this)");
-            userDataComment.appendChild(button1);
+            let buttonReadMore = document.createElement("input");
+            buttonReadMore.setAttribute("class","btn-readoff");
+            if(countChar(iteration[k].content) > 1000){
+              // let commentEdited  = cutComment(iteration[k].content);
+              // texComment = document.createTextNode(commentEdited[0]);
+              buttonReadMore.setAttribute("class","btn-readon");
+              buttonReadMore.value = "Read More";
+              buttonReadMore.setAttribute("onclick", "clickReadMore(this)");
+              //console.log(commentEdited[0]);
+            }
+            userDataComment.appendChild(buttonReadMore);
+            //button view
             let button2 = document.createElement("button");
             button2.setAttribute("onclick", "clickButtonView(this)");
             button2.setAttribute("class", "buttonview");
             userDataComment.appendChild(button2);
-
+            // button trash
+            let button1 = document.createElement("button");
+            button1.setAttribute("class", "buttonTrash");
+            button1.setAttribute("onclick", "clickButtonView(this)");
+            userDataComment.appendChild(button1);
+            //button warning
+            let button3 = document.createElement("button");
+            button3.setAttribute("onclick", "clickButtonView(this)");
+            button3.setAttribute("class", "buttonWarning");
+            userDataComment.appendChild(button3);
             //Create the separator
             let separator = document.createElement("div");
             separator.setAttribute("class", "separator-m");
@@ -875,27 +906,47 @@ const buildModal = (data) => {
     }
     //button > in modal - comments dataTable
 function nextPage() {
-    if (pagemodal < pagination.numberOfPage)
-        return pagemodal++;
+    if (pagemodal < pagination.numberOfPage){
+      console.log(">",pagemodal);
+      var wrapper = document.getElementById('wrapper');
+      wrapper.innerHTML = '';
+      wrapper.innerHTML += `<button value=${pagemodal} class='pagination-button' >${pagemodal}</button>`;
+      wrapper.innerHTML += `<button value=${pagemodal+1} id='buttonnext' class='pagination-button' >${pagemodal+1}</button>`;
+
+      return pagemodal++;
+    }
 }
 //button < in modal - comments dataTable
 function previousPage() {
-    if (pagemodal > 1)
-        return pagemodal--;
+    if (pagemodal > 1){
+      console.log("<", pagemodal);
+      var wrapper = document.getElementById('wrapper');
+      wrapper.innerHTML = '';
+      wrapper.innerHTML += `<button value=${pagemodal-1} class='pagination-button' >${pagemodal-1}</button>`;
+      wrapper.innerHTML += `<button value=${pagemodal} id='buttonnext' class='pagination-button' >${pagemodal}</button>`;
+
+      return pagemodal--;
+    }
 }
 
 //function used for pagination of the modal in
 //comments datatable
 const pageButton = (currentPage) => {
+  let current= currentPage.currentPage;
+  console.log(current);
     var wrapper = document.getElementById('wrapper');
     wrapper.innerHTML = ''
-    wrapper.innerHTML += `<button value=${currentPage} class='pagination-button' >${currentPage}</button>`;
-    wrapper.innerHTML += `<button value=${currentPage+1} id='buttonnext' class='pagination-button' >${currentPage+1}</button>`;
+    wrapper.innerHTML += `<button value=${current} class='pagination-button' >${current}</button>`;
+
+    if(currentPage.numberOfPage > 1){
+    wrapper.innerHTML += `<button value=${current+1} id='buttonnext' class='pagination-button' >${current+1}</button>`;
 
     let buttonnext = document.getElementById('buttonnext');
     buttonnext.addEventListener('click', function() {
-        pagination.currentPage = $(this).val();
+        current = $(this).val();
+        console.log(current);
     });
+  }
 
 }
 
@@ -1057,6 +1108,7 @@ function setDataTableArticle(table, dataSet) {
         "bDestroy": true
     });
 
+    //restart modalcontent
     let buttonCloseModal = document.getElementById('buttonCloseModal');
     buttonCloseModal.addEventListener('click', function() {
         let usercomentdata = document.getElementById('ModalCommentContent');
@@ -1077,7 +1129,7 @@ function setDataTableArticle(table, dataSet) {
         buildModal(dataModal.pageList);
 
         if (pagination.currentPage === 1)
-            pageButton(pagination.currentPage);
+            pageButton(pagination);
 
         $('.pagination-button').on('click', function() {
             $('#ModalCommentContent').empty()
@@ -1129,6 +1181,7 @@ function buildCommentsChildren(dataSet, pID) {
 
 //--- END OF DataTable COMMENTS AND MODAL -------
 
+
 function formatChildModeration(comment) {
     //console.log(comment.posts[0][0].username);
     let response = comment.posts[0];
@@ -1153,9 +1206,10 @@ function formatChildModeration(comment) {
         userDataComment.appendChild(userName);
         //Create the comment of the user
         let commentUser = document.createElement("p");
+        commentUser.setAttribute("class", "read-more");
         let texComment = document.createTextNode(response[i].content);
         commentUser.appendChild(texComment);
-        commentUser.setAttribute("class", "comment-user");
+        //commentUser.setAttribute("class", "comment-user");
         userDataComment.appendChild(commentUser);
         //Create the buttons
         //button red x
@@ -1173,8 +1227,21 @@ function formatChildModeration(comment) {
         button3.setAttribute("onclick", "clickButtonView(this)");
         button3.setAttribute("class", "buttonz-child-moderation");
         //userDataComment.appendChild(button3);
+        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+        '<tr>' +
+        '<td>'+userImg +'</td>' +
+        '<td>' + response[i].username + '</td>' +
+        '<td>' + response[i].content + '</td>' +
+        '</tr>' +
+        '</table>';
     }
-    return userDataComment;
+    //return userDataComment;
+    // return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+    // '<tr>' +
+    // '<td>'+ +'</td>' +
+    // '<td>' + userDataComment + '</td>' +
+    // '</tr>' +
+    // '</table>';
 }
 
 //Menu  Spam tab Comments
@@ -1395,6 +1462,23 @@ $(document).on('click', '.section-complete .buttonTrashRed', function(e) {
             //windowSpam(articles);
             location.reload();
         });
+    }
+    else {
+      event.target.className="buttonTrash";
+    }
+});
+
+$(document).on('click', '.section-complete .buttonWarningOrange', function(e) {
+  var parent = event.target.parentElement;
+  var child = parent.getElementsByClassName('name-user-m')[0].id;
+    if (window.confirm('Do you really want to mark this comment as spam?')){
+        // newFetch(nodeBBURL + '/comments/delete/' + child, {}, localStorage.token).then(function() {
+        //     //windowSpam(articles);
+        //     location.reload();
+        // });
+    }
+    else{
+      event.target.className="buttonWarning";
     }
 });
 

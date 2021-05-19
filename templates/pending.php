@@ -19,8 +19,8 @@
 
 
 <html>
-<div class="arrow-left3"></div>
-<div class="space3"></div>
+<!-- <div class="arrow-left3"></div>
+<div class="space3"></div> -->
     <div class="container-back">
         <div class="container-medium" >
             <!--Here is the begin of tabs forum and pendingSyncs-->
