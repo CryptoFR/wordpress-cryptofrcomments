@@ -15,8 +15,11 @@ if (isset($_POST['defaultCid'])) {
 // -- INSERT OPTIONAL CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP
 if (isset($_POST['optionalCid'])) {
   if (ctype_digit($_POST['optionalCid'])){
+    $cid= $_POST['optionalCid'];
+    $option = (int)$cid;
+    echo "imprime" . var_dump($option);
     $sqlCommand ="INSERT INTO cryptofrcomments_cids (cid) VALUES (%s);";
-    $wpdb->query($wpdb->prepare($sqlCommand, $_POST['optionalCid'] ));
+    $wpdb->query($wpdb->prepare($sqlCommand, $option ));
   }
 }
 

@@ -84,7 +84,7 @@ $allow_guest = 1;
                                 <div class="settings-top">
                                   <!-- <form id="config-form-optional-cids-delete" action="?page=cryptofr_comments_plugin" method="POST"> -->
                                 		<label class="label-setting" for="optionalCid">Optional CategoryID</label>
-                                		<input class="insertcategory" id="optionalCid" name="optionalCid" value="0">
+                                		<input class="insertcategory" id="optionalCid" name="optionalCid">
                                 		<button class="btn btn-setting">Insert</button>
                                 	<!-- </form> -->
                                 </div>

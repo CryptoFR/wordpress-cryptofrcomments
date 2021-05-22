@@ -1302,11 +1302,66 @@ const windowSpam = (data) => {
     }
 }
 
+function match_categoryopt_categoryauth(cat) {
+
+  let categories = [] ;
+  let cat_atuhorized = cat.categories;
+
+  for(let i=0; i < optionalCidsCopy.length ; i++){
+    var option = parseInt(optionalCidsCopy[i]["cid"]);
+
+    for(let j=0; j < cat_atuhorized.length ; j++){
+      if(option == cat.categories[j].cid ){
+        var name;
+        newFetchGet(nodeBBURL + '/api/category/' + option , localStorage.token)
+            .then(res => {
+                status = res.status;
+                return res;
+            })
+            .then(res => res.json())
+            .then(function(res) {
+              name = res.name;
+              console.log(name);
+              if (status == '403') {
+                    // NOT AUTHORIZED
+                    document.querySelector('.error-cryptofr-auth').style.display = 'block';
+                    return;
+                }
+              })
+        let object = { "option": option , "name": name};
+        categories.push(object);
+        console.log(categories);
+      i++;
+      }
+    }
+
+  }
+  return categories;
+}
+
 //--When a category id is selectedCid
 const selectCategoryId = () => {
 
     let button = document.getElementsByClassName("category-button");
     let cid = document.getElementById("categoryCommentss").value;
+
+      newFetchGet(nodeBBURL + '/comments/categories-authorized', localStorage.token)
+          .then(res => {
+              status = res.status;
+              return res;
+          })
+          .then(res => res.json())
+          .then(function(res) {
+            match_categoryopt_categoryauth(res);
+            if (status == '403') {
+                  // NOT AUTHORIZED
+                  document.querySelector('.error-cryptofr-auth').style.display = 'block';
+                  return;
+              }
+            })
+
+  //for (let optcid of optionalCidsCopy) {
+    //}
 
     if (cid == "Category") {
         let button = document.getElementsByClassName("category-button");
@@ -1429,6 +1484,10 @@ $(document).on('click', '.container-spam .button-spam2', function(e) {
     if (window.confirm('Do you really want to aprove this comment?')) {
         var parent = event.target.parentElement;
         var child = parent.getElementsByClassName('name-user-m')[0].id;
+        newFetch(nodeBBURL + '/comments/approve/' + child, {}, localStorage.token).then(function() {
+            //windowSpam(articles);
+            location.reload();
+        });
     }
 });
 
@@ -1472,10 +1531,10 @@ $(document).on('click', '.section-complete .buttonWarningOrange', function(e) {
   var parent = event.target.parentElement;
   var child = parent.getElementsByClassName('name-user-m')[0].id;
     if (window.confirm('Do you really want to mark this comment as spam?')){
-        // newFetch(nodeBBURL + '/comments/delete/' + child, {}, localStorage.token).then(function() {
-        //     //windowSpam(articles);
-        //     location.reload();
-        // });
+        newFetch(nodeBBURL + '/comments/reject/' + child, {}, localStorage.token).then(function() {
+            //windowSpam(articles);
+            location.reload();
+        });
     }
     else{
       event.target.className="buttonWarning";
