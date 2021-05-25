@@ -13,12 +13,7 @@
           <form>
             <select id="categoryCommentss" class="category-comments" onchange="selectCategoryId()">
               <option>Category</option>
-              <?php
-              echo "<option value=".$config->cid.">".$config->cid."</option>";
-              foreach ($optionalCidsArray as $cid) {
-                echo "<option value=".$cid->cid.">".$cid->cid."</option>";
-              }
-              ?>
+              
             </select>
             <!-- <button type="button" onclick="selectCategoryId()" class="btn btn-setting">Send</button> -->
       </form>

@@ -10,7 +10,6 @@ wpComments = structureWpComments();
 let optionalCidsCopy = optionalCids.map(x => x);
 
 optionalCidsCopy.push({ cid: cid });
-
 // ----- FUNCTIONS
 
 // Data Table init for Comments from nodebb
@@ -705,6 +704,7 @@ function getCommentsByOptionalCid() {
             });
     }
     //setDataTableModeration(document.querySelector('#table_moderation') , articles);
+    categoriesName();
     setDataTableArticle(document.querySelector('#articles'), articles);
 }
 
@@ -1167,6 +1167,23 @@ function setDataTableArticle(table, dataSet) {
     return tables;
 }
 
+function categoriesName(){
+  newFetchGet(nodeBBURL + '/comments/categories-authorized', localStorage.token)
+      .then(res => {
+          status = res.status;
+          return res;
+      })
+      .then(res => res.json())
+      .then(function(res) {
+        match_categoryopt_categoryauth(res);
+        if (status == '403') {
+              // NOT AUTHORIZED
+              document.querySelector('.error-cryptofr-auth').style.display = 'block';
+              return;
+          }
+        });
+}
+
 //DataTable Article - Modal with comments
 function buildCommentsChildren(dataSet, pID) {
     let children = [];
@@ -1302,7 +1319,22 @@ const windowSpam = (data) => {
     }
 }
 
-function match_categoryopt_categoryauth(cat) {
+const selectCategoryInComments = (categories) =>{
+console.log(categories);
+  var select= document.getElementById("categoryCommentss");
+
+  for(let k=0; k < categories.length ; k++)
+  {
+     var opt = document.createElement("option");
+     opt.value= categories[k].option;
+     opt.innerHTML = categories[k].name; // whatever property it has
+     // // then append it to the select element
+     select.appendChild(opt);
+  }
+  console.log(opt);
+}
+
+const match_categoryopt_categoryauth = (cat) => {
 
   let categories = [] ;
   let cat_atuhorized = cat.categories;
@@ -1313,22 +1345,8 @@ function match_categoryopt_categoryauth(cat) {
     for(let j=0; j < cat_atuhorized.length ; j++){
       if(option == cat.categories[j].cid ){
         var name;
-        newFetchGet(nodeBBURL + '/api/category/' + option , localStorage.token)
-            .then(res => {
-                status = res.status;
-                return res;
-            })
-            .then(res => res.json())
-            .then(function(res) {
-              name = res.name;
-              console.log(name);
-              if (status == '403') {
-                    // NOT AUTHORIZED
-                    document.querySelector('.error-cryptofr-auth').style.display = 'block';
-                    return;
-                }
-              })
-        let object = { "option": option , "name": name};
+
+        let object = { "option": option , "name": cat.categories[j].name};
         categories.push(object);
         console.log(categories);
       i++;
@@ -1336,32 +1354,14 @@ function match_categoryopt_categoryauth(cat) {
     }
 
   }
-  return categories;
+  selectCategoryInComments(categories);
 }
 
 //--When a category id is selectedCid
-const selectCategoryId = () => {
+function selectCategoryId(){
 
     let button = document.getElementsByClassName("category-button");
     let cid = document.getElementById("categoryCommentss").value;
-
-      newFetchGet(nodeBBURL + '/comments/categories-authorized', localStorage.token)
-          .then(res => {
-              status = res.status;
-              return res;
-          })
-          .then(res => res.json())
-          .then(function(res) {
-            match_categoryopt_categoryauth(res);
-            if (status == '403') {
-                  // NOT AUTHORIZED
-                  document.querySelector('.error-cryptofr-auth').style.display = 'block';
-                  return;
-              }
-            })
-
-  //for (let optcid of optionalCidsCopy) {
-    //}
 
     if (cid == "Category") {
         let button = document.getElementsByClassName("category-button");
