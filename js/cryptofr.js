@@ -10,6 +10,7 @@ wpComments = structureWpComments();
 let optionalCidsCopy = optionalCids.map(x => x);
 
 optionalCidsCopy.push({ cid: cid });
+console.log("optionalCidsCopy",optionalCidsCopy);
 // ----- FUNCTIONS
 
 // Data Table init for Comments from nodebb
@@ -704,7 +705,7 @@ function getCommentsByOptionalCid() {
             });
     }
     //setDataTableModeration(document.querySelector('#table_moderation') , articles);
-    categoriesName();
+    categoriesAuthorizedName();
     setDataTableArticle(document.querySelector('#articles'), articles);
 }
 
@@ -1167,7 +1168,8 @@ function setDataTableArticle(table, dataSet) {
     return tables;
 }
 
-function categoriesName(){
+function categoriesAuthorizedName(){
+
   newFetchGet(nodeBBURL + '/comments/categories-authorized', localStorage.token)
       .then(res => {
           status = res.status;
@@ -1175,7 +1177,9 @@ function categoriesName(){
       })
       .then(res => res.json())
       .then(function(res) {
+
         match_categoryopt_categoryauth(res);
+
         if (status == '403') {
               // NOT AUTHORIZED
               document.querySelector('.error-cryptofr-auth').style.display = 'block';
@@ -1320,16 +1324,22 @@ const windowSpam = (data) => {
 }
 
 const selectCategoryInComments = (categories) =>{
-console.log(categories);
-  var select= document.getElementById("categoryCommentss");
+
+  var selectComments= document.getElementById("categoryCommentss");
+  var selectSettings= document.getElementById("selectSetting");
 
   for(let k=0; k < categories.length ; k++)
   {
      var opt = document.createElement("option");
      opt.value= categories[k].option;
-     opt.innerHTML = categories[k].name; // whatever property it has
-     // // then append it to the select element
-     select.appendChild(opt);
+     opt.innerHTML = categories[k].name;
+
+     var opt1 = document.createElement("option");
+     opt1.value= categories[k].option;
+     opt1.innerHTML = categories[k].name;
+
+     selectSettings.appendChild(opt1);
+     selectComments.appendChild(opt);
   }
   console.log(opt);
 }
@@ -1348,13 +1358,61 @@ const match_categoryopt_categoryauth = (cat) => {
 
         let object = { "option": option , "name": cat.categories[j].name};
         categories.push(object);
-        console.log(categories);
       i++;
       }
     }
 
   }
+  selectTopicsByCategoryAuth(categories);
   selectCategoryInComments(categories);
+}
+
+function selectTopicsByCategoryAuth( categories ){
+  for(let k=0; k < categories.length ; k++)
+  {
+    newFetchGet(nodeBBURL + '/api/category/'+categories[k].option, localStorage.token)
+        .then(res => {
+            status = res.status;
+            return res;
+        })
+        .then(res => res.json())
+        .then(function(res) {
+
+          match_topics_comments(res);
+
+          if (status == '403') {
+                // NOT AUTHORIZED
+                document.querySelector('.error-cryptofr-auth').style.display = 'block';
+                return;
+            }
+          });
+  }
+
+}
+
+function match_topics_comments(data){
+  let topics=data.topics;
+  for(let k=0; k < topics.length ; k++)
+  {
+  if(topics[k].deleted === 0){
+  newFetchGet(nodeBBURL + '/api/topic/'+topics[k].tid+'?page=1', localStorage.token)
+      .then(res => {
+          status = res.status;
+          return res;
+      })
+      .then(res => res.json())
+      .then(function(res) {
+
+        console.log("match_topics_comments",res);
+
+        if (status == '403') {
+              // NOT AUTHORIZED
+              document.querySelector('.error-cryptofr-auth').style.display = 'block';
+              return;
+          }
+        });
+      }
+    }
 }
 
 //--When a category id is selectedCid

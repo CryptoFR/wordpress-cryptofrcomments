@@ -8,7 +8,7 @@ $allow_guest = 1;
     <div class="container-medium" >
 
        <div>
-            <div class="container-panel">
+            <div class="container-panel-settings">
 
                 <div style="display:block">
                     <!--All content about tab forum is here se-->
@@ -55,13 +55,7 @@ $allow_guest = 1;
                                 <!-- <div class="sync-key2"></div> -->
                                 <!-- <form id="config-form" action="?page=cryptofr_comments_plugin" method="POST" > -->
                                   <label class="label-setting" for="cid">Default post category for the forum</label>
-                                  <select class="optionalCid" name="cid">
-                                    <?php
-                                    echo "<option value=".$config->cid.">".$config->cid."</option>";
-                                    foreach ($optionalCidsArray as $cid) {
-                                      echo "<option value=".$cid->cid.">".$cid->cid."</option>";
-                                    }
-                                    ?>
+                                  <select class="optionalCid" name="cid" id="selectSetting">
                                   </select>
                                   	<input type='submit' class="btn btn-setting" name="defaultCid" value='Send'>
                                 <!-- </form> -->
