@@ -6,8 +6,10 @@ var siteTable = null;
 var status = null;
 var articles = {};
 var copyArticle = {};
+var topicsByComents= [];
 wpComments = structureWpComments();
 let optionalCidsCopy = optionalCids.map(x => x);
+var contadorGlobal = 0;
 
 optionalCidsCopy.push({ cid: cid });
 console.log("optionalCidsCopy",optionalCidsCopy);
@@ -699,19 +701,17 @@ function getCommentsByOptionalCid() {
                 // siteTable = setDataTable(document.querySelector('#grid'), data.posts);
 
                 // Set a datatable to each article
-                console.log(copyArticles);
+                //console.log(copyArticles);
                 //setDataTableToEachArticle(copyArticles);
 
             });
     }
     //setDataTableModeration(document.querySelector('#table_moderation') , articles);
-    categoriesAuthorizedName();
-    setDataTableArticle(document.querySelector('#articles'), articles);
+    //setDataTableArticle(document.querySelector('#articles'), articles);
 }
 
 //function used to handle the data that reaches the Comments datatable
 function manageDataModeration(dataSet) {
-
     let response = [];
     //let dataSet=articles;
     for (let i = 0; i < dataSet.length; i++) {
@@ -722,6 +722,24 @@ function manageDataModeration(dataSet) {
         (dataSet[i][1].topic).posts = posts;
         response.push(dataSet[i][1].topic);
     }
+    return response;
+}
+
+function manageDataArticles(dataSet) {
+  console.log("manageDataArticles",dataSet);
+    let response = [];
+    //let dataSet=articles;
+    for (let i = 0; i < dataSet.length; i++) {
+      console.log("entro en ciclo de manageDataArticles");
+        let count = (dataSet[i].posts).length;
+        console.log("manageDataArticles couunt",dataSet);
+        (dataSet[i]).count_comments = count;
+        let posts = [];
+        posts.push(dataSet[i][1].posts);
+        (dataSet[i][1].topic).posts = posts;
+        response.push(dataSet[i][1].topic);
+    }
+    console.log("manageDataArticles  salida",dataSet);
     return response;
 }
 
@@ -847,6 +865,7 @@ function paginationModal(pagination1) {
 //Build Modal in Datatable Comments
 const buildModal = (data) => {
         let iteration = (data);
+        console.log(iteration);
         for (let k = 0; k < iteration.length; k++) {
             let cont = document.getElementById("ModalCommentContent");
             let userDataComment = document.createElement("div");
@@ -859,7 +878,7 @@ const buildModal = (data) => {
             userDataComment.appendChild(userImg);
             //Create the name of user
             let userName = document.createElement("label");
-            let textUser = document.createTextNode(iteration[k].username);
+            let textUser = document.createTextNode(iteration[k].user["username"]);
             userName.setAttribute("class", "name-user-m");
             userName.setAttribute("id", iteration[k].pid);
             userName.appendChild(textUser);
@@ -1040,7 +1059,6 @@ const buildCommentsSync = (arr) => {
             cont.appendChild(userDataComment);
         }
     }
-    // console.log('optionalCids', optionalCids);
 
 function activarTab(unTab) {
     try {
@@ -1094,16 +1112,16 @@ function activarTab(unTab) {
 
 //Tab menu Comments datatable
 function setDataTableArticle(table, dataSet) {
+console.log("setDataTableArticle",dataSet);
     table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
-
     let response = [];
-    response = manageDataModeration(dataSet);
-
+    //response = manageDataArticles(dataSet);
+    //console.log("setDataTableArticle",response);
     var tables = $(table).DataTable({
-        data: response,
+        data: dataSet,
         columns: [
             { data: "title" },
-            { data: "count_comments" },
+            { data: "postcount" },
             { "defaultContent": "<button class='buttonComment glyphicon glyphicon-new-window' data-toggle='modal' data-target='#ModalComments'></button>" }
         ],
         "bDestroy": true
@@ -1121,12 +1139,12 @@ function setDataTableArticle(table, dataSet) {
     //onclick function to show modal for every row
     $('#articles tbody').on('click', 'button', function() {
         let data = tables.row($(this).parents('tr')).data();
-
         let title = document.querySelector('#ModalCommentTitle');
         title.innerHTML = data.title;
+        pagination.querySet = data.posts;
 
-        pagination.querySet = data.posts[0];
         var dataModal = paginationModal(pagination);
+
         buildModal(dataModal.pageList);
 
         if (pagination.currentPage === 1)
@@ -1341,7 +1359,6 @@ const selectCategoryInComments = (categories) =>{
      selectSettings.appendChild(opt1);
      selectComments.appendChild(opt);
   }
-  console.log(opt);
 }
 
 const match_categoryopt_categoryauth = (cat) => {
@@ -1390,29 +1407,46 @@ function selectTopicsByCategoryAuth( categories ){
 
 }
 
-function match_topics_comments(data){
+const match_topics_comments = (data) =>{
   let topics=data.topics;
+  let topicsAuth= [];
+
   for(let k=0; k < topics.length ; k++)
   {
-  if(topics[k].deleted === 0){
-  newFetchGet(nodeBBURL + '/api/topic/'+topics[k].tid+'?page=1', localStorage.token)
-      .then(res => {
-          status = res.status;
-          return res;
-      })
-      .then(res => res.json())
-      .then(function(res) {
-
-        console.log("match_topics_comments",res);
-
-        if (status == '403') {
-              // NOT AUTHORIZED
-              document.querySelector('.error-cryptofr-auth').style.display = 'block';
-              return;
-          }
-        });
+    if(topics[k].deleted === 0){
+      topicsAuth.push(topics[k]);
       }
-    }
+  }
+    topicsAtuhorized(topicsAuth);
+}
+
+const topicsAtuhorized = (topics)=>{
+  let flag = (topics.length)-1;
+
+  for(let k=0; k <  topics.length ; k++)
+  {
+    newFetchGet(nodeBBURL + '/api/topic/'+topics[k].tid+'?page=1', localStorage.token)
+        .then(res => {
+            status = res.status;
+            return res;
+        })
+        .then(res => res.json())
+        .then(function(res) {
+
+          topicsByComents.push(res);
+
+            if(k === flag){
+            setDataTableArticle(document.querySelector('#articles'), topicsByComents);
+            }
+
+          if (status == '403') {
+                // NOT AUTHORIZED
+                document.querySelector('.error-cryptofr-auth').style.display = 'block';
+                return;
+            }
+          });
+  }
+
 }
 
 //--When a category id is selectedCid
@@ -1778,6 +1812,7 @@ if ('token' in localStorage && localStorage.status === '200') {
 
         //-- OPTIONAL CIDS
         getCommentsByOptionalCid();
+        categoriesAuthorizedName();
     })();
 } else {
     // NOT CONNECTED
