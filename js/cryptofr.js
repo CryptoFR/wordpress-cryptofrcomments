@@ -713,7 +713,6 @@ function getCommentsByOptionalCid() {
 //function used to handle the data that reaches the Comments datatable
 function manageDataModeration(dataSet) {
     let response = [];
-    //let dataSet=articles;
     for (let i = 0; i < dataSet.length; i++) {
         let count = (dataSet[i][1].posts).length;
         (dataSet[i][1].topic).count_comments = count;
@@ -726,9 +725,7 @@ function manageDataModeration(dataSet) {
 }
 
 function manageDataArticles(dataSet) {
-  console.log("manageDataArticles",dataSet);
     let response = [];
-    //let dataSet=articles;
     for (let i = 0; i < dataSet.length; i++) {
       console.log("entro en ciclo de manageDataArticles");
         let count = (dataSet[i].posts).length;
@@ -739,7 +736,6 @@ function manageDataArticles(dataSet) {
         (dataSet[i][1].topic).posts = posts;
         response.push(dataSet[i][1].topic);
     }
-    console.log("manageDataArticles  salida",dataSet);
     return response;
 }
 
@@ -854,7 +850,9 @@ function cutComment (comment) {
 function paginationModal(pagination1) {
     var begin = ((pagination1.currentPage - 1) * pagination1.numberPerPage);
     var end = begin + pagination1.numberPerPage;
-    pagination.pageList = (pagination1.querySet).slice(begin, end);
+    let pageList1=pagination1.querySet;
+    pagination.pageList = (pageList1).slice(begin, end);
+    console.log(pagination.pageList);
     pagination.numberOfPage = Math.ceil((pagination1.querySet).length / (pagination1.numberPerPage));
     return {
         'pageList': pagination.pageList,
@@ -865,7 +863,6 @@ function paginationModal(pagination1) {
 //Build Modal in Datatable Comments
 const buildModal = (data) => {
         let iteration = (data);
-        console.log(iteration);
         for (let k = 0; k < iteration.length; k++) {
             let cont = document.getElementById("ModalCommentContent");
             let userDataComment = document.createElement("div");
@@ -926,7 +923,9 @@ const buildModal = (data) => {
     }
     //button > in modal - comments dataTable
 function nextPage() {
-    if (pagemodal < pagination.numberOfPage){
+
+if(pagemodal < pagination.numberOfPage){
+
       console.log(">",pagemodal);
       var wrapper = document.getElementById('wrapper');
       wrapper.innerHTML = '';
@@ -952,8 +951,8 @@ function previousPage() {
 //function used for pagination of the modal in
 //comments datatable
 const pageButton = (currentPage) => {
+  console.log("entra en pageButton")
   let current= currentPage.currentPage;
-  console.log(current);
     var wrapper = document.getElementById('wrapper');
     wrapper.innerHTML = ''
     wrapper.innerHTML += `<button value=${current} class='pagination-button' >${current}</button>`;
@@ -961,11 +960,11 @@ const pageButton = (currentPage) => {
     if(currentPage.numberOfPage > 1){
     wrapper.innerHTML += `<button value=${current+1} id='buttonnext' class='pagination-button' >${current+1}</button>`;
 
-    let buttonnext = document.getElementById('buttonnext');
-    buttonnext.addEventListener('click', function() {
-        current = $(this).val();
-        console.log(current);
-    });
+    // let buttonnext = document.getElementById('buttonnext');
+    // buttonnext.addEventListener('click', function() {
+    //     current = $(this).val();
+    //     console.log(current);
+    // });
   }
 
 }
@@ -1112,7 +1111,6 @@ function activarTab(unTab) {
 
 //Tab menu Comments datatable
 function setDataTableArticle(table, dataSet) {
-console.log("setDataTableArticle",dataSet);
     table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
     let response = [];
     //response = manageDataArticles(dataSet);
@@ -1142,7 +1140,6 @@ console.log("setDataTableArticle",dataSet);
         let title = document.querySelector('#ModalCommentTitle');
         title.innerHTML = data.title;
         pagination.querySet = data.posts;
-
         var dataModal = paginationModal(pagination);
 
         buildModal(dataModal.pageList);
@@ -1153,7 +1150,7 @@ console.log("setDataTableArticle",dataSet);
         $('.pagination-button').on('click', function() {
             $('#ModalCommentContent').empty()
             var pagination = {
-                'querySet': data.posts[0],
+                'querySet': data.posts,
                 'pageList': new Array(),
                 'currentPage': pagemodal,
                 'numberPerPage': 10,
@@ -1169,14 +1166,15 @@ console.log("setDataTableArticle",dataSet);
         $('.buttonsnextprev').on('click', function() {
             $('#ModalCommentContent').empty()
             var pagination = {
-                'querySet': data.posts[0],
+                'querySet': data.posts,
                 'pageList': new Array(),
                 'currentPage': pagemodal,
                 'numberPerPage': 10,
                 'numberOfPage': 0,
             }
             let pageActive = $(this)
-            pageActive.addClass("pagination-button-active")
+            pageActive.addClass("pagination-button-active");
+            console.log(pagination);
             var dataModal = paginationModal(pagination);
             buildModal(dataModal.pageList);
         });
