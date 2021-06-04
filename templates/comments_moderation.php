@@ -8,9 +8,9 @@
      <div class="modal-content" id="modalcontentmod">
        <div class="modal-header">
          <button  type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-         <label  class="blog-name"></label>
+          <label id="ModalModerationTitle" class="blog-name"></label>
        </div>
-       <div class="modal-body">
+       <div class="modal-body" id="ModalModContent">
        </div>
        <div id="modalFooterModeration" class="modal-footer">
         <div class="paginationdiv">

@@ -7,6 +7,7 @@ var status = null;
 var articles = {};
 var copyArticle = {};
 var topicsByComents = [];
+var commentsByTopicsAuthorized = [];
 wpComments = structureWpComments();
 let optionalCidsCopy = optionalCids.map((x) => x);
 var contadorGlobal = 0;
@@ -732,9 +733,7 @@ function manageDataModeration(dataSet) {
 function manageDataArticles(dataSet) {
   let response = [];
   for (let i = 0; i < dataSet.length; i++) {
-    console.log('entro en ciclo de manageDataArticles');
     let count = dataSet[i].posts.length;
-    console.log('manageDataArticles couunt', dataSet);
     dataSet[i].count_comments = count;
     let posts = [];
     posts.push(dataSet[i][1].posts);
@@ -745,6 +744,7 @@ function manageDataArticles(dataSet) {
 }
 
 function setDataTableModeration(table, dataSet) {
+  console.log(dataSet);
   table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
 
   let response = manageDataModeration(dataSet);
@@ -755,22 +755,53 @@ function setDataTableModeration(table, dataSet) {
       bDestroy: true,
     });
 
-    // //on click in arrow of row
-    // $('#table_moderation tbody').on('click', 'td.details-control', function() {
-    //     var tr = $(this).closest('tr');
-    //     var row = tables.row(tr);
-    //
-    //     if (row.child.isShown()) {
-    //         // This row is already open - close it
-    //         row.child.hide();
-    //         tr.removeClass('shown');
-    //     } else {
-    //         // Open this row
-    //         row.child(formatChildModeration(row.data())).show();
-    //         tr.addClass('shown');
-    //     }
-    // });
-    return tables;
+    //on click in arrow of row
+  $('#table_moderation tbody').on('click', 'button', function () {
+    let data = tables.row($(this).parents('tr')).data();
+    let title = document.querySelector('#ModalModerationTitle');
+    title.innerHTML = data.title;
+
+    pagination.querySet = data.posts;
+    var dataModal = paginationModal(pagination);
+
+    buildModalModeration(dataModal.pageList);
+
+    if (pagination.currentPage === 1) pageButton(pagination);
+
+    $('.pagination-button').on('click', function () {
+      $('#ModalModContent').empty();
+      var pagination = {
+        querySet: data.posts,
+        pageList: new Array(),
+        currentPage: pagemodal,
+        numberPerPage: 10,
+        numberOfPage: 0,
+      };
+      pagination.currentPage = $(this).val();
+      let pageActive = $(this);
+      pageActive.addClass('pagination-button-active');
+      var dataModal = paginationModal(pagination);
+
+      buildModalModeration(dataModal.pageList);
+    });
+
+    $('.buttonsnextprev').on('click', function () {
+      $('#ModalModContent').empty();
+      var pagination = {
+        querySet: data.posts,
+        pageList: new Array(),
+        currentPage: pagemodal,
+        numberPerPage: 10,
+        numberOfPage: 0,
+      };
+      let pageActive = $(this);
+      pageActive.addClass('pagination-button-active');
+      var dataModal = paginationModal(pagination);
+      buildModalModeration(dataModal.pageList);
+    });
+  });
+
+  return tables;
   }
 }
 
@@ -860,7 +891,6 @@ function paginationModal(pagination1) {
   var end = begin + pagination1.numberPerPage;
   let pageList1 = pagination1.querySet;
   pagination.pageList = pageList1.slice(begin, end);
-  console.log(pagination.pageList);
   pagination.numberOfPage = Math.ceil(pagination1.querySet.length / pagination1.numberPerPage);
   return {
     pageList: pagination.pageList,
@@ -872,6 +902,7 @@ function paginationModal(pagination1) {
 const buildModal = (data) => {
   let iteration = data;
   for (let k = 0; k < iteration.length; k++) {
+    if(iteration[k].deleted === 0){
     let cont = document.getElementById('ModalCommentContent');
     let userDataComment = document.createElement('div');
     userDataComment.setAttribute('class', 'section-complete');
@@ -903,7 +934,6 @@ const buildModal = (data) => {
       buttonReadMore.setAttribute('class', 'btn-readon');
       buttonReadMore.value = 'Read More';
       buttonReadMore.setAttribute('onclick', 'clickReadMore(this)');
-      //console.log(commentEdited[0]);
     }
     userDataComment.appendChild(buttonReadMore);
     //button view
@@ -927,12 +957,75 @@ const buildModal = (data) => {
     //userDataComment.appendChild(separator);
     cont.appendChild(userDataComment);
     cont.appendChild(separator);
+    }
+  }
+};
+
+const buildModalModeration = (data) => {
+  let iteration = data[0];
+  for (let k = 0; k < iteration.length; k++) {
+    if(iteration[k].deleted === 0){
+      console.log(iteration[k]);
+    let cont = document.getElementById('ModalModContent');
+    let userDataComment = document.createElement('div');
+    userDataComment.setAttribute('class', 'section-complete');
+    //Create the picture of user
+    let userImg = document.createElement('img');
+    userImg.setAttribute('src', 'https://i.blogs.es/2d5264/facebook-image/450_1000.jpg');
+    userImg.setAttribute('class', 'user-picture');
+    userImg.setAttribute('alt', 'This is an user perfil picture');
+    userDataComment.appendChild(userImg);
+    //Create the name of user
+    let userName = document.createElement('label');
+    let textUser = document.createTextNode(iteration[k].user['username']);
+    userName.setAttribute('class', 'name-user-m');
+    userName.setAttribute('id', iteration[k].pid);
+    userName.appendChild(textUser);
+    userDataComment.appendChild(userName);
+    //Create the comment of the user
+    let commentUser = document.createElement('p');
+    let texComment = document.createTextNode(iteration[k].content);
+    commentUser.appendChild(texComment);
+    commentUser.setAttribute('class', 'comment-user');
+    userDataComment.appendChild(commentUser);
+    //Create the buttons
+    let buttonReadMore = document.createElement('input');
+    buttonReadMore.setAttribute('class', 'btn-readoff');
+    if (countChar(iteration[k].content) > 1000) {
+      // let commentEdited  = cutComment(iteration[k].content);
+      // texComment = document.createTextNode(commentEdited[0]);
+      buttonReadMore.setAttribute('class', 'btn-readon');
+      buttonReadMore.value = 'Read More';
+      buttonReadMore.setAttribute('onclick', 'clickReadMore(this)');
+    }
+    userDataComment.appendChild(buttonReadMore);
+    //button view
+    let button2 = document.createElement('button');
+    button2.setAttribute('onclick', 'clickButtonView(this)');
+    button2.setAttribute('class', 'buttonview');
+    userDataComment.appendChild(button2);
+    // button trash
+    let button1 = document.createElement('button');
+    button1.setAttribute('class', 'buttonTrash');
+    button1.setAttribute('onclick', 'clickButtonView(this)');
+    userDataComment.appendChild(button1);
+    //button warning
+    let button3 = document.createElement('button');
+    button3.setAttribute('onclick', 'clickButtonView(this)');
+    button3.setAttribute('class', 'buttonWarning');
+    userDataComment.appendChild(button3);
+    //Create the separator
+    let separator = document.createElement('div');
+    separator.setAttribute('class', 'separator-m');
+    //userDataComment.appendChild(separator);
+    cont.appendChild(userDataComment);
+    cont.appendChild(separator);
+    }
   }
 };
 //button > in modal - comments dataTable
 function nextPage() {
   if (pagemodal < pagination.numberOfPage) {
-    console.log('>', pagemodal);
     var wrapper = document.getElementById('wrapper');
     wrapper.innerHTML = '';
     wrapper.innerHTML += `<button value=${pagemodal} class='pagination-button' >${pagemodal}</button>`;
@@ -944,7 +1037,6 @@ function nextPage() {
 //button < in modal - comments dataTable
 function previousPage() {
   if (pagemodal > 1) {
-    console.log('<', pagemodal);
     var wrapper = document.getElementById('wrapper');
     wrapper.innerHTML = '';
     wrapper.innerHTML += `<button value=${pagemodal - 1} class='pagination-button' >${pagemodal - 1}</button>`;
@@ -957,7 +1049,6 @@ function previousPage() {
 //function used for pagination of the modal in
 //comments datatable
 const pageButton = (currentPage) => {
-  console.log('entra en pageButton');
   let current = currentPage.currentPage;
   var wrapper = document.getElementById('wrapper');
   wrapper.innerHTML = '';
@@ -981,7 +1072,6 @@ const fillPostPending = () => {
   //This for will fill the post window.
   for (let k = 0; k < posts; k++) {
     let cont = document.getElementById('posts-container');
-    // console.log(cont);
     let userDataComment = document.createElement('div');
     userDataComment.setAttribute('class', 'each-post');
 
@@ -1113,10 +1203,9 @@ function activarTab(unTab) {
 
 //Tab menu Comments datatable
 function setDataTableArticle(table, dataSet) {
+  commentsByTopicsAuthorized= dataSet;
   table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
   let response = [];
-  //response = manageDataArticles(dataSet);
-  //console.log("setDataTableArticle",response);
   var tables = $(table).DataTable({
     data: dataSet,
     columns: [{ data: 'title' }, { data: 'postcount' }, { defaultContent: "<button class='buttonComment glyphicon glyphicon-new-window' data-toggle='modal' data-target='#ModalComments'></button>" }],
@@ -1171,7 +1260,6 @@ function setDataTableArticle(table, dataSet) {
       };
       let pageActive = $(this);
       pageActive.addClass('pagination-button-active');
-      console.log(pagination);
       var dataModal = paginationModal(pagination);
       buildModal(dataModal.pageList);
     });
@@ -1213,7 +1301,7 @@ function buildCommentsChildren(dataSet, pID) {
 //--- END OF DataTable COMMENTS AND MODAL -------
 
 function formatChildModeration(comment) {
-  //console.log(comment.posts[0][0].username);
+  console.log(comment);
   let response = comment.posts[0];
   let userDataComment;
 
@@ -1374,7 +1462,7 @@ function selectTopicsByCategoryAuth(categories) {
       })
       .then((res) => res.json())
       .then(function (res) {
-        match_topics_comments(res);
+        topicsFilteredByDeleted(res);
 
         if (status == '403') {
           // NOT AUTHORIZED
@@ -1385,7 +1473,7 @@ function selectTopicsByCategoryAuth(categories) {
   }
 }
 
-const match_topics_comments = (data) => {
+const topicsFilteredByDeleted = (data) => {
   let topics = data.topics;
   let topicsAuth = [];
 
@@ -1397,6 +1485,7 @@ const match_topics_comments = (data) => {
   topicsAtuhorized(topicsAuth);
 };
 
+//the comments by topics for the dataTable Articles
 const topicsAtuhorized = async (topics) => {
   let flag = 0;
 
@@ -1429,6 +1518,7 @@ const topicsAtuhorized = async (topics) => {
 
 //--When a category id is selectedCid
 function selectCategoryId() {
+
   let button = document.getElementsByClassName('category-button');
   let cid = document.getElementById('categoryCommentss').value;
 
@@ -1442,14 +1532,15 @@ function selectCategoryId() {
 //When the table is filter by category
 const selectedCid = (cid) => {
   $('#articles').empty();
-
-  let dataSet = articles;
+  console.log(cid);
+console.log(commentsByTopicsAuthorized);
   let response = [];
 
-  for (let i = 0; i < dataSet.length; i++) {
-    if (dataSet[i][1].topic.cid == cid) response = dataSet;
+  for (let i = 0; i < commentsByTopicsAuthorized.length; i++) {
+    if (commentsByTopicsAuthorized[i].cid == cid)
+    response.push(commentsByTopicsAuthorized[i]);
   }
-
+console.log(response);
   setDataTableArticle(document.querySelector('#articles'), response);
 };
 
