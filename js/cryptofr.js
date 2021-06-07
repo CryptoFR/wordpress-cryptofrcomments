@@ -900,6 +900,7 @@ function paginationModal(pagination1) {
 
 //Build Modal in Datatable Comments
 const buildModal = (data) => {
+  console.log("buildModal",data);
   let iteration = data;
   for (let k = 0; k < iteration.length; k++) {
     if(iteration[k].deleted === 0){
@@ -962,10 +963,10 @@ const buildModal = (data) => {
 };
 
 const buildModalModeration = (data) => {
+  console.log("buildModalModeration", data);
+
   let iteration = data[0];
   for (let k = 0; k < iteration.length; k++) {
-    if(iteration[k].deleted === 0){
-      console.log(iteration[k]);
     let cont = document.getElementById('ModalModContent');
     let userDataComment = document.createElement('div');
     userDataComment.setAttribute('class', 'section-complete');
@@ -977,7 +978,7 @@ const buildModalModeration = (data) => {
     userDataComment.appendChild(userImg);
     //Create the name of user
     let userName = document.createElement('label');
-    let textUser = document.createTextNode(iteration[k].user['username']);
+    let textUser = document.createTextNode(iteration[k].username);
     userName.setAttribute('class', 'name-user-m');
     userName.setAttribute('id', iteration[k].pid);
     userName.appendChild(textUser);
@@ -1021,7 +1022,6 @@ const buildModalModeration = (data) => {
     cont.appendChild(userDataComment);
     cont.appendChild(separator);
     }
-  }
 };
 //button > in modal - comments dataTable
 function nextPage() {

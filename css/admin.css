@@ -1250,6 +1250,10 @@
             min-width: 50em;
         }
 
+        #modalcontentmod{
+            min-width: 50em;
+        }
+
         @media only screen and (max-width: 769px) {
             #modalcontent {
                 min-width: 100% !important;
@@ -1267,6 +1271,14 @@
             overflow-y: scroll;
             height: 30em;
         }
+
+        #ModalModContent {
+            padding: 30px 40px;
+            overflow-y: scroll;
+            height: 30em;
+        }
+
+
 
         .section-complete {
             width: 85%;
