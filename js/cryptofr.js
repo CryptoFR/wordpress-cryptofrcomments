@@ -744,7 +744,8 @@ function manageDataArticles(dataSet) {
 }
 
 function setDataTableModeration(table, dataSet) {
-  console.log(dataSet);
+  let textPending = document.createTextNode(dataSet.length);
+  document.querySelector('#modEntries').appendChild(textPending);
   table.innerHTML = '<thead style="display:none"></thead><tbody></tbody>';
 
   let response = manageDataModeration(dataSet);
@@ -1003,7 +1004,7 @@ const buildModalModeration = (data) => {
     //button view
     let button2 = document.createElement('button');
     button2.setAttribute('onclick', 'clickButtonView(this)');
-    button2.setAttribute('class', 'buttonview');
+    button2.setAttribute('class', 'buttonViewOrange');
     userDataComment.appendChild(button2);
     // button trash
     let button1 = document.createElement('button');
@@ -1694,6 +1695,19 @@ $(document).on('click', '.section-complete .buttonWarningOrange', function (e) {
     });
   } else {
     event.target.className = 'buttonWarning';
+  }
+});
+
+$(document).on('click', '.section-complete .buttonview', function (e) {
+  var parent = event.target.parentElement;
+  var child = parent.getElementsByClassName('name-user-m')[0].id;
+  if (window.confirm('Do you really want to approve this comment?')) {
+    // newFetch(nodeBBURL + '/comments/reject/' + child, {}, localStorage.token).then(function () {
+    //   //windowSpam(articles);
+      location.reload();
+    }
+  else {
+    event.target.className = 'buttonViewOrange';
   }
 });
 

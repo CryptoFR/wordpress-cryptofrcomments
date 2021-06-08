@@ -1,6 +1,8 @@
 <!-- <div class="space1"></div> -->
   <div class="container-panel-rules">
-    <label class="label2">There are new comments pending moderation in 3 entries</label>
+    <label class="label2">There are new comments pending moderation in</label>
+    <label class="label2" id="modEntries"></label>
+    <label class="label2">entries</label>
   <table id="table_moderation" class="table table-striped table-bordered" width="100%"></table>
   <!--All these element are for Modal-->
   <div class="modal" tabindex="-1" role="dialog" id="ModalModeration">
