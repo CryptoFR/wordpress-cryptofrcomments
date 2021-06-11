@@ -1286,6 +1286,13 @@
             background-attachment: white;
         }
 
+        .section-complete-child{
+          margin-left: 15%;
+          width: 85%;
+          font-family: sans-serif;
+          background-attachment: white;
+      }
+
         .user-picture {
             width: 30px;
             height: 22px;

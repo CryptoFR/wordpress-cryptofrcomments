@@ -901,67 +901,140 @@ function paginationModal(pagination1) {
 
 //Build Modal in Datatable Comments
 const buildModal = (data) => {
-  console.log("buildModal",data);
   let iteration = data;
   for (let k = 0; k < iteration.length; k++) {
     if(iteration[k].deleted === 0){
-    let cont = document.getElementById('ModalCommentContent');
-    let userDataComment = document.createElement('div');
-    userDataComment.setAttribute('class', 'section-complete');
-    //Create the picture of user
-    let userImg = document.createElement('img');
-    userImg.setAttribute('src', 'https://i.blogs.es/2d5264/facebook-image/450_1000.jpg');
-    userImg.setAttribute('class', 'user-picture');
-    userImg.setAttribute('alt', 'This is an user perfil picture');
-    userDataComment.appendChild(userImg);
-    //Create the name of user
-    let userName = document.createElement('label');
-    let textUser = document.createTextNode(iteration[k].user['username']);
-    userName.setAttribute('class', 'name-user-m');
-    userName.setAttribute('id', iteration[k].pid);
-    userName.appendChild(textUser);
-    userDataComment.appendChild(userName);
-    //Create the comment of the user
-    let commentUser = document.createElement('p');
-    let texComment = document.createTextNode(iteration[k].content);
-    commentUser.appendChild(texComment);
-    commentUser.setAttribute('class', 'comment-user');
-    userDataComment.appendChild(commentUser);
-    //Create the buttons
-    let buttonReadMore = document.createElement('input');
-    buttonReadMore.setAttribute('class', 'btn-readoff');
-    if (countChar(iteration[k].content) > 1000) {
-      // let commentEdited  = cutComment(iteration[k].content);
-      // texComment = document.createTextNode(commentEdited[0]);
-      buttonReadMore.setAttribute('class', 'btn-readon');
-      buttonReadMore.value = 'Read More';
-      buttonReadMore.setAttribute('onclick', 'clickReadMore(this)');
-    }
-    userDataComment.appendChild(buttonReadMore);
-    //button view
-    let button2 = document.createElement('button');
-    button2.setAttribute('onclick', 'clickButtonView(this)');
-    button2.setAttribute('class', 'buttonview');
-    userDataComment.appendChild(button2);
-    // button trash
-    let button1 = document.createElement('button');
-    button1.setAttribute('class', 'buttonTrash');
-    button1.setAttribute('onclick', 'clickButtonView(this)');
-    userDataComment.appendChild(button1);
-    //button warning
-    let button3 = document.createElement('button');
-    button3.setAttribute('onclick', 'clickButtonView(this)');
-    button3.setAttribute('class', 'buttonWarning');
-    userDataComment.appendChild(button3);
-    //Create the separator
-    let separator = document.createElement('div');
-    separator.setAttribute('class', 'separator-m');
-    //userDataComment.appendChild(separator);
-    cont.appendChild(userDataComment);
-    cont.appendChild(separator);
+      if (typeof iteration[k].parent == 'undefined'){
+      let cont = document.getElementById('ModalCommentContent');
+      let userDataComment = document.createElement('div');
+      userDataComment.setAttribute('class', 'section-complete');
+      //Create the picture of user
+      let userImg = document.createElement('img');
+      userImg.setAttribute('src', 'https://i.blogs.es/2d5264/facebook-image/450_1000.jpg');
+      userImg.setAttribute('class', 'user-picture');
+      userImg.setAttribute('alt', 'This is an user perfil picture');
+      userDataComment.appendChild(userImg);
+      //Create the name of user
+      let userName = document.createElement('label');
+      let textUser = document.createTextNode(iteration[k].user['username']);
+      userName.setAttribute('class', 'name-user-m');
+      userName.setAttribute('id', iteration[k].pid);
+      userName.appendChild(textUser);
+      userDataComment.appendChild(userName);
+      //Create the comment of the user
+      let commentUser = document.createElement('p');
+      let texComment = document.createTextNode(iteration[k].content);
+      commentUser.appendChild(texComment);
+      commentUser.setAttribute('class', 'comment-user');
+      userDataComment.appendChild(commentUser);
+      //Create the buttons
+      let buttonReadMore = document.createElement('input');
+      buttonReadMore.setAttribute('class', 'btn-readoff');
+      if (countChar(iteration[k].content) > 1000) {
+        // let commentEdited  = cutComment(iteration[k].content);
+        // texComment = document.createTextNode(commentEdited[0]);
+        buttonReadMore.setAttribute('class', 'btn-readon');
+        buttonReadMore.value = 'Read More';
+        buttonReadMore.setAttribute('onclick', 'clickReadMore(this)');
+      }
+      userDataComment.appendChild(buttonReadMore);
+      //button view
+      let button2 = document.createElement('button');
+      button2.setAttribute('onclick', 'clickButtonView(this)');
+      button2.setAttribute('class', 'buttonview');
+      userDataComment.appendChild(button2);
+      // button trash
+      let button1 = document.createElement('button');
+      button1.setAttribute('class', 'buttonTrash');
+      button1.setAttribute('onclick', 'clickButtonView(this)');
+      userDataComment.appendChild(button1);
+      //button warning
+      let button3 = document.createElement('button');
+      button3.setAttribute('onclick', 'clickButtonView(this)');
+      button3.setAttribute('class', 'buttonWarning');
+      userDataComment.appendChild(button3);
+      //Create the separator
+      let separator = document.createElement('div');
+      separator.setAttribute('class', 'separator-m');
+      //userDataComment.appendChild(separator);
+      cont.appendChild(userDataComment);
+      cont.appendChild(separator);
+      buildCommentsChildren2(iteration, iteration[k].pid);
+      }
     }
   }
+  buildCommentsChildren2(iteration);
 };
+
+const buildCommentsChildren2 = (iteration, pid) =>{
+  console.log("iteration",iteration);
+
+  for (let k = 0; iteration.length; k++) {
+      //console.log("iteration",iteration[k]);
+    if (typeof iteration[k].toPid == 'undefined'){
+      console.log("iteration",iteration[k]);
+    }
+    else{
+      if (iteration[k].toPid === pid){
+      let cont = document.getElementById('ModalCommentContent');
+      let userDataComment = document.createElement('div');
+      userDataComment.setAttribute('class', 'section-complete-child');
+      //Create the picture of user
+      let userImg = document.createElement('img');
+      userImg.setAttribute('src', 'https://i.blogs.es/2d5264/facebook-image/450_1000.jpg');
+      userImg.setAttribute('class', 'user-picture');
+      userImg.setAttribute('alt', 'This is an user perfil picture');
+      userDataComment.appendChild(userImg);
+      //Create the name of user
+      let userName = document.createElement('label');
+      let textUser = document.createTextNode(iteration[k].user['username']);
+      userName.setAttribute('class', 'name-user-m');
+      userName.setAttribute('id', iteration.pid);
+      userName.appendChild(textUser);
+      userDataComment.appendChild(userName);
+      //Create the comment of the user
+      let commentUser = document.createElement('p');
+      let texComment = document.createTextNode(iteration[k].content);
+      commentUser.appendChild(texComment);
+      commentUser.setAttribute('class', 'comment-user');
+      userDataComment.appendChild(commentUser);
+      //Create the buttons
+      let buttonReadMore = document.createElement('input');
+      buttonReadMore.setAttribute('class', 'btn-readoff');
+      if (countChar(iteration[k].content) > 1000) {
+        // let commentEdited  = cutComment(iteration[k].content);
+        // texComment = document.createTextNode(commentEdited[0]);
+        buttonReadMore.setAttribute('class', 'btn-readon');
+        buttonReadMore.value = 'Read More';
+        buttonReadMore.setAttribute('onclick', 'clickReadMore(this)');
+      }
+      userDataComment.appendChild(buttonReadMore);
+      //button view
+      let button2 = document.createElement('button');
+      button2.setAttribute('onclick', 'clickButtonView(this)');
+      button2.setAttribute('class', 'buttonview');
+      userDataComment.appendChild(button2);
+      // button trash
+      let button1 = document.createElement('button');
+      button1.setAttribute('class', 'buttonTrash');
+      button1.setAttribute('onclick', 'clickButtonView(this)');
+      userDataComment.appendChild(button1);
+      //button warning
+      let button3 = document.createElement('button');
+      button3.setAttribute('onclick', 'clickButtonView(this)');
+      button3.setAttribute('class', 'buttonWarning');
+      userDataComment.appendChild(button3);
+      //Create the separator
+      let separator = document.createElement('div');
+      separator.setAttribute('class', 'separator-m');
+      userDataComment.appendChild(separator);
+      cont.appendChild(userDataComment);
+      cont.appendChild(separator);
+    }
+  }
+
+}
+}
 
 const buildModalModeration = (data) => {
   console.log("buildModalModeration", data);
