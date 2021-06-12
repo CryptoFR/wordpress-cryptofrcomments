@@ -959,6 +959,7 @@ const buildModal = (data) => {
       //userDataComment.appendChild(separator);
       cont.appendChild(userDataComment);
       cont.appendChild(separator);
+
       buildCommentsChildren2(iteration, iteration[k].pid);
       }
     }
@@ -967,15 +968,11 @@ const buildModal = (data) => {
 };
 
 const buildCommentsChildren2 = (iteration, pid) =>{
-  console.log("iteration",iteration);
 
-  for (let k = 0; iteration.length; k++) {
-      //console.log("iteration",iteration[k]);
-    if (typeof iteration[k].toPid == 'undefined'){
-      console.log("iteration",iteration[k]);
-    }
-    else{
-      if (iteration[k].toPid === pid){
+  for (let k = 0; k < iteration.length; k++) {
+    if(iteration[k].deleted === 0){
+      if ((typeof iteration[k].toPid != 'undefined') && (iteration[k].toPid == pid)){
+
       let cont = document.getElementById('ModalCommentContent');
       let userDataComment = document.createElement('div');
       userDataComment.setAttribute('class', 'section-complete-child');
@@ -1030,11 +1027,11 @@ const buildCommentsChildren2 = (iteration, pid) =>{
       userDataComment.appendChild(separator);
       cont.appendChild(userDataComment);
       cont.appendChild(separator);
+      }
     }
   }
+}
 
-}
-}
 
 const buildModalModeration = (data) => {
   console.log("buildModalModeration", data);
