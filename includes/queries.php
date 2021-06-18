@@ -2,6 +2,13 @@
 
 global $wpdb;
 
+// -- GET optionalCids
+$table_name = 'cryptofrcomments_cids';
+$sqlCommand="SELECT DISTINCT cid FROM ".$table_name;
+$wpdb->query($sqlCommand);
+$optionalCidsArray=$wpdb->last_result;
+$optionalCids=json_encode($wpdb->last_result);
+
 // -- UPDATE CID ON CRYPTOFRCOMMENTS PLUGIN CONFIG WP (DEFAULT POST CATEGORY)
 if (isset($_POST['defaultCid'])) {
   if (ctype_digit($_POST['cid'])){
@@ -17,9 +24,17 @@ if (isset($_POST['optionalCid'])) {
   if (ctype_digit($_POST['optionalCid'])){
     $cid= $_POST['optionalCid'];
     $option = (int)$cid;
-    echo "imprime" . var_dump($option);
-    $sqlCommand ="INSERT INTO cryptofrcomments_cids (cid) VALUES (%s);";
-    $wpdb->query($wpdb->prepare($sqlCommand, $option ));
+    $flagduplicated=0;
+
+    foreach ($optionalCidsArray as $value){
+      $array[] = $value->cid;
+      if($option == $value->cid)
+        $flagduplicated=1;
+    }
+    if($flagduplicated == 1){
+      $sqlCommand ="INSERT INTO cryptofrcomments_cids (cid) VALUES (%s);";
+      $wpdb->query($wpdb->prepare($sqlCommand, $option ));
+    }
   }
 }
 
@@ -196,12 +211,7 @@ $wpdb->query($sqlCommand);
 $wpComments=json_encode($wpdb->last_result);
 
 
-// -- GET COMMENTS
-$table_name = 'cryptofrcomments_cids';
-$sqlCommand="SELECT cid FROM ".$table_name;
-$wpdb->query($sqlCommand);
-$optionalCidsArray=$wpdb->last_result;
-$optionalCids=json_encode($wpdb->last_result);
+
 
 
 ?>

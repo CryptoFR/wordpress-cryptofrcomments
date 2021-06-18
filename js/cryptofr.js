@@ -953,20 +953,24 @@ const buildModal = (data) => {
       button3.setAttribute('onclick', 'clickButtonView(this)');
       button3.setAttribute('class', 'buttonWarning');
       userDataComment.appendChild(button3);
+      //Create vertical separator
+      let verticalSeparator = document.createElement('div');
+      verticalSeparator.setAttribute('class', 'vertical-line');
       //Create the separator
       let separator = document.createElement('div');
       separator.setAttribute('class', 'separator-m');
-      //userDataComment.appendChild(separator);
       cont.appendChild(userDataComment);
-      cont.appendChild(separator);
+      cont.appendChild(verticalSeparator);
 
       buildCommentsChildren2(iteration, iteration[k].pid);
+      cont.appendChild(separator);
       }
     }
   }
   buildCommentsChildren2(iteration);
 };
 
+//Build Child Comments of Comments in Comments Datatable
 const buildCommentsChildren2 = (iteration, pid) =>{
 
   for (let k = 0; k < iteration.length; k++) {
@@ -976,10 +980,14 @@ const buildCommentsChildren2 = (iteration, pid) =>{
       let cont = document.getElementById('ModalCommentContent');
       let userDataComment = document.createElement('div');
       userDataComment.setAttribute('class', 'section-complete-child');
+      //create line to vertical line
+      let lineChild = document.createElement('div');
+      lineChild.setAttribute('class', 'line-child');
+      userDataComment.appendChild(lineChild);
       //Create the picture of user
       let userImg = document.createElement('img');
       userImg.setAttribute('src', 'https://i.blogs.es/2d5264/facebook-image/450_1000.jpg');
-      userImg.setAttribute('class', 'user-picture');
+      userImg.setAttribute('class', 'user-picture-child');
       userImg.setAttribute('alt', 'This is an user perfil picture');
       userDataComment.appendChild(userImg);
       //Create the name of user
@@ -993,7 +1001,7 @@ const buildCommentsChildren2 = (iteration, pid) =>{
       let commentUser = document.createElement('p');
       let texComment = document.createTextNode(iteration[k].content);
       commentUser.appendChild(texComment);
-      commentUser.setAttribute('class', 'comment-user');
+      commentUser.setAttribute('class', 'comment-user-child');
       userDataComment.appendChild(commentUser);
       //Create the buttons
       let buttonReadMore = document.createElement('input');
@@ -1024,9 +1032,9 @@ const buildCommentsChildren2 = (iteration, pid) =>{
       //Create the separator
       let separator = document.createElement('div');
       separator.setAttribute('class', 'separator-m');
-      userDataComment.appendChild(separator);
+      //userDataComment.appendChild(separator);
       cont.appendChild(userDataComment);
-      cont.appendChild(separator);
+      //cont.appendChild(separator);
       }
     }
   }
