@@ -901,6 +901,7 @@ function paginationModal(pagination1) {
 
 //Build Modal in Datatable Comments
 const buildModal = (data) => {
+  console.log(data);
   let iteration = data;
   for (let k = 0; k < iteration.length; k++) {
     if(iteration[k].deleted === 0){
@@ -1042,7 +1043,6 @@ const buildCommentsChildren2 = (iteration, pid) =>{
 
 
 const buildModalModeration = (data) => {
-  console.log("buildModalModeration", data);
 
   let iteration = data[0];
   for (let k = 0; k < iteration.length; k++) {
@@ -1280,6 +1280,42 @@ function activarTab(unTab) {
   } catch (e) {}
 }
 
+function manageDataArticlesPosts(posts) {
+
+  let data = [];
+    for (let k = 0; k < posts.length; k++) {
+      if(posts[k].deleted === 0){
+        if (typeof posts[k].parent == 'undefined'){
+          data.push(posts[k]);
+          for (let i = 0; i < posts.length; i++) {
+              if ((typeof posts[i].toPid != 'undefined') && (posts[i].toPid == posts[k].pid)){
+                  data.push(posts[i]);
+              }
+            }
+        }
+      }
+    }
+    return data;
+}
+
+// function findPostbyTopicPaginated(topic, page){
+//   newFetchGet(nodeBBURL + '/api/topic/' + topic + '?page='+page, localStorage.token)
+//     .then((res) => {
+//       status = res.status;
+//       return res;
+//     })
+//     .then((res) => res.json())
+//     .then(function (res) {
+//       console.log(res);
+//
+//       if (status != '200') {
+//         // NOT AUTHORIZED
+//         document.querySelector('.error-cryptofr-auth').style.display = 'block';
+//         return;
+//       }
+//     });
+// }
+
 //Tab menu Comments datatable
 function setDataTableArticle(table, dataSet) {
   commentsByTopicsAuthorized= dataSet;
@@ -1303,9 +1339,12 @@ function setDataTableArticle(table, dataSet) {
   //onclick function to show modal for every row
   $('#articles tbody').on('click', 'button', function () {
     let data = tables.row($(this).parents('tr')).data();
+    console.log(data);
+
+    let dataManaged = manageDataArticlesPosts(data.posts);
     let title = document.querySelector('#ModalCommentTitle');
     title.innerHTML = data.title;
-    pagination.querySet = data.posts;
+    pagination.querySet = dataManaged;
     var dataModal = paginationModal(pagination);
 
     buildModal(dataModal.pageList);
@@ -1315,7 +1354,7 @@ function setDataTableArticle(table, dataSet) {
     $('.pagination-button').on('click', function () {
       $('#ModalCommentContent').empty();
       var pagination = {
-        querySet: data.posts,
+        querySet: dataManaged,
         pageList: new Array(),
         currentPage: pagemodal,
         numberPerPage: 10,
@@ -1331,7 +1370,7 @@ function setDataTableArticle(table, dataSet) {
     $('.buttonsnextprev').on('click', function () {
       $('#ModalCommentContent').empty();
       var pagination = {
-        querySet: data.posts,
+        querySet: dataManaged,
         pageList: new Array(),
         currentPage: pagemodal,
         numberPerPage: 10,
@@ -1576,6 +1615,7 @@ const topicsAtuhorized = async (topics) => {
       })
       .then((res) => res.json())
       .then(function (res) {
+        console.log(res);
         flag++;
         if (status != '200') {
           // NOT AUTHORIZED
@@ -1594,6 +1634,30 @@ const topicsAtuhorized = async (topics) => {
     await sleep(1);
   }
 };
+
+// //the comments by topics for the dataTable Articles
+// const topicsAtuhorized1 = async (topics) => {
+//
+//   await Promise.all(
+//               [].map(async (element, index) => {
+//               })
+//             );
+//   newFetchGet(nodeBBURL + '/api/topic/' + topic.tid + '?page=1', localStorage.token)
+//   .then(Response => jsonResponse.json())
+//   .then(ResponseJson => {
+//     Promise.all(
+//       ResponseJson.posts.map(filmUrl =>
+//         fetch(filmUrl).then(filmResponse => filmResponse.json())
+//       )
+//     ).then(films => {
+//       console.log(films)
+//     })
+//   })
+//
+//
+// };
+
+
 
 //--When a category id is selectedCid
 function selectCategoryId() {

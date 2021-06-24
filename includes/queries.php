@@ -23,7 +23,7 @@ if (isset($_POST['defaultCid'])) {
 if (isset($_POST['optionalCid'])) {
   if (ctype_digit($_POST['optionalCid'])){
     $cid= $_POST['optionalCid'];
-    $option = (int)$cid;
+    $option = $cid;
     $flagduplicated=0;
 
     foreach ($optionalCidsArray as $value){
@@ -32,6 +32,7 @@ if (isset($_POST['optionalCid'])) {
         $flagduplicated=1;
     }
     if($flagduplicated == 1){
+      echo "entro en el flag true";
       $sqlCommand ="INSERT INTO cryptofrcomments_cids (cid) VALUES (%s);";
       $wpdb->query($wpdb->prepare($sqlCommand, $option ));
     }
