@@ -11,6 +11,7 @@ var commentsByTopicsAuthorized = [];
 wpComments = structureWpComments();
 let optionalCidsCopy = optionalCids.map((x) => x);
 var contadorGlobal = 0;
+const topicsAtuhorizedRes  = [];
 
 optionalCidsCopy.push({ cid: cid });
 console.log('optionalCidsCopy', optionalCidsCopy);
@@ -1299,21 +1300,10 @@ function manageDataArticlesPosts(posts) {
 }
 
 // function findPostbyTopicPaginated(topic, page){
-//   newFetchGet(nodeBBURL + '/api/topic/' + topic + '?page='+page, localStorage.token)
-//     .then((res) => {
-//       status = res.status;
-//       return res;
-//     })
-//     .then((res) => res.json())
-//     .then(function (res) {
-//       console.log(res);
-//
-//       if (status != '200') {
-//         // NOT AUTHORIZED
-//         document.querySelector('.error-cryptofr-auth').style.display = 'block';
-//         return;
-//       }
-//     });
+//   await Promise.all(
+//             [].map(async (element, index) => {
+//             })
+//           );
 // }
 
 //Tab menu Comments datatable
@@ -1340,7 +1330,7 @@ function setDataTableArticle(table, dataSet) {
   $('#articles tbody').on('click', 'button', function () {
     let data = tables.row($(this).parents('tr')).data();
     console.log(data);
-
+    console.log(topicsAtuhorizedRes);
     let dataManaged = manageDataArticlesPosts(data.posts);
     let title = document.querySelector('#ModalCommentTitle');
     title.innerHTML = data.title;
@@ -1601,6 +1591,7 @@ const topicsFilteredByDeleted = (data) => {
     }
   }
   topicsAtuhorized(topicsAuth);
+  topicsAtuhorized1(topicsAuth);
 };
 
 //the comments by topics for the dataTable Articles
@@ -1635,28 +1626,55 @@ const topicsAtuhorized = async (topics) => {
   }
 };
 
-// //the comments by topics for the dataTable Articles
-// const topicsAtuhorized1 = async (topics) => {
-//
-//   await Promise.all(
-//               [].map(async (element, index) => {
-//               })
-//             );
-//   newFetchGet(nodeBBURL + '/api/topic/' + topic.tid + '?page=1', localStorage.token)
-//   .then(Response => jsonResponse.json())
-//   .then(ResponseJson => {
-//     Promise.all(
-//       ResponseJson.posts.map(filmUrl =>
-//         fetch(filmUrl).then(filmResponse => filmResponse.json())
-//       )
-//     ).then(films => {
-//       console.log(films)
-//     })
-//   })
-//
-//
-// };
+function topicsWithComments (tid , paginationCount) {
+  let commentsPaginated= [];
+  for(let i=2 ; i  < paginationCount ; i++){
+  newFetchGet(nodeBBURL + '/api/topic/' + tid + '?page='+i, localStorage.token)
+    .then((res) => {
+      status = res.status;
+      return res;
+    })
+    .then((res) => res.json())
+    .then(function (res) {
+      commentsPaginated.push(res.posts);
+      if (status != '200') {
+        // NOT AUTHORIZED
+        document.querySelector('.error-cryptofr-auth').style.display = 'block';
+        return;
+      }
+    });
+  }
+  return commentsPaginated;
+}
 
+the comments by topics for the dataTable Articles
+function topicsAtuhorized1 (topics) {
+  for (let topic of topics) {
+    newFetchGet(nodeBBURL + '/api/topic/' + topic.tid + '?page=1', localStorage.token)
+      .then((res) => {
+        status = res.status;
+        return res;
+      })
+      .then((res) => res.json())
+      .then(function (res) {
+        if(res.pagination["pageCount"] > 1){
+          let paginationCount= res.pagination["pageCount"];
+          let commentsPaginated= topicsWithComments(topic.tid , paginationCount);
+          console.log(commentsPaginated);
+          //for (let i = 0 ; i< commentsPaginated.length ; i++){
+            (res.posts).push(commentsPaginated);
+          //}
+        }
+        topicsAtuhorizedRes.push(res);
+        if (status != '200') {
+          // NOT AUTHORIZED
+          document.querySelector('.error-cryptofr-auth').style.display = 'block';
+          return;
+        }
+      });
+  }
+  return topicsAtuhorized;
+};
 
 
 //--When a category id is selectedCid
